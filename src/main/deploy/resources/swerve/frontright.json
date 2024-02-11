@@ -2,7 +2,7 @@
     "moduleName": "frontRight",
     "angleSystem": {
         "motorConfig": {
-            "port": 4,
+            "port": 2,
             "isInverted": false,
             "motorModel": "SparkMax",
             "motorType": "BRUSHLESS",
@@ -16,7 +16,7 @@
         }
     },
     "speedConfig": {
-        "port": 3,
+        "port": 1,
         "isInverted": true,
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
