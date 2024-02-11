@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.swerve.DriveCommand;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
+import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
 
@@ -29,14 +31,18 @@ public class RobotContainer {
   private ConfigUtils mConfigUtils;
 
   private SOTA_Xboxcontroller dController;
+  private SOTA_Xboxcontroller mController;
   private SOTA_Gyro mGyro;
 
   private SOTA_SwerveDrive mSwerveDrive;
+
+  private Intake mIntake;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
 
     this.dController = new SOTA_Xboxcontroller(0);
+    this.mController = new SOTA_Xboxcontroller(1);
     this.mGyro = new NavX(new AHRS(Port.kMXP));
 
     try {
@@ -60,6 +66,15 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
+    try {
+      IntakeConfig intakeConfig = mConfigUtils.readFromClassPath(IntakeConfig.class, "intake/intake");
+      SOTA_MotorController intakeMotor = MotorControllerFactory.generateMotorController(intakeConfig.getMotorConfig());
+      MultiplexedColorSensor leftSensor = new MultiplexedColorSensor(Port.kMXP, 0);
+      MultiplexedColorSensor rightSensor = new MultiplexedColorSensor(Port.kMXP, 1);
+      this.mIntake = new Intake(intakeMotor, intakeConfig, leftSensor, rightSensor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     configureBindings();
   }
 
@@ -72,6 +87,8 @@ public class RobotContainer {
     dController.leftBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(false), mSwerveDrive));
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
+
+    mController.a().onTrue(Commands.run(() -> mIntake.intake(), mIntake)).onFalse(Commands.runOnce(() -> mIntake.stop() , mIntake));
   }
 
   public Command getAutonomousCommand() {
