@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import SOTAlib.MotorController.SOTA_MotorController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.MultiplexedColorSensor;
 import frc.robot.subsystems.configs.IntakeConfig;
@@ -20,6 +21,9 @@ public class Intake extends SubsystemBase {
         this.rightSensor = rightSensor;
         Optional.ofNullable(config).ifPresent((IntakeConfig lConfig) -> this.intakeVoltage = lConfig.getIntakeVoltage());
         Optional.ofNullable(config).ifPresent((IntakeConfig lConfig) -> this.sensorTrigger = lConfig.getSensorTrigger());
+        Shuffleboard.getTab("Intake").addBoolean("Has Note", this::hasNote);
+        Shuffleboard.getTab("Intake").addNumber("Left Sensor Prox", leftSensor::getProximity);
+        Shuffleboard.getTab("Intake").addNumber("Right Sensor Prox", rightSensor::getProximity);
     }
 
     public void intake() {
