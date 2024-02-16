@@ -89,6 +89,7 @@ public class RobotContainer {
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
     mController.a().onTrue(Commands.run(() -> mIntake.intake(), mIntake)).onFalse(Commands.runOnce(() -> mIntake.stop() , mIntake));
+    mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake)).onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
   }
 
   public Command getAutonomousCommand() {

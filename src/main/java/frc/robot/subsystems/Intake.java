@@ -27,11 +27,11 @@ public class Intake extends SubsystemBase {
     }
 
     public void intake() {
-        mMotor.setVoltage(intakeVoltage);
+        mMotor.set(intakeVoltage);
     }
 
     public void outtake() {
-        mMotor.setVoltage(-intakeVoltage);
+        mMotor.set(-intakeVoltage);
     }
 
     public void stop() {
