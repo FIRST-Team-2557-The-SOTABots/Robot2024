@@ -11,13 +11,13 @@
         },
         "encoderConfig": {
             "encoderType": "SPARKMAX",
-            "isInverted": false,
+            "isInverted": true,
             "encoderOffset": 0.0
         }
     },
     "speedConfig": {
         "port": 1,
-        "isInverted": true,
+        "isInverted": false,
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
         "neutralOperation": "BRAKE",

@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
 
@@ -24,6 +25,7 @@ public class SOTA_SwerveModule {
     private SOTA_MotorController speedMotor;
     private PIDController speedPID;
     private SimpleMotorFeedforward speedFF;
+    private double testVoltage;
 
     public SOTA_SwerveModule(SOTA_SwerveDriveConfig driveConfig, SOTA_SwerveModuleConfig moduleConfig,
             SOTA_MotorController angleMotor, SOTA_AbsoulteEncoder angleEncoder,
@@ -39,6 +41,7 @@ public class SOTA_SwerveModule {
         this.moduleName = moduleConfig.getModuleName();
         this.kWheelCircumfrence = driveConfig.getWheelDiameter();
         this.kGearRatio = driveConfig.getGearRatio();
+        this.testVoltage = driveConfig.getSpeedKs();
 
         this.angleMotor = angleMotor;
         this.angleEncoder = angleEncoder;
@@ -56,6 +59,7 @@ public class SOTA_SwerveModule {
 
         double anglePIDOutput = anglePID.calculate(getCurrentAngle().getRotations(),
                 swerveModuleState.angle.getRotations());
+
         double speedRPM = Conversions.metersPerSecondToRPM(swerveModuleState.speedMetersPerSecond, kWheelCircumfrence,
                 kGearRatio);
         double speedPIDOutput = speedPID.calculate(speedMotor.getEncoderVelocity(), speedRPM);

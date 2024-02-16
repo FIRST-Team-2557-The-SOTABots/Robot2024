@@ -4,13 +4,13 @@
     "maxSpeed": 15.76,
     "wheelDiameter": 3,
     "gearRatio": 4.71,
-    "maxRotationalVelocity": 3.14,
+    "maxRotationalVelocity": 6.28,
     "angleP": 10.0,
     "angleI": 0.0,
     "angleD": 2.0,
     "speedP": 0.0,
     "speedI": 0.0,
     "speedD": 0.0,
-    "speedKs": 0.15,
-    "speedKv": 0.00234333
+    "speedKs": 0.29,
+    "speedKv": 0.00232124
 }
