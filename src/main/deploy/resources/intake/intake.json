@@ -1,0 +1,12 @@
+{
+    "intakeVoltage": 1,
+    "sensorTrigger": 200,
+    "motorConfig": {
+        "port" : 9,
+        "isInverted": true,
+        "motorModel": "SparkMax",
+        "motorType" : "BRUSHLESS",
+        "neutralOperation" : "BRAKE",
+        "currentLimit" : 30
+    }
+}
