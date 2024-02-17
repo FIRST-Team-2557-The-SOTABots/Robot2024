@@ -31,6 +31,7 @@ import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.commands.swerve.RotateToAprilTag;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.ClimberConfig;
 import frc.robot.subsystems.configs.DeliveryConfig;
+import frc.robot.subsystems.configs.ArmConfig;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
@@ -60,6 +62,8 @@ public class RobotContainer {
   private Climber rightClimber;
   private Delivery mDelivery;
   private Shooter mShooter;
+
+  private Arm mArm;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -89,6 +93,16 @@ public class RobotContainer {
           .generateMotorController(shooterConfig.getRightShooterConfig());
 
       this.mShooter = new Shooter(shooterConfig, linearActuator, lineaEncoder, leftMotor, rightMotor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
+      ArmConfig armConfig = mConfigUtils.readFromClassPath(ArmConfig.class, "arm/arm");
+      SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
+      SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(armConfig.getRightMotor());
+      this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor, leftMotor.getAbsEncoder());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -155,6 +169,9 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
+    mArm.setDefaultCommand(Commands.run(() -> {
+      mArm.moveArms(mController.getLeftY());
+    }, mArm));
   }
 
   private void configureBindings() {
