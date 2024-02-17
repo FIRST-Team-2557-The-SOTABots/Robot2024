@@ -16,15 +16,21 @@ import SOTAlib.Gyro.SOTA_Gyro;
 import SOTAlib.MotorController.SOTA_CompositeMotor;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.climber.Climb;
+import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.swerve.DriveCommand;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristPosition;
+import frc.robot.subsystems.configs.ClimberConfig;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
@@ -41,6 +47,8 @@ public class RobotContainer {
 
   private Intake mIntake;
   private Wrist mWrist;
+  private Climber leftClimber;
+  private Climber rightClimber;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -58,6 +66,23 @@ public class RobotContainer {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    try {
+      ClimberConfig leftConfig = mConfigUtils.readFromClassPath(ClimberConfig.class, "climber/left");
+      ClimberConfig rightConfig = mConfigUtils.readFromClassPath(ClimberConfig.class, "climber/right");
+
+      SOTA_MotorController leftMotor = MotorControllerFactory.generateMotorController(leftConfig.getMotorConfig());
+      SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(rightConfig.getMotorConfig());
+
+      DigitalInput leftSwitch = new DigitalInput(leftConfig.getSwitchPort());
+      DigitalInput rightSwitch = new DigitalInput(rightConfig.getSwitchPort());
+
+      this.leftClimber = new Climber(leftConfig, leftMotor, leftSwitch);
+      this.rightClimber = new Climber(rightConfig, rightMotor, rightSwitch);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     try {
       CompositeMotorFactory mCompositeMotorFactory = new CompositeMotorFactory();
 
@@ -107,6 +132,13 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
     mController.x().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.FLOOR), mWrist));
     mController.y().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.REST), mWrist));
+
+    mController.start().onTrue(new Climb(leftClimber, rightClimber));
+    mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+    mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
+        .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+            Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
   }
 
   public Command getAutonomousCommand() {

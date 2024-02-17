@@ -1,0 +1,13 @@
+{
+    "name": "right",
+    "climbSpeed": 0.8,
+    "switchPort": 1,
+    "motorConfig": {
+        "port": 19,
+        "motorModel": "SparkMax",
+        "motorType": "BRUSHLESS",
+        "isInverted": true,
+        "neutralOperation": "BRAKE",
+        "currentLimit": 60
+    }
+}
