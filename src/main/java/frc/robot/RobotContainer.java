@@ -23,9 +23,12 @@ import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
+import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
   private ConfigUtils mConfigUtils;
@@ -37,6 +40,7 @@ public class RobotContainer {
   private SOTA_SwerveDrive mSwerveDrive;
 
   private Intake mIntake;
+  private Wrist mWrist;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -45,6 +49,15 @@ public class RobotContainer {
     this.mController = new SOTA_Xboxcontroller(1);
     this.mGyro = new NavX(new AHRS(Port.kMXP));
 
+    try {
+      CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
+      WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
+      SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(wristConfig.getLeftMotor());
+      SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(wristConfig.getRightMotor());
+      this.mWrist = new Wrist(wristConfig, leftMotor.getAbsEncoder(), leftMotor.getMotor(), rightMotor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     try {
       CompositeMotorFactory mCompositeMotorFactory = new CompositeMotorFactory();
 
@@ -88,8 +101,12 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    mController.a().onTrue(Commands.run(() -> mIntake.intake(), mIntake)).onFalse(Commands.runOnce(() -> mIntake.stop() , mIntake));
-    mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake)).onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+    mController.a().onTrue(Commands.run(() -> mIntake.intake(), mIntake))
+        .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+    mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
+        .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+    mController.x().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.FLOOR), mWrist));
+    mController.y().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.REST), mWrist));
   }
 
   public Command getAutonomousCommand() {
