@@ -16,7 +16,8 @@
         }, 
         "encoderConfig": {
             "encoderType": "SPARKMAX",
-            "isInverted": false
+            "isInverted": true,
+            "encoderOffset": 0.0
         }
     },
     "rightMotor": {
