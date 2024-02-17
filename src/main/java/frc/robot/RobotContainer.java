@@ -24,6 +24,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
@@ -104,8 +105,8 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
-    mController.x().onTrue(Commands.run(() -> mWrist.toFloor(), mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
-    mController.y().onTrue(Commands.run(() -> mWrist.toRest(), mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
+    mController.x().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.FLOOR), mWrist));
+    mController.y().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.REST), mWrist));
   }
 
   public Command getAutonomousCommand() {
