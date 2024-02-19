@@ -1,0 +1,36 @@
+{
+    "p": 0.0,
+    "i": 0.0,
+    "d": 0.0,
+    "maxLinearValue": 0.475812448,
+    "linearActuatorConfig": {
+        "port": 15,
+        "isInverted": false,
+        "motorType": "BRUSHED",
+        "motorModel": "SparkMax",
+        "neutralOperation": "BRAKE",
+        "currentLimit": 3
+    },
+    "linearEncoderConfig": {
+        "port": 0,
+        "isInverted": false,
+        "encoderType": "ANALOG",
+        "encoderOffset": 0.16
+    },
+    "leftShooterConfig": {
+        "port": 13,
+        "isInverted": false,
+        "motorType": "BRUSHLESS",
+        "motorModel": "SparkMax",
+        "neutralOperation": "COAST",
+        "currentLimit": 60
+    },
+    "rightShooterConfig": {
+        "port": 14,
+        "isInverted": true,
+        "motorType": "BRUSHLESS",
+        "motorModel": "SparkMax",
+        "neutralOperation": "COAST",
+        "currentLimit": 60
+    }
+}
