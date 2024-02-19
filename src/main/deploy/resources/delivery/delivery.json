@@ -1,0 +1,11 @@
+{
+    "deliverySpeed": 0.3,
+    "deliveryConfig": {
+        "port": 12,
+        "isInverted": false,
+        "motorModel": "SparkMax",
+        "motorType": "BRUSHLESS",
+        "neutralOperation": "BRAKE",
+        "currentLimit": 30
+    }
+}
