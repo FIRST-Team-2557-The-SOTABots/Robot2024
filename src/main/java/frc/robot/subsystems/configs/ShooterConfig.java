@@ -8,12 +8,22 @@ public class ShooterConfig {
     private double i;
     private double d;
     private double maxLinearValue;
+    private double angleConvM;
+    private double angleConvB;
 
     private MotorControllerConfig linearActuatorConfig;
     private EncoderConfig linearEncoderConfig;
 
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
+
+    public double getAngleConvM() {
+        return angleConvM;
+    }
+
+    public double getAngleConvB() {
+        return angleConvB;
+    }
 
     public double getMaxLinearValue() {
         return maxLinearValue;

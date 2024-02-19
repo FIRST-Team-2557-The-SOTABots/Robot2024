@@ -155,7 +155,6 @@ public class RobotContainer {
 
     mShooter.setDefaultCommand(Commands.run(() -> {
       mShooter.runShooters(mController.getRightY());
-      mShooter.linearActuatorSetVoltage(mController.getLeftY() * 6);
     }, mShooter));
   }
 

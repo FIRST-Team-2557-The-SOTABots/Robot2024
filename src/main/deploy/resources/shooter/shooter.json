@@ -1,7 +1,9 @@
 {
-    "p": 0.0,
+    "p": 1.0,
     "i": 0.0,
     "d": 0.0,
+    "angleConvM": 53.4631,
+    "angleConvB": 37.8996,
     "maxLinearValue": 0.475812448,
     "linearActuatorConfig": {
         "port": 15,

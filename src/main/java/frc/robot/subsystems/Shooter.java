@@ -13,6 +13,8 @@ public class Shooter extends SubsystemBase {
     private SOTA_AbsoulteEncoder linearEncoder;
     private PIDController linearPID;
     private double maxLinearValue;
+    private final double angleConvM;
+    private final double angleConvB;
 
     private SOTA_MotorController leftShooter;
     private SOTA_MotorController rightShooter;
@@ -25,6 +27,8 @@ public class Shooter extends SubsystemBase {
 
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
         this.maxLinearValue = config.getMaxLinearValue();
+        this.angleConvM = config.getAngleConvM();
+        this.angleConvB = config.getAngleConvB();
 
         this.leftShooter = leftShooter;
         this.rightShooter = rightShooter;
@@ -45,8 +49,13 @@ public class Shooter extends SubsystemBase {
         rightShooter.set(speed);
     }
 
+    public double encoderToAngle(double encoderPos) {
+        return angleConvM * encoderPos + angleConvB;
+    }
+
     @Override
     public void periodic() {
-        // linearPID.calculate(linearEncoder.getPosition(), );
+        double volts = linearPID.calculate(encoderToAngle(linearEncoder.getPosition()), 40);
+        linearActuatorSetVoltage(volts);
     }
 }
