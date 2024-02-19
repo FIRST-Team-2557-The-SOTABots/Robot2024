@@ -25,12 +25,14 @@ import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.ClimberConfig;
+import frc.robot.subsystems.configs.DeliveryConfig;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
@@ -49,6 +51,7 @@ public class RobotContainer {
   private Wrist mWrist;
   private Climber leftClimber;
   private Climber rightClimber;
+  private Delivery mDelivery;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -56,6 +59,15 @@ public class RobotContainer {
     this.dController = new SOTA_Xboxcontroller(0);
     this.mController = new SOTA_Xboxcontroller(1);
     this.mGyro = new NavX(new AHRS(Port.kMXP));
+
+    try {
+      DeliveryConfig deliveryConfig = mConfigUtils.readFromClassPath(DeliveryConfig.class, "delivery/delivery");
+      SOTA_MotorController deliveryMotor = MotorControllerFactory
+          .generateMotorController(deliveryConfig.getDeliveryConfig());
+      this.mDelivery = new Delivery(deliveryConfig, deliveryMotor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     try {
       CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
@@ -130,15 +142,29 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+
     mController.x().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.FLOOR), mWrist));
     mController.y().onTrue(Commands.run(() -> mWrist.setDesiredPosition(WristPosition.REST), mWrist));
 
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
         Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+
     mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
         .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
             Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+
+    mController.leftBumper().onTrue(Commands.run(() -> {
+      mDelivery.toIntake();
+    }, mDelivery)).onFalse(Commands.runOnce(() -> {
+      mDelivery.stop();
+    }, mDelivery));
+
+    mController.rightBumper().onTrue(Commands.run(() -> {
+      mDelivery.toShooter();
+    }, mDelivery)).onFalse(Commands.runOnce(() -> {
+      mDelivery.stop();
+    }, mDelivery));
   }
 
   public Command getAutonomousCommand() {
