@@ -21,11 +21,17 @@ public class ShooterConfig {
     private double kS;
     private double kV;
 
+    private double targetVoltage;
+
     private MotorControllerConfig linearActuatorConfig;
     private EncoderConfig linearEncoderConfig;
 
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
+
+    public double getTargetVoltage() {
+        return targetVoltage;
+    }
 
     public double getkS() {
         return kS;
