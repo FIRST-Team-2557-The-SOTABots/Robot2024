@@ -14,7 +14,7 @@ public class ShooterSequence extends SequentialCommandGroup {
        addCommands(
             Commands.runOnce(() -> {mWrist.setDesiredPosition(WristPosition.REST);}, mWrist),
             Commands.waitUntil(mWrist::atSetpoint),
-            Commands.run(() -> {mIntake.outtake(); mDelivery.toIntake();}, mIntake, mWrist).until(mIntake::hasNote),
+            // Commands.run(() -> {mIntake.outtake(); mDelivery.toIntake();}, mIntake, mWrist).until(mIntake::hasNote),
             Commands.run(() -> {mShooter.spinUpFlyWheel();}, mShooter).until(mShooter::isAtShootingSpeed),
             Commands.parallel(
                 Commands.run(() -> {mShooter.spinUpFlyWheel();}, mShooter),

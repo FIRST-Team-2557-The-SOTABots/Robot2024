@@ -1,11 +1,11 @@
 {
-    "p": 1.0,
+    "p": 2.0,
     "i": 0.0,
     "d": 0.0,
     "kS": 0.18,
     "kV": 0.00186767,
-    "angleConvM": 53.4631,
-    "angleConvB": 37.8996,
+    "angleConvM": 49.3355,
+    "angleConvB": 20.0349,
     "maxLinearValue": 0.475812448,
     "speakerTagHeight": 56.75,
     "speakerTagToHood": 23,
@@ -13,6 +13,7 @@
     "limeLightAngle": 15,
     "limeLightToShooterPivot": 12.75,
     "pivotHeight": 5.75,
+    "targetVoltage": 5000,
     "linearActuatorConfig": {
         "port": 15,
         "isInverted": false,

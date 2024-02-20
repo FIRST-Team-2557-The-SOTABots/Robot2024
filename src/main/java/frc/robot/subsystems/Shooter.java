@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
 import SOTAlib.Encoder.Absolute.SOTA_AbsoulteEncoder;
-import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.SOTA_MotorController;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.ShooterConfig;
 
@@ -58,6 +55,22 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
         Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
         Shuffleboard.getTab("Shooter").addDouble("Angle to Hood", this::calcAngleToHood);
+        Shuffleboard.getTab("Shooter").addDouble("Shooter Angle", this::getShooterAngle);
+        Shuffleboard.getTab("Shooter").addDouble("Left rpm", leftShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
+        Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
+    }
+
+    public double getCorrectedEncoderPosition() {
+        double output;
+        if (linearEncoder.getPosition() > 0.95) {
+            output = 0.0;
+        } else {
+            output = linearEncoder.getPosition();
+        }
+
+        return output;
     }
 
     public void linearActuatorSetVoltage(double volts) {
@@ -70,9 +83,9 @@ public class Shooter extends SubsystemBase {
     }
 
     public void spinUpFlyWheel() {
-        double output = flyWheelFeedforward.calculate(targetVoltage);
-        leftShooter.setVoltage(output);
-        rightShooter.setVoltage(output);
+        // double output = flyWheelFeedforward.calculate(targetVoltage);
+        leftShooter.set(1);
+        rightShooter.set(1);
     }
 
     public void stopFlyWheel() {
@@ -81,7 +94,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isAtShootingSpeed() {
-        return leftShooter.getEncoderVelocity() >= targetVoltage && rightShooter.getEncoderVelocity() >= targetVoltage;
+        return leftShooter.getEncoderVelocity() >= targetVoltage || rightShooter.getEncoderVelocity() >= targetVoltage;
     }
 
     public boolean isNotAtShootingSpeed() {
@@ -92,18 +105,23 @@ public class Shooter extends SubsystemBase {
         return angleConvM * encoderPos + angleConvB;
     }
 
+    public double getShooterAngle() {
+        return encoderToAngle(getCorrectedEncoderPosition());
+    }
+
     public double calcDistanceLimeLightToTag() {
         return (speakerTagHeight - limeLightHeight) / Math.tan(Math.toRadians(limeLightAngle
                 + NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0)));
     }
 
     public double calcAngleToHood() {
-        return Math.toDegrees(Math.atan((speakerTagToHood + speakerTagHeight - pivotHeight)/ (calcDistanceLimeLightToTag() + limeLightToShooterPivot)));
+        return Math.toDegrees(Math.atan((speakerTagToHood + speakerTagHeight - pivotHeight)
+                / (calcDistanceLimeLightToTag() + limeLightToShooterPivot)));
     }
 
     @Override
     public void periodic() {
-        double volts = linearPID.calculate(encoderToAngle(linearEncoder.getPosition()), calcAngleToHood());
+        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()), calcAngleToHood());
         linearActuatorSetVoltage(volts);
     }
 }

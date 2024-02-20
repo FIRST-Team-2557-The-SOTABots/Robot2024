@@ -169,8 +169,12 @@ public class RobotContainer {
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
 
-    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist)).onFalse(Commands.runOnce(() -> {mIntake.stop(); mDelivery.stop(); mShooter.stopFlyWheel();}, mIntake, mDelivery, mShooter));
-    
+    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist)).onFalse(Commands.runOnce(() -> {
+      mIntake.stop();
+      mDelivery.stop();
+      mShooter.stopFlyWheel();
+    }, mIntake, mDelivery, mShooter));
+
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
         Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
