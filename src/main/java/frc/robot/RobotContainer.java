@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
+import frc.robot.commands.intake.AutoStop;
 import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
@@ -138,8 +139,11 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    mController.a().onTrue(Commands.run(() -> mIntake.intake(), mIntake))
-        .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+    mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
+      mWrist.setDesiredPosition(WristPosition.REST);
+      mIntake.stop();
+    }, mWrist, mIntake));
+
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
 
