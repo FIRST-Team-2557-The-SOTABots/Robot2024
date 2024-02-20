@@ -21,5 +21,7 @@ public class ShooterSequence extends SequentialCommandGroup {
                 Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery)
             ).until(mShooter::isNotAtShootingSpeed)
         );
+
+        addRequirements(mShooter, mDelivery, mIntake, mWrist);
     }
 }
