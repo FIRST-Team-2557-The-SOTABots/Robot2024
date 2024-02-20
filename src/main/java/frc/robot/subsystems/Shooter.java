@@ -5,8 +5,10 @@ import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.ShooterConfig;
 
@@ -27,6 +29,7 @@ public class Shooter extends SubsystemBase {
 
     private SOTA_MotorController leftShooter;
     private SOTA_MotorController rightShooter;
+    private SimpleMotorFeedforward flyWheelFeedforward;
 
     public Shooter(ShooterConfig config, SOTA_MotorController linearActuator, SOTA_AbsoulteEncoder linearEncoder,
             SOTA_MotorController leftShooter, SOTA_MotorController rightShooter) {
@@ -48,6 +51,8 @@ public class Shooter extends SubsystemBase {
 
         this.leftShooter = leftShooter;
         this.rightShooter = rightShooter;
+        this.flyWheelFeedforward = new SimpleMotorFeedforward(config.getkS(), config.getkV());
+
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
         Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
         Shuffleboard.getTab("Shooter").addDouble("Angle to Hood", this::calcAngleToHood);
@@ -65,6 +70,13 @@ public class Shooter extends SubsystemBase {
     public void runShooters(double speed) {
         leftShooter.set(speed);
         rightShooter.set(speed);
+    }
+
+    public void setFlyWheelVoltage(double volts) {
+        SmartDashboard.putNumber(volts + " leftRPM", leftShooter.getEncoderVelocity());
+        SmartDashboard.putNumber(volts + " rightRPM", rightShooter.getEncoderVelocity());
+        leftShooter.setVoltage(volts);
+        rightShooter.setVoltage(volts);
     }
 
     public double encoderToAngle(double encoderPos) {
