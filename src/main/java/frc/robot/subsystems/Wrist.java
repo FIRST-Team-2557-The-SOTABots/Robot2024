@@ -71,6 +71,10 @@ public class Wrist extends SubsystemBase {
         }
     }
 
+    public boolean atSetpoint() {
+        return mPID.atSetpoint();
+    }
+
     @Override
     public void periodic() {
         if (mPID.atSetpoint()) {mPID.reset();}
