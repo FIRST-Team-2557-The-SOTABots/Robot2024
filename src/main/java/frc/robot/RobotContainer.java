@@ -8,7 +8,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import SOTAlib.Config.ConfigUtils;
 import SOTAlib.Control.SOTA_Xboxcontroller;
+import SOTAlib.Encoder.Absolute.SOTA_AbsoulteEncoder;
 import SOTAlib.Factories.CompositeMotorFactory;
+import SOTAlib.Factories.EncoderFactory;
 import SOTAlib.Factories.IllegalMotorModel;
 import SOTAlib.Factories.MotorControllerFactory;
 import SOTAlib.Gyro.NavX;
@@ -29,6 +31,7 @@ import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.ClimberConfig;
@@ -36,6 +39,7 @@ import frc.robot.subsystems.configs.DeliveryConfig;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
+import frc.robot.subsystems.configs.ShooterConfig;
 import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
@@ -52,6 +56,7 @@ public class RobotContainer {
   private Climber leftClimber;
   private Climber rightClimber;
   private Delivery mDelivery;
+  private Shooter mShooter;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -65,6 +70,22 @@ public class RobotContainer {
       SOTA_MotorController deliveryMotor = MotorControllerFactory
           .generateMotorController(deliveryConfig.getDeliveryConfig());
       this.mDelivery = new Delivery(deliveryConfig, deliveryMotor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      ShooterConfig shooterConfig = mConfigUtils.readFromClassPath(ShooterConfig.class, "shooter/shooter");
+      SOTA_MotorController linearActuator = MotorControllerFactory
+          .generateMotorController(shooterConfig.getLinearActuatorConfig());
+      SOTA_AbsoulteEncoder lineaEncoder = EncoderFactory
+          .generateAbsoluteEncoder(shooterConfig.getLinearEncoderConfig());
+      SOTA_MotorController leftMotor = MotorControllerFactory
+          .generateMotorController(shooterConfig.getLeftShooterConfig());
+      SOTA_MotorController rightMotor = MotorControllerFactory
+          .generateMotorController(shooterConfig.getRightShooterConfig());
+
+      this.mShooter = new Shooter(shooterConfig, linearActuator, lineaEncoder, leftMotor, rightMotor);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -131,6 +152,10 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
+
+    mShooter.setDefaultCommand(Commands.run(() -> {
+      mShooter.runShooters(mController.getRightY());
+    }, mShooter));
   }
 
   private void configureBindings() {
