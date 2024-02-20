@@ -11,11 +11,38 @@ public class ShooterConfig {
     private double angleConvM;
     private double angleConvB;
 
+    private double speakerTagHeight;
+    private double speakerTagToHood;
+    private double limeLightHeight;
+    private double limeLightAngle;
+    private double limeLightToShooterPivot;
+    private double pivotHeight;
+
     private MotorControllerConfig linearActuatorConfig;
     private EncoderConfig linearEncoderConfig;
 
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
+
+    public double getSpeakerTagToHood() {
+        return speakerTagToHood;
+    }
+
+    public double getLimeLightToShooterPivot() {
+        return limeLightToShooterPivot;
+    }
+
+    public double getSpeakerTagHeight() {
+        return speakerTagHeight;
+    }
+
+    public double getLimeLightHeight() {
+        return limeLightHeight;
+    }
+
+    public double getLimeLightAngle() {
+        return limeLightAngle;
+    }
 
     public double getAngleConvM() {
         return angleConvM;
@@ -55,5 +82,9 @@ public class ShooterConfig {
 
     public double getD() {
         return d;
+    }
+
+    public double getPivotHeight() {
+        return pivotHeight;
     }
 }

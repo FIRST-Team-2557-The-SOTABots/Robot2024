@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import SOTAlib.Encoder.Absolute.SOTA_AbsoulteEncoder;
+import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.ShooterConfig;
@@ -15,6 +17,13 @@ public class Shooter extends SubsystemBase {
     private double maxLinearValue;
     private final double angleConvM;
     private final double angleConvB;
+
+    private double speakerTagHeight;
+    private double speakerTagToHood;
+    private double limeLightHeight;
+    private double limeLightAngle;
+    private double limeLightToShooterPivot;
+    private double pivotHeight;
 
     private SOTA_MotorController leftShooter;
     private SOTA_MotorController rightShooter;
@@ -30,14 +39,23 @@ public class Shooter extends SubsystemBase {
         this.angleConvM = config.getAngleConvM();
         this.angleConvB = config.getAngleConvB();
 
+        this.speakerTagHeight = config.getSpeakerTagHeight();
+        this.speakerTagToHood = config.getSpeakerTagToHood();
+        this.limeLightHeight = config.getLimeLightHeight();
+        this.limeLightAngle = config.getLimeLightAngle();
+        this.limeLightToShooterPivot = config.getLimeLightToShooterPivot();
+        this.pivotHeight = config.getPivotHeight();
+
         this.leftShooter = leftShooter;
         this.rightShooter = rightShooter;
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
         Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
+        Shuffleboard.getTab("Shooter").addDouble("Angle to Hood", this::calcAngleToHood);
     }
 
     public void linearActuatorSetVoltage(double volts) {
-        if ((linearEncoder.getPosition() >= maxLinearValue && linearEncoder.getPosition() <= 0.95) && Math.signum(volts) == 1) {
+        if ((linearEncoder.getPosition() >= maxLinearValue && linearEncoder.getPosition() <= 0.95)
+                && Math.signum(volts) == 1) {
             linearActuator.stopMotor();
         } else {
             linearActuator.setVoltage(volts);
@@ -53,9 +71,18 @@ public class Shooter extends SubsystemBase {
         return angleConvM * encoderPos + angleConvB;
     }
 
+    public double calcDistanceLimeLightToTag() {
+        return (speakerTagHeight - limeLightHeight) / Math.tan(Math.toRadians(limeLightAngle
+                + NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0)));
+    }
+
+    public double calcAngleToHood() {
+        return Math.toDegrees(Math.atan((speakerTagToHood + speakerTagHeight - pivotHeight)/ (calcDistanceLimeLightToTag() + limeLightToShooterPivot)));
+    }
+
     @Override
     public void periodic() {
-        double volts = linearPID.calculate(encoderToAngle(linearEncoder.getPosition()), 40);
+        double volts = linearPID.calculate(encoderToAngle(linearEncoder.getPosition()), calcAngleToHood());
         linearActuatorSetVoltage(volts);
     }
 }
