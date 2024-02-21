@@ -19,7 +19,7 @@ public class ShooterSequence extends SequentialCommandGroup {
             Commands.parallel(
                 Commands.run(() -> {mShooter.spinUpFlyWheel();}, mShooter),
                 Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery)
-            ).until(mShooter::isNotAtShootingSpeed)
+            )
         );
 
         addRequirements(mShooter, mDelivery, mIntake, mWrist);
