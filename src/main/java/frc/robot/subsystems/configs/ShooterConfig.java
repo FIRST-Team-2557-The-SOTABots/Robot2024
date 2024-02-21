@@ -18,10 +18,12 @@ public class ShooterConfig {
     private double limeLightToShooterPivot;
     private double pivotHeight;
 
-    private double kS;
-    private double kV;
+    private double leftKS;
+    private double leftKV;
+    private double rightKS;
+    private double rightKV;
 
-    private double targetVoltage;
+    private double targetRPM;
 
     private MotorControllerConfig linearActuatorConfig;
     private EncoderConfig linearEncoderConfig;
@@ -29,16 +31,24 @@ public class ShooterConfig {
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
 
-    public double getTargetVoltage() {
-        return targetVoltage;
+    public double getLeftKS() {
+        return leftKS;
     }
 
-    public double getkS() {
-        return kS;
+    public double getLeftKV() {
+        return leftKV;
     }
 
-    public double getkV() {
-        return kV;
+    public double getRightKS() {
+        return rightKS;
+    }
+
+    public double getRightKV() {
+        return rightKV;
+    }
+
+    public double getTargetRPM() {
+        return targetRPM;
     }
 
     public double getSpeakerTagToHood() {

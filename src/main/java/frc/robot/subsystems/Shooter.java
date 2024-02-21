@@ -26,8 +26,9 @@ public class Shooter extends SubsystemBase {
 
     private SOTA_MotorController leftShooter;
     private SOTA_MotorController rightShooter;
-    private SimpleMotorFeedforward flyWheelFeedforward;
-    private double targetVoltage;
+    private SimpleMotorFeedforward leftFF;
+    private SimpleMotorFeedforward rightFF;
+    private double targetRPM;
 
     public Shooter(ShooterConfig config, SOTA_MotorController linearActuator, SOTA_AbsoulteEncoder linearEncoder,
             SOTA_MotorController leftShooter, SOTA_MotorController rightShooter) {
@@ -49,8 +50,9 @@ public class Shooter extends SubsystemBase {
 
         this.leftShooter = leftShooter;
         this.rightShooter = rightShooter;
-        this.flyWheelFeedforward = new SimpleMotorFeedforward(config.getkS(), config.getkV());
-        this.targetVoltage = config.getTargetVoltage();
+        this.leftFF = new SimpleMotorFeedforward(config.getLeftKS(), config.getLeftKV());
+        this.rightFF = new SimpleMotorFeedforward(config.getRightKS(), config.getRightKV());
+        this.targetRPM = config.getTargetRPM();
 
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
         Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
@@ -83,9 +85,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void spinUpFlyWheel() {
-        // double output = flyWheelFeedforward.calculate(targetVoltage);
-        leftShooter.set(1);
-        rightShooter.set(1);
+        leftShooter.setVoltage(leftFF.calculate(targetRPM));
+        rightShooter.setVoltage(rightFF.calculate(targetRPM));
     }
 
     public void stopFlyWheel() {
@@ -94,7 +95,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isAtShootingSpeed() {
-        return leftShooter.getEncoderVelocity() >= targetVoltage || rightShooter.getEncoderVelocity() >= targetVoltage;
+        return leftShooter.getEncoderVelocity() >= targetRPM - 100
+                || rightShooter.getEncoderVelocity() >= targetRPM - 100;
     }
 
     public boolean isNotAtShootingSpeed() {
@@ -121,7 +123,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()), calcAngleToHood());
+        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()),
+                calcAngleToHood());
         linearActuatorSetVoltage(volts);
     }
 }
