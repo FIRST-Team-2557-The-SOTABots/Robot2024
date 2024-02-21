@@ -28,6 +28,7 @@ import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
 import frc.robot.commands.shooter.ShooterSequence;
 import frc.robot.commands.swerve.DriveCommand;
+import frc.robot.commands.swerve.RotateToAprilTag;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.Intake;
@@ -194,6 +195,8 @@ public class RobotContainer {
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
     }, mDelivery));
+    
+    mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
   }
 
   public Command getAutonomousCommand() {
