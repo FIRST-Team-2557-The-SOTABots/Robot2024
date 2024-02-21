@@ -3,6 +3,7 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Shooter;
+import frc.robot.commands.swerve.RotateToAprilTag;
 import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
@@ -19,7 +20,7 @@ public class ShooterSequence extends SequentialCommandGroup {
             Commands.parallel(
                 Commands.run(() -> {mShooter.spinUpFlyWheel();}, mShooter),
                 Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery)
-            ).until(mShooter::isNotAtShootingSpeed)
+            )
         );
 
         addRequirements(mShooter, mDelivery, mIntake, mWrist);
