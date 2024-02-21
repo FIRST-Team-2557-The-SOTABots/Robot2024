@@ -170,7 +170,7 @@ public class RobotContainer {
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
 
-    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist)).onFalse(Commands.runOnce(() -> {
+    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive)).onFalse(Commands.runOnce(() -> {
       mIntake.stop();
       mDelivery.stop();
       mShooter.stopFlyWheel();
