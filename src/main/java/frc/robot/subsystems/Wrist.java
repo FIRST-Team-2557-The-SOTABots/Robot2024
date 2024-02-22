@@ -46,6 +46,27 @@ public class Wrist extends SubsystemBase {
     public void setDesiredPosition(WristPosition position) {
         this.currentPosition = position;
     }
+    
+    public double getCorrectedEncoderPosition() {
+    double output;
+    if (mEncoder.getPosition() > 0.95) {
+        output = 0.0;
+     } else {
+        output = mEncoder.getPosition();
+    }
+
+    return output;
+    }
+
+    private double adjustedEncoder;
+
+    public void adjustEncoderPosition(double adjustment){
+        adjustedEncoder = mEncoder.getPosition() + adjustment;
+    }
+
+    public double getAdjustedEncoder(){
+        return adjustedEncoder;
+    }
 
     public void toFloor() {
         leftMotor.set(0.1);
