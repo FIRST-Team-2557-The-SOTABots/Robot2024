@@ -47,6 +47,26 @@ public class Wrist extends SubsystemBase {
         this.currentPosition = position;
     }
 
+    /**
+     * When the wrist goes to the rest sometimes the abs encoder underflows from 0
+     * to .99999 ish.
+     * First we tried doing a continous input pid with safety, but then the pid
+     * wanted to go backwards.
+     * So now this just corrects for the underflow, and we should be golden.
+     * 
+     * @return value of the encoder with the physical zero position taken into
+     *         account
+     */
+    public double getCorrectedEncoderPosition() {
+        double output;
+        if (mEncoder.getPosition() > 0.95) {
+            output = 0.0;
+        } else {
+            output = mEncoder.getPosition();
+        }
+        return output;
+    }
+
     public void toFloor() {
         leftMotor.set(0.1);
         rightMotor.set(0.1);
@@ -77,7 +97,9 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (mPID.atSetpoint()) {mPID.reset();}
-        setWristVoltage(mPID.calculate(mEncoder.getPosition(), currentPosition.position));
+        if (mPID.atSetpoint()) {
+            mPID.reset();
+        }
+        setWristVoltage(mPID.calculate(getCorrectedEncoderPosition(), currentPosition.position));
     }
 }
