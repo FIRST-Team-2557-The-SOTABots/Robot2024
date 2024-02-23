@@ -19,7 +19,11 @@ import SOTAlib.MotorController.SOTA_CompositeMotor;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -37,6 +41,7 @@ import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.ClimberConfig;
 import frc.robot.subsystems.configs.DeliveryConfig;
@@ -101,8 +106,16 @@ public class RobotContainer {
       CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
       ArmConfig armConfig = mConfigUtils.readFromClassPath(ArmConfig.class, "arm/arm");
       SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
-      SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(armConfig.getRightMotor());
-      this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor, leftMotor.getAbsEncoder());
+      SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
+
+      DoubleSolenoid leftSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 2, 3);
+      DoubleSolenoid rightSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 0, 1);
+
+      leftSolenoid.set(Value.kReverse);
+      rightSolenoid.set(Value.kReverse);
+      this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor.getMotor(), leftMotor.getAbsEncoder(),
+          rightMotor.getAbsEncoder(), leftSolenoid,
+          rightSolenoid);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -169,9 +182,8 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
-    mArm.setDefaultCommand(Commands.run(() -> {
-      mArm.moveArms(mController.getLeftY());
-    }, mArm));
+
+    mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
   }
 
   private void configureBindings() {
@@ -187,11 +199,12 @@ public class RobotContainer {
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
 
-    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive)).onFalse(Commands.runOnce(() -> {
-      mIntake.stop();
-      mDelivery.stop();
-      mShooter.stopFlyWheel();
-    }, mIntake, mDelivery, mShooter));
+    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
+        .onFalse(Commands.runOnce(() -> {
+          mIntake.stop();
+          mDelivery.stop();
+          mShooter.stopFlyWheel();
+        }, mIntake, mDelivery, mShooter));
 
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
@@ -212,8 +225,11 @@ public class RobotContainer {
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
     }, mDelivery));
-    
+
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
+    
+    mController.povUp().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.VERTICAL), mArm));
+    mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {

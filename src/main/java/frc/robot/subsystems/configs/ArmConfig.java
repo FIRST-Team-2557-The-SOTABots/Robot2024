@@ -1,12 +1,11 @@
 package frc.robot.subsystems.configs;
 
 import SOTAlib.Config.CompositeMotorConfig;
-import SOTAlib.Config.MotorControllerConfig;
 
 public class ArmConfig {
 
     private CompositeMotorConfig leftMotor;
-    private MotorControllerConfig rightMotor;
+    private CompositeMotorConfig rightMotor;
 
     private double p;
     private double i;
@@ -20,7 +19,7 @@ public class ArmConfig {
         return leftMotor;
     }
 
-    public MotorControllerConfig getRightMotor() {
+    public CompositeMotorConfig getRightMotor() {
         return rightMotor;
     }
 
