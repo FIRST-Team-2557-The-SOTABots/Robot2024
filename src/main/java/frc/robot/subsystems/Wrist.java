@@ -54,18 +54,7 @@ public class Wrist extends SubsystemBase {
      } else {
         output = mEncoder.getPosition();
     }
-
     return output;
-    }
-
-    private double adjustedEncoder;
-
-    public void adjustEncoderPosition(double adjustment){
-        adjustedEncoder = mEncoder.getPosition() + adjustment;
-    }
-
-    public double getAdjustedEncoder(){
-        return adjustedEncoder;
     }
 
     public void toFloor() {
