@@ -14,6 +14,7 @@ public class Wrist extends SubsystemBase {
     public enum WristPosition {
         FLOOR(0.38),
         REST(0.0),
+        AMP(0.27),
         TEST(0.3);
 
         public double position;
@@ -41,6 +42,7 @@ public class Wrist extends SubsystemBase {
         mPID.setTolerance(0.02);
         Shuffleboard.getTab("Wrist").addBoolean("At setpoint", mPID::atSetpoint);
         Shuffleboard.getTab("Wrist").addDouble("Encoder Postion", mEncoder::getPosition);
+        Shuffleboard.getTab("Wrist").addDouble("Adjusted Position", this::getCorrectedEncoderPosition);
     }
 
     public void setDesiredPosition(WristPosition position) {
@@ -60,7 +62,7 @@ public class Wrist extends SubsystemBase {
     public double getCorrectedEncoderPosition() {
         double output;
         if (mEncoder.getPosition() > 0.95) {
-            output = 0.0;
+            output = mEncoder.getPosition() - 1;
         } else {
             output = mEncoder.getPosition();
         }
@@ -83,7 +85,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private void setWristVoltage(double volts) {
-        if (mEncoder.getPosition() <= 0.99 && mEncoder.getPosition() >= 0.45) {
+        if (mEncoder.getPosition() <= 0.95 && mEncoder.getPosition() >= 0.45) {
             stop();
         } else {
             leftMotor.setVoltage(volts);

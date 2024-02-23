@@ -24,7 +24,7 @@ public class Arm extends SubsystemBase {
     public enum ArmPosition {
         REST(0),
         VERTICAL(0.25),
-        AMP(0);
+        AMP(0.27);
 
         public double position;
 

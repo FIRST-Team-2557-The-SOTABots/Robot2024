@@ -206,6 +206,11 @@ public class RobotContainer {
           mShooter.stopFlyWheel();
         }, mIntake, mDelivery, mShooter));
 
+    mController.y().onTrue(Commands.runOnce(() -> {
+      mArm.setDesiredPosition(ArmPosition.AMP);
+      mWrist.setDesiredPosition(WristPosition.AMP);
+    }, mArm, mWrist));
+
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
         Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
@@ -216,15 +221,19 @@ public class RobotContainer {
 
     mController.leftBumper().onTrue(Commands.run(() -> {
       mDelivery.toIntake();
+      mIntake.intake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
-    }, mDelivery));
+      mIntake.stop();
+    }, mDelivery, mIntake));
 
     mController.rightBumper().onTrue(Commands.run(() -> {
       mDelivery.toShooter();
+      mIntake.outtake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
-    }, mDelivery));
+      mIntake.stop();
+    }, mDelivery, mIntake));
 
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
     
