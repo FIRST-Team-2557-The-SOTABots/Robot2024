@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.ColorSensorV3;
 
 import SOTAlib.Config.ConfigUtils;
 import SOTAlib.Control.SOTA_Xboxcontroller;
@@ -170,9 +171,8 @@ public class RobotContainer {
     try {
       IntakeConfig intakeConfig = mConfigUtils.readFromClassPath(IntakeConfig.class, "intake/intake");
       SOTA_MotorController intakeMotor = MotorControllerFactory.generateMotorController(intakeConfig.getMotorConfig());
-      MultiplexedColorSensor leftSensor = new MultiplexedColorSensor(Port.kMXP, 0);
-      MultiplexedColorSensor rightSensor = new MultiplexedColorSensor(Port.kMXP, 1);
-      this.mIntake = new Intake(intakeMotor, intakeConfig, leftSensor, rightSensor);
+      ColorSensorV3 colorSensorV3 = new ColorSensorV3(Port.kOnboard);
+      this.mIntake = new Intake(intakeMotor, intakeConfig, colorSensorV3);
     } catch (Exception e) {
       e.printStackTrace();
     }
