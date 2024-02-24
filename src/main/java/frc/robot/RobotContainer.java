@@ -19,7 +19,11 @@ import SOTAlib.MotorController.SOTA_CompositeMotor;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -31,14 +35,17 @@ import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.commands.swerve.RotateToAprilTag;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.SOTA_SwerveModule;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.configs.ClimberConfig;
 import frc.robot.subsystems.configs.DeliveryConfig;
+import frc.robot.subsystems.configs.ArmConfig;
 import frc.robot.subsystems.configs.IntakeConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
@@ -60,6 +67,8 @@ public class RobotContainer {
   private Climber rightClimber;
   private Delivery mDelivery;
   private Shooter mShooter;
+
+  private Arm mArm;
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
@@ -89,6 +98,24 @@ public class RobotContainer {
           .generateMotorController(shooterConfig.getRightShooterConfig());
 
       this.mShooter = new Shooter(shooterConfig, linearActuator, lineaEncoder, leftMotor, rightMotor);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
+      ArmConfig armConfig = mConfigUtils.readFromClassPath(ArmConfig.class, "arm/arm");
+      SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
+      SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
+
+      DoubleSolenoid leftSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 2, 3);
+      DoubleSolenoid rightSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 0, 1);
+
+      leftSolenoid.set(Value.kReverse);
+      rightSolenoid.set(Value.kReverse);
+      this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor.getMotor(), leftMotor.getAbsEncoder(),
+          rightMotor.getAbsEncoder(), leftSolenoid,
+          rightSolenoid);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -155,6 +182,8 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
+
+    mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
   }
 
   private void configureBindings() {
@@ -170,11 +199,17 @@ public class RobotContainer {
     mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
         .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
 
-    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive)).onFalse(Commands.runOnce(() -> {
-      mIntake.stop();
-      mDelivery.stop();
-      mShooter.stopFlyWheel();
-    }, mIntake, mDelivery, mShooter));
+    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
+        .onFalse(Commands.runOnce(() -> {
+          mIntake.stop();
+          mDelivery.stop();
+          mShooter.stopFlyWheel();
+        }, mIntake, mDelivery, mShooter));
+
+    mController.y().onTrue(Commands.runOnce(() -> {
+      mArm.setDesiredPosition(ArmPosition.AMP);
+      mWrist.setDesiredPosition(WristPosition.AMP);
+    }, mArm, mWrist));
 
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
@@ -186,17 +221,24 @@ public class RobotContainer {
 
     mController.leftBumper().onTrue(Commands.run(() -> {
       mDelivery.toIntake();
+      mIntake.intake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
-    }, mDelivery));
+      mIntake.stop();
+    }, mDelivery, mIntake));
 
     mController.rightBumper().onTrue(Commands.run(() -> {
       mDelivery.toShooter();
+      mIntake.outtake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
-    }, mDelivery));
-    
+      mIntake.stop();
+    }, mDelivery, mIntake));
+
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
+    
+    mController.povUp().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.VERTICAL), mArm));
+    mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {

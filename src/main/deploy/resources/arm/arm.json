@@ -1,0 +1,38 @@
+{
+    "p": 14.0,
+    "i": 1.0,
+    "d": 0.0,
+    "kS": 0.0,
+    "kG": 0.0,
+    "kV": 0.0,
+    "leftMotor": {
+        "motorConfig": {
+            "port": 16,
+            "isInverted": true,
+            "motorModel": "SparkMax",
+            "motorType": "BRUSHLESS",
+            "neutralOperation": "BRAKE",
+            "currentLimit": 40
+        },
+        "encoderConfig": {
+            "encoderType": "SPARKMAX",
+            "isInverted": true,
+            "encoderOffset": 0.0
+        }
+    },
+    "rightMotor": {
+        "motorConfig": {
+            "port": 17,
+            "isInverted": false,
+            "motorModel": "SparkMax",
+            "motorType": "BRUSHLESS",
+            "neutralOperation": "BRAKE",
+            "currentLimit": 40
+        },
+        "encoderConfig": {
+            "encoderType": "SPARKMAX",
+            "isInverted": false,
+            "encoderOffset": 0.0
+        }
+    }
+}
