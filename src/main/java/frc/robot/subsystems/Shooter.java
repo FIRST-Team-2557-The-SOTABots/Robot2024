@@ -92,7 +92,7 @@ public class Shooter extends SubsystemBase {
 
     public void spinUpFlyWheel() {
         leftShooter.setVoltage(leftFF.calculate(targetRPM));
-        rightShooter.setVoltage(rightFF.calculate(targetRPM));
+        rightShooter.setVoltage(rightFF.calculate(targetRPM * 0.5));
     }
 
     public void stopFlyWheel() {
