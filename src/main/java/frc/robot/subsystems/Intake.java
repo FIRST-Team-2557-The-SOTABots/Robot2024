@@ -31,6 +31,6 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean hasNote() {
-        return proxSensor.get();
+        return !proxSensor.get();
     }
 }
