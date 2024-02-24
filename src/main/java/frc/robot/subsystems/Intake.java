@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
 
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -14,8 +15,10 @@ public class Intake extends SubsystemBase {
 
     public Intake(SOTA_MotorController motor, IntakeConfig config, DigitalInput proxSwitch) {
         this.mMotor = motor;
+        Optional.ofNullable(config.getIntakeVoltage()).ifPresent((voltage) -> this.intakeVoltage = voltage);
         this.proxSensor = proxSwitch;
         Shuffleboard.getTab("Intake").addBoolean("Has Note", this::hasNote);
+        Shuffleboard.getTab("Intake").addDouble("Motor Voltage", mMotor::getMotorCurrent);
     }
 
     public void intake() {
