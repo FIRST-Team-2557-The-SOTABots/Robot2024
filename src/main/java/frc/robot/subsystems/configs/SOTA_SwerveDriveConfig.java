@@ -87,14 +87,6 @@ public class SOTA_SwerveDriveConfig {
         return moduleTranslations;
     }
 
-    public double getWheelBaseMeters() {
-        return Conversions.inchesToMeters(wheelBase);
-    }
-
-    public double getTrackWidthMeters() {
-        return Conversions.inchesToMeters(trackWidth);
-    }
-
     /**
      * @return math rotational velocity of the robot in radians per second
      */
@@ -161,6 +153,18 @@ public class SOTA_SwerveDriveConfig {
 
     public double getGearRatio() {
         return this.gearRatio;
+    }
+
+    public double getDriveBaseRadius() {
+        return Math.sqrt(Math.pow(getTrackWidthMeters() / 2, 2) + Math.pow(getWheelBaseMeters() / 2, 2));
+    }
+
+    public double getWheelBaseMeters() {
+        return Conversions.inchesToMeters(wheelBase);
+    }
+
+    public double getTrackWidthMeters() {
+        return Conversions.inchesToMeters(trackWidth);
     }
 
 }
