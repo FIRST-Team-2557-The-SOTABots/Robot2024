@@ -171,8 +171,8 @@ public class RobotContainer {
     try {
       IntakeConfig intakeConfig = mConfigUtils.readFromClassPath(IntakeConfig.class, "intake/intake");
       SOTA_MotorController intakeMotor = MotorControllerFactory.generateMotorController(intakeConfig.getMotorConfig());
-      ColorSensorV3 colorSensorV3 = new ColorSensorV3(Port.kOnboard);
-      this.mIntake = new Intake(intakeMotor, intakeConfig, colorSensorV3);
+            DigitalInput proxSensor = new DigitalInput(2);
+      this.mIntake = new Intake(intakeMotor, intakeConfig, proxSensor);
     } catch (Exception e) {
       e.printStackTrace();
     }
