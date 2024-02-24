@@ -11,8 +11,8 @@
     "maxLinearValue": 0.475812448,
     "speakerTagHeight": 56.75,
     "speakerTagToHood": 23,
-    "limeLightHeight": 8.5,
-    "limeLightAngle": 15,
+    "limeLightHeight": 9,
+    "limeLightAngle": 30,
     "limeLightToShooterPivot": 12.75,
     "pivotHeight": 5.75,
     "targetRPM": 4000,
@@ -34,7 +34,7 @@
         "port": 13,
         "isInverted": false,
         "motorType": "BRUSHLESS",
-        "motorModel": "SparkMax",
+        "motorModel": "SparkFlex",
         "neutralOperation": "COAST",
         "currentLimit": 60
     },
@@ -42,7 +42,7 @@
         "port": 14,
         "isInverted": true,
         "motorType": "BRUSHLESS",
-        "motorModel": "SparkMax",
+        "motorModel": "SparkFlex",
         "neutralOperation": "COAST",
         "currentLimit": 60
     }
