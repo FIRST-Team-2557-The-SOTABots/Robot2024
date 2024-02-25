@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.ColorSensorV3;
 
 import SOTAlib.Config.ConfigUtils;
@@ -25,6 +26,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -55,6 +58,8 @@ import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
   private ConfigUtils mConfigUtils;
+
+  private SendableChooser<Command> autoChooser;
 
   private SOTA_Xboxcontroller dController;
   private SOTA_Xboxcontroller mController;
@@ -162,7 +167,8 @@ public class RobotContainer {
       };
 
       this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
-      configureDefaultCommands();
+      this.autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData(autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -171,11 +177,12 @@ public class RobotContainer {
     try {
       IntakeConfig intakeConfig = mConfigUtils.readFromClassPath(IntakeConfig.class, "intake/intake");
       SOTA_MotorController intakeMotor = MotorControllerFactory.generateMotorController(intakeConfig.getMotorConfig());
-            DigitalInput proxSensor = new DigitalInput(2);
+      DigitalInput proxSensor = new DigitalInput(2);
       this.mIntake = new Intake(intakeMotor, intakeConfig, proxSensor);
     } catch (Exception e) {
       e.printStackTrace();
     }
+    configureDefaultCommands();
     configureBindings();
   }
 
@@ -236,13 +243,13 @@ public class RobotContainer {
     }, mDelivery, mIntake));
 
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
-    
+
     mController.povUp().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.VERTICAL), mArm));
     mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.getSelected();
   }
 
   private SOTA_SwerveModule initModule(ConfigUtils lConfigUtils, CompositeMotorFactory lCompositeMotorFactory,
