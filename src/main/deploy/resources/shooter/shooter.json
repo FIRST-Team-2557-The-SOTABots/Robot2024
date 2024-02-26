@@ -10,7 +10,7 @@
     "angleConvB": 20.0349,
     "maxLinearValue": 0.475812448,
     "speakerTagHeight": 56.75,
-    "speakerTagToHood": 22.75,
+    "speakerTagToHood" : 28.5,
     "limeLightHeight": 8.791,
     "limeLightAngle": 30,
     "limeLightToShooterPivot": 11.8,

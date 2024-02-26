@@ -200,6 +200,8 @@ public class RobotContainer {
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
+
+    mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0 ), mShooter));
   }
 
   private void configureBindings() {

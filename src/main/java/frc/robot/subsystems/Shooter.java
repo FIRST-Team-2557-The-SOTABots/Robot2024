@@ -127,6 +127,11 @@ public class Shooter extends SubsystemBase {
         linearActuatorSetVoltage(volts);
     }
 
+    public void goToSpecifiedAngle (double angle) {
+        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()), angle);
+        linearActuatorSetVoltage(volts);
+    }
+
     public boolean isAtAngle() {
         return linearPID.atSetpoint();
     }
