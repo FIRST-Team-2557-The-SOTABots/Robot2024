@@ -231,8 +231,7 @@ public class RobotContainer {
 
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
 
-    rightClimber.setDefaultCommand(new Climb(leftClimber, rightClimber));
-    mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0 ), mShooter));
+    mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0), mShooter));
   }
 
   private void configureBindings() {
