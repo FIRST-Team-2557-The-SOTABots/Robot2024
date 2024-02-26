@@ -22,7 +22,7 @@ public class ShooterSequence extends SequentialCommandGroup {
             Commands.runOnce(() -> {mWrist.setDesiredPosition(WristPosition.REST);}, mWrist),
             Commands.waitUntil(mWrist::atSetpoint),
             // Commands.run(() -> {mIntake.outtake(); mDelivery.toIntake();}, mIntake, mWrist).until(mIntake::hasNote),
-            new RotateToAprilTag(mSwerve),
+            // new RotateToAprilTag(mSwerve),
             Commands.parallel(
                 Commands.run(() -> {
                     mShooter.spinUpFlyWheel();
