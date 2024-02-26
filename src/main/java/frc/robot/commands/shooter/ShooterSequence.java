@@ -22,14 +22,15 @@ public class ShooterSequence extends SequentialCommandGroup {
             Commands.runOnce(() -> {mWrist.setDesiredPosition(WristPosition.REST);}, mWrist),
             Commands.waitUntil(mWrist::atSetpoint),
             // Commands.run(() -> {mIntake.outtake(); mDelivery.toIntake();}, mIntake, mWrist).until(mIntake::hasNote),
-            new RotateToAprilTag(mSwerve),
+            // new RotateToAprilTag(mSwerve),
             Commands.parallel(
                 Commands.run(() -> {
                     mShooter.spinUpFlyWheel();
                     mShooter.goToAngle();
                 }, mShooter),
                 Commands.waitUntil(this::isReadyToShoot).andThen(Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery))
-            )
+            ),
+            Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> mShooter.stopFlyWheel(), mShooter))
         );
 
         addRequirements(mShooter, mDelivery, mIntake, mWrist);
