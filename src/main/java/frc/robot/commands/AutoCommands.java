@@ -126,6 +126,4 @@ public class AutoCommands {
     public boolean isReadyToShoot() {
         return mShooter.isAtShootingSpeed() && mShooter.isAtAngle();
     }
-
-
 }
