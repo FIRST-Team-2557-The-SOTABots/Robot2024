@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.revrobotics.ColorSensorV3;
 
 import SOTAlib.Config.ConfigUtils;
@@ -31,9 +33,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.AutoCommands;
+import frc.robot.commands.auto.intake.IntakeAutoStop;
+import frc.robot.commands.auto.shooter.DeliverNote;
+import frc.robot.commands.auto.shooter.Spinup;
+import frc.robot.commands.auto.wrist.SetWristToGround;
+import frc.robot.commands.auto.wrist.SetWristToRest;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
+import frc.robot.commands.intake.IntakeAutoCommands;
+import frc.robot.commands.shooter.AutoShoot;
 import frc.robot.commands.shooter.ShooterSequence;
 import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.commands.swerve.RotateToAprilTag;
@@ -176,6 +186,9 @@ public class RobotContainer {
       };
 
       this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
+
+      registerNamedCommands();
+
       this.autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData(autoChooser);
 
@@ -193,6 +206,20 @@ public class RobotContainer {
     }
     configureDefaultCommands();
     configureBindings();
+  }
+
+  private void registerNamedCommands() {
+    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mSwerveDrive);
+
+    NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
+    // NamedCommands.registerCommand("Shoot", new AutoShoot(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
+    // // NamedCommands.registerCommand("Intake", new AutoStop(mWrist, mIntake));
+    // NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
+    // NamedCommands.registerCommand("WristGround", new SetWristToGround(mWrist));
+    // NamedCommands.registerCommand("WristRest", new SetWristToRest(mWrist));
+    // NamedCommands.registerCommand("Spinup", new Spinup(mShooter));
+    // NamedCommands.registerCommand("Deliver", new DeliverNote(mDelivery, mIntake));
   }
 
   private void configureDefaultCommands() {
