@@ -193,7 +193,6 @@ public class RobotContainer {
 
       this.autoChooser = AutoBuilder.buildAutoChooser();
       Shuffleboard.getTab("Competition").add(autoChooser);
-
     } catch (Exception e) {
       e.printStackTrace();
     }
