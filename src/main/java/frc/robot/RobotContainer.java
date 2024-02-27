@@ -201,6 +201,7 @@ public class RobotContainer {
 
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
 
+    rightClimber.setDefaultCommand(new Climb(leftClimber, rightClimber));
     mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0 ), mShooter));
   }
 
@@ -230,8 +231,8 @@ public class RobotContainer {
     }, mArm, mWrist));
 
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
-    mController.back().onTrue(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
-        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+    mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
+        Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
 
     mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
         .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
