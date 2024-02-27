@@ -57,6 +57,15 @@ import frc.robot.subsystems.configs.ShooterConfig;
 import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
+    public enum LimeLightPipelines {
+        SPEAKER(0),
+        AMP(1),
+        STAGE(2);
+        public int id;
+        private LimeLightPipelines(int id) {
+            this.id = id;
+        }
+    }
   private ConfigUtils mConfigUtils;
 
   private SendableChooser<Command> autoChooser;
@@ -191,6 +200,8 @@ public class RobotContainer {
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
+
+    mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0 ), mShooter));
   }
 
   private void configureBindings() {

@@ -121,10 +121,19 @@ public class Shooter extends SubsystemBase {
                 / (calcDistanceLimeLightToTag() + limeLightToShooterPivot)));
     }
 
-    @Override
-    public void periodic() {
+    public void goToAngle() {
         double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()),
                 calcAngleToHood());
         linearActuatorSetVoltage(volts);
     }
+
+    public void goToSpecifiedAngle (double angle) {
+        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()), angle);
+        linearActuatorSetVoltage(volts);
+    }
+
+    public boolean isAtAngle() {
+        return linearPID.atSetpoint();
+    }
+
 }
