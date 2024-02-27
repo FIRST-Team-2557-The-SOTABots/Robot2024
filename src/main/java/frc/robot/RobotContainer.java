@@ -190,7 +190,7 @@ public class RobotContainer {
       registerNamedCommands();
 
       this.autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData(autoChooser);
+      SmartDashboard.putData("auto chooser", autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -204,6 +204,12 @@ public class RobotContainer {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    registerNamedCommands();
+
+      this.autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData("auto chooser", autoChooser);
+
     configureDefaultCommands();
     configureBindings();
   }
