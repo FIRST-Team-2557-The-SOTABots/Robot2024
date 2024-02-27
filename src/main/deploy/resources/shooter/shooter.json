@@ -15,7 +15,7 @@
     "limeLightAngle": 30,
     "limeLightToShooterPivot": 11.8,
     "pivotHeight": 5.65,
-    "targetRPM": 5500,
+    "targetRPM": 5400,
     "linearActuatorConfig": {
         "port": 15,
         "isInverted": false,
