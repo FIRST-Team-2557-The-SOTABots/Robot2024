@@ -230,6 +230,11 @@ public class RobotContainer {
       mWrist.setDesiredPosition(WristPosition.AMP);
     }, mArm, mWrist));
 
+    mController.povDown().onTrue(Commands.runOnce(() -> {
+      mArm.setDesiredPosition(ArmPosition.REST);
+      mWrist.setDesiredPosition(WristPosition.REST);
+    }, mArm, mWrist));
+
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
     mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
         Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
@@ -256,7 +261,11 @@ public class RobotContainer {
 
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
 
-    mController.povUp().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.VERTICAL), mArm));
+    mController.povUp().onTrue(Commands.runOnce(() -> {
+      mArm.setDesiredPosition(ArmPosition.AMP);
+      mWrist.setDesiredPosition(WristPosition.AMP);
+    }, mArm, mWrist));
+
     mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
