@@ -260,10 +260,12 @@ public class RobotContainer {
           mShooter.stopFlyWheel();
         }, mIntake, mDelivery, mShooter));
 
-    mController.y().onTrue(Commands.runOnce(() -> {
-      mArm.setDesiredPosition(ArmPosition.AMP);
-      mWrist.setDesiredPosition(WristPosition.AMP);
-    }, mArm, mWrist));
+    // mController.y().onTrue(Commands.runOnce(() -> {
+    //   mArm.setDesiredPosition(ArmPosition.AMP);
+    //   mWrist.setDesiredPosition(WristPosition.AMP);
+    // }, mArm, mWrist));
+
+    mController.y().onTrue(Commands.run(() -> mShooter.spinUpFlyWheel(), mShooter)).onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
 
     mController.povDown().onTrue(Commands.runOnce(() -> {
       mArm.setDesiredPosition(ArmPosition.REST);
