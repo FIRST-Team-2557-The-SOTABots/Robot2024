@@ -30,7 +30,7 @@ public class AutoCommands {
         return Commands.run(() -> {
             mWrist.setDesiredPosition(WristPosition.FLOOR);
             mIntake.intake();
-        }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.run(() -> {
+        }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.runOnce(() -> {
             mIntake.stop();
             mWrist.setDesiredPosition(WristPosition.REST);
         }, mIntake, mWrist));
@@ -39,10 +39,10 @@ public class AutoCommands {
     public Command spinUpShoot () {
         return Commands.sequence(
             Commands.parallel(
-                Commands.runOnce(() -> {
+                Commands.run(() -> {
                     mShooter.spinUpFlyWheel();
                     mShooter.goToAngle();
-                }, mShooter),
+                }, mShooter).until(this::isReadyToShoot),
                 Commands.waitUntil(this::isReadyToShoot).andThen(
                     Commands.runOnce(() -> {
                         mIntake.intake();
@@ -50,13 +50,12 @@ public class AutoCommands {
                     })
                 )
             ),
-            Commands.waitSeconds(0.5).andThen(
-                Commands.runOnce(() -> {
-                    mShooter.stopFlyWheel();
-                    mDelivery.stop();
-                    mIntake.stop();
-                }, mShooter, mDelivery, mIntake)
-            )
+            Commands.waitSeconds(0.5),
+            Commands.runOnce(() -> {
+                mShooter.stopFlyWheel();
+                mDelivery.stop();
+                mIntake.stop();
+            }, mShooter, mDelivery, mIntake)
         );
     }
 
