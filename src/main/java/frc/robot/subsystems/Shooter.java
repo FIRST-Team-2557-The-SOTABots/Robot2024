@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtShootingSpeed() {
         return leftShooter.getEncoderVelocity() >= targetRPM - 100
-                || rightShooter.getEncoderVelocity() >= targetRPM - 100;
+                || rightShooter.getEncoderVelocity() >= targetRPM - 200;
     }
 
     public boolean isNotAtShootingSpeed() {
