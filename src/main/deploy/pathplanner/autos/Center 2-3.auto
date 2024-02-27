@@ -34,22 +34,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.25
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Center P-2"
-                      }
-                    }
-                  ]
+                  "pathName": "Center P-2"
                 }
               }
             ]
@@ -74,22 +61,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Note2-1test"
+                  "pathName": "Note2-3"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Note1-Shoot"
+            "pathName": "Note3-Shoot"
           }
         },
         {
