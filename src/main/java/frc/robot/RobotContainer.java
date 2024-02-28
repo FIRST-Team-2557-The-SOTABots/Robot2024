@@ -34,11 +34,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.AutoCommands;
-import frc.robot.commands.auto.intake.IntakeAutoStop;
-import frc.robot.commands.auto.shooter.DeliverNote;
-import frc.robot.commands.auto.shooter.Spinup;
-import frc.robot.commands.auto.wrist.SetWristToGround;
-import frc.robot.commands.auto.wrist.SetWristToRest;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
@@ -207,8 +202,8 @@ public class RobotContainer {
 
     registerNamedCommands();
 
-      this.autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("auto chooser", autoChooser);
+      // this.autoChooser = AutoBuilder.buildAutoChooser();
+      // SmartDashboard.putData("auto chooser", autoChooser);
 
     configureDefaultCommands();
     configureBindings();
@@ -220,6 +215,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
     NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
     NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
+    NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
+    NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
     NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
     NamedCommands.registerCommand("Amp to Amp", autoCommands.setArmToAmp());
     NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
