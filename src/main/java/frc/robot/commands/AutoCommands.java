@@ -2,11 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.swerve.RotateToAprilTag;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Delivery;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SOTA_SwerveDrive;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Wrist.WristPosition;
 
 public class AutoCommands {
@@ -15,13 +18,15 @@ public class AutoCommands {
     private Intake mIntake;
     private Wrist mWrist;
     private Delivery mDelivery;
+    private Arm mArm;
     private SOTA_SwerveDrive mSwerve;
 
-    public AutoCommands (Shooter shooter, Intake intake, Wrist wrist, Delivery delivery, SOTA_SwerveDrive swerve) {
+    public AutoCommands (Shooter shooter, Intake intake, Wrist wrist, Delivery delivery, Arm arm, SOTA_SwerveDrive swerve) {
         this.mShooter = shooter;
         this.mIntake = intake;
         this.mWrist = wrist;
         this.mDelivery = delivery;
+        this.mArm = arm;
         this.mSwerve = swerve;
 
     }
@@ -39,6 +44,7 @@ public class AutoCommands {
     public Command spinUpShoot () {
         return Commands.sequence(
             Commands.parallel(
+                // new RotateToAprilTag(mSwerve),
                 Commands.run(() -> {
                     mShooter.spinUpFlyWheel();
                     mShooter.goToAngle();
@@ -59,8 +65,67 @@ public class AutoCommands {
         );
     }
 
+    public Command setFlyWheels () {
+        return Commands.runOnce(() -> {
+            mShooter.spinUpFlyWheel();
+
+        });
+    }
+
+    public Command stopFlyWheels () {
+        return Commands.runOnce(() -> {
+            mShooter.stopFlyWheel();
+        });
+    }
+
+    public Command alignAndShoot () {
+        return Commands.sequence(
+            Commands.parallel(
+                // new RotateToAprilTag(mSwerve),
+                Commands.run(() -> {
+                    mShooter.goToAngle();
+                }).until(this::isReadyToShoot),
+                Commands.waitUntil(this::isReadyToShoot).andThen(
+                    Commands.runOnce(() -> {
+                        mIntake.intake();
+                        mDelivery.toShooter();
+                    })  
+                )
+            ),
+            Commands.waitSeconds(0.5),
+            Commands.runOnce(() -> {
+                mIntake.stop();
+                mDelivery.stop();
+            })
+        );
+    }
+
+    public Command setArmToAmp () {
+        return Commands.runOnce(() -> {
+            mArm.setDesiredPosition(ArmPosition.AMP);
+            mWrist.setDesiredPosition(WristPosition.AMP);
+        });
+    }
+
+    public Command setArmToRest () {
+        return Commands.runOnce(() -> {
+            mArm.setDesiredPosition(ArmPosition.REST);
+            mWrist.setDesiredPosition(WristPosition.REST);
+        });
+    }
+
+    
+    public Command intakeAmp() {
+        return Commands.sequence(
+            Commands.runOnce(() -> mIntake.intake()),
+            Commands.waitSeconds(0.3),
+            Commands.runOnce(() -> mIntake.stop())
+        );
+    }
+
     public boolean isReadyToShoot() {
         return mShooter.isAtShootingSpeed() && mShooter.isAtAngle();
     }
+
 
 }
