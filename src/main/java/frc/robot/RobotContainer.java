@@ -215,17 +215,14 @@ public class RobotContainer {
   }
 
   private void registerNamedCommands() {
-    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mSwerveDrive);
+    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
 
     NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
     NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
-    // NamedCommands.registerCommand("Shoot", new AutoShoot(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
-    // // NamedCommands.registerCommand("Intake", new AutoStop(mWrist, mIntake));
-    // NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
-    // NamedCommands.registerCommand("WristGround", new SetWristToGround(mWrist));
-    // NamedCommands.registerCommand("WristRest", new SetWristToRest(mWrist));
-    // NamedCommands.registerCommand("Spinup", new Spinup(mShooter));
-    // NamedCommands.registerCommand("Deliver", new DeliverNote(mDelivery, mIntake));
+    NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
+    NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
+    NamedCommands.registerCommand("Amp to Amp", autoCommands.setArmToAmp());
+    NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
   }
 
   private void configureDefaultCommands() {
