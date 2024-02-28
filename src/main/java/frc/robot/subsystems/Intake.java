@@ -18,6 +18,7 @@ public class Intake extends SubsystemBase {
         Optional.ofNullable(config.getIntakeVoltage()).ifPresent((voltage) -> this.intakeVoltage = voltage);
         this.proxSensor = proxSwitch;
         Shuffleboard.getTab("Intake").addBoolean("Has Note", this::hasNote);
+        Shuffleboard.getTab("Competition").addBoolean("Has Note", this::hasNote);
         Shuffleboard.getTab("Intake").addDouble("Motor Voltage", mMotor::getMotorCurrent);
     }
 

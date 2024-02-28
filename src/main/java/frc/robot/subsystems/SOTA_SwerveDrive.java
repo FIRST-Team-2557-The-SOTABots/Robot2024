@@ -74,7 +74,9 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         mField2d = new Field2d();
         this.sTab = Shuffleboard.getTab("Swerve");
         sTab.addNumber("Gyro Heading: ", mGyro::getAngle);
+        Shuffleboard.getTab("Competition").addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
+        Shuffleboard.getTab("Competition").addBoolean("FieldCentric Active: ", this::getFieldCentric);
         sTab.addNumber("Live Speed", () -> {return this.getRelativeSpeeds().omegaRadiansPerSecond;});
         sTab.add(mField2d);
 

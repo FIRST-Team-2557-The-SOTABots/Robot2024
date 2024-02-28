@@ -19,6 +19,7 @@ import SOTAlib.Gyro.NavX;
 import SOTAlib.Gyro.SOTA_Gyro;
 import SOTAlib.MotorController.SOTA_CompositeMotor;
 import SOTAlib.MotorController.SOTA_MotorController;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -87,7 +89,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     this.mConfigUtils = new ConfigUtils();
-
+    CameraServer.startAutomaticCapture();
     this.dController = new SOTA_Xboxcontroller(0);
     this.mController = new SOTA_Xboxcontroller(1);
     this.mGyro = new NavX(new AHRS(Port.kMXP));
@@ -177,7 +179,7 @@ public class RobotContainer {
 
       this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
       this.autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData(autoChooser);
+      Shuffleboard.getTab("Competition").add(autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
