@@ -44,6 +44,7 @@ public class AutoCommands {
     public Command spinUpShoot () {
         return Commands.sequence(
             Commands.parallel(
+                // new RotateToAprilTag(mSwerve),
                 Commands.run(() -> {
                     mShooter.spinUpFlyWheel();
                     mShooter.goToAngle();
