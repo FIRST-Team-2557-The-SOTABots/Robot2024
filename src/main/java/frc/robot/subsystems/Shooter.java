@@ -29,6 +29,7 @@ public class Shooter extends SubsystemBase {
     private SimpleMotorFeedforward leftFF;
     private SimpleMotorFeedforward rightFF;
     private double targetRPM;
+    private double kMaxShooterAngle;
 
     public Shooter(ShooterConfig config, SOTA_MotorController linearActuator, SOTA_AbsoulteEncoder linearEncoder,
             SOTA_MotorController leftShooter, SOTA_MotorController rightShooter) {
@@ -53,6 +54,7 @@ public class Shooter extends SubsystemBase {
         this.leftFF = new SimpleMotorFeedforward(config.getLeftKS(), config.getLeftKV());
         this.rightFF = new SimpleMotorFeedforward(config.getRightKS(), config.getRightKV());
         this.targetRPM = config.getTargetRPM();
+        this.kMaxShooterAngle = encoderToAngle(maxLinearValue);
 
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
         Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
@@ -60,6 +62,9 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Shooter Angle", this::getShooterAngle);
         Shuffleboard.getTab("Shooter").addDouble("Left rpm", leftShooter::getEncoderVelocity);
         Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Competition").addBoolean("Too Close!", this::isTooClose);
         Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
         Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
     }
@@ -134,6 +139,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtAngle() {
         return linearPID.atSetpoint();
+    }
+
+    private boolean isTooClose() {
+        return calcAngleToHood() > kMaxShooterAngle;
     }
 
 }
