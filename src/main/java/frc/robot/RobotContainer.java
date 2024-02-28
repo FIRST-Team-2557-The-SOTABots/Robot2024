@@ -203,8 +203,8 @@ public class RobotContainer {
 
     registerNamedCommands();
 
-      // this.autoChooser = AutoBuilder.buildAutoChooser();
-      // SmartDashboard.putData("auto chooser", autoChooser);
+      this.autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData("auto chooser", autoChooser);
 
     configureDefaultCommands();
     configureBindings();
