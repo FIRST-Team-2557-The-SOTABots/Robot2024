@@ -205,8 +205,8 @@ public class RobotContainer {
     try {
       registerNamedCommands();
 
-      this.autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("auto chooser", autoChooser);
+      // this.autoChooser = AutoBuilder.buildAutoChooser();
+      // SmartDashboard.putData("auto chooser", autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
