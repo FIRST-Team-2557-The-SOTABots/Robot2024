@@ -22,12 +22,6 @@
           "data": {
             "name": "Shoot"
           }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": []
-          }
         }
       ]
     }
