@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1,
-        "y": 5.546502145635871
+        "x": 2.4,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8966704123032583,
-        "y": 6.10924384639467
+        "x": 2.1966704123032583,
+        "y": 6.112741700758799
       },
       "isLocked": false,
-      "linkedName": "shoot2"
+      "linkedName": "Intake2"
     },
     {
       "anchor": {
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Note to Note",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
