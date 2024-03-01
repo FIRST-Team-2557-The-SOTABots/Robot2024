@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1,
-        "y": 5.546502145635871
+        "x": 7.925662517991703,
+        "y": 0.7403223578376983
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6232192113507036,
-        "y": 5.2019081231144915
+        "x": 5.876234910364557,
+        "y": 0.6677762478331976
       },
       "isLocked": false,
-      "linkedName": "shoot2"
+      "linkedName": "intake8"
     },
     {
       "anchor": {
-        "x": 2.4665677401530246,
-        "y": 4.276945220557108
+        "x": 1.8952671238675813,
+        "y": 4.485515286820048
       },
       "prevControl": {
-        "x": 1.6776287938540795,
-        "y": 4.648744034330175
+        "x": 2.493772531404712,
+        "y": 1.5111247766355198
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Intake3"
+      "linkedName": "Shoot Source"
     }
   ],
   "rotationTargets": [],
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 4.71,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -27.121303404158784,
-    "rotateFast": false
+    "rotation": -27.597295868643716,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Note-Note",
+  "folder": "Speaker",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

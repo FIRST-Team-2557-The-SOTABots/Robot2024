@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.48,
+      "y": 7.35
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin Flywheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Sub-Amp shootP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ASide pShoot-Leave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "1 Note",
+  "choreoAuto": false
+}
