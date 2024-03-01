@@ -22,6 +22,17 @@ public class AutoCommands {
     private SOTA_SwerveDrive mSwerve;
 
     public AutoCommands (Shooter shooter, Intake intake, Wrist wrist, Delivery delivery, Arm arm, SOTA_SwerveDrive swerve) {
+        if (shooter == null) {
+            throw new NullPointerException("Shooter Null in AutoCommands.");
+        }
+
+        if (delivery == null) {
+            throw new NullPointerException("Delivery is null in AutoCommands");
+        }
+
+        if (intake == null) {
+            throw new NullPointerException("intake is null in AutoCommands");
+        }
         this.mShooter = shooter;
         this.mIntake = intake;
         this.mWrist = wrist;

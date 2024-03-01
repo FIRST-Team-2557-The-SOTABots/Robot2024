@@ -39,8 +39,6 @@ import frc.robot.commands.AutoCommands;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
-import frc.robot.commands.intake.IntakeAutoCommands;
-import frc.robot.commands.shooter.AutoShoot;
 import frc.robot.commands.shooter.ShooterSequence;
 import frc.robot.commands.swerve.DriveCommand;
 import frc.robot.commands.swerve.RotateToAprilTag;
@@ -64,15 +62,18 @@ import frc.robot.subsystems.configs.ShooterConfig;
 import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
-    public enum LimeLightPipelines {
-        SPEAKER(0),
-        AMP(1),
-        STAGE(2);
-        public int id;
-        private LimeLightPipelines(int id) {
-            this.id = id;
-        }
+  public enum LimeLightPipelines {
+    SPEAKER(0),
+    AMP(1),
+    STAGE(2);
+
+    public int id;
+
+    private LimeLightPipelines(int id) {
+      this.id = id;
     }
+  }
+
   private ConfigUtils mConfigUtils;
 
   private SendableChooser<Command> autoChooser;
@@ -130,8 +131,10 @@ public class RobotContainer {
       SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
       SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
 
-      // DoubleSolenoid leftSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 2, 3);
-      // DoubleSolenoid rightSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 0, 1);
+      // DoubleSolenoid leftSolenoid = new DoubleSolenoid(20,
+      // PneumaticsModuleType.REVPH, 2, 3);
+      // DoubleSolenoid rightSolenoid = new DoubleSolenoid(20,
+      // PneumaticsModuleType.REVPH, 0, 1);
 
       // leftSolenoid.set(Value.kReverse);
       // rightSolenoid.set(Value.kReverse);
@@ -146,7 +149,7 @@ public class RobotContainer {
       WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
       SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(wristConfig.getLeftMotor());
       SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(wristConfig.getRightMotor());
-            this.mWrist = new Wrist(wristConfig, leftMotor.getAbsEncoder(), leftMotor.getMotor(), rightMotor);
+      this.mWrist = new Wrist(wristConfig, leftMotor.getAbsEncoder(), leftMotor.getMotor(), rightMotor);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -183,10 +186,6 @@ public class RobotContainer {
 
       this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
 
-      registerNamedCommands();
-
-      this.autoChooser = AutoBuilder.buildAutoChooser();
-      Shuffleboard.getTab("Competition").add(autoChooser);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -201,17 +200,15 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-
     try {
       registerNamedCommands();
 
       this.autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("auto chooser", autoChooser);
+      Shuffleboard.getTab("Competition").add(autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
     }
-      
 
     configureDefaultCommands();
     configureBindings();
@@ -244,7 +241,6 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
       mWrist.setDesiredPosition(WristPosition.REST);
       mIntake.stop();
@@ -261,11 +257,12 @@ public class RobotContainer {
         }, mIntake, mDelivery, mShooter));
 
     // mController.y().onTrue(Commands.runOnce(() -> {
-    //   mArm.setDesiredPosition(ArmPosition.AMP);
-    //   mWrist.setDesiredPosition(WristPosition.AMP);
+    // mArm.setDesiredPosition(ArmPosition.AMP);
+    // mWrist.setDesiredPosition(WristPosition.AMP);
     // }, mArm, mWrist));
 
-    mController.y().onTrue(Commands.runOnce(() -> mShooter.spinUpFlyWheel(), mShooter)).onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
+    mController.y().onTrue(Commands.runOnce(() -> mShooter.spinUpFlyWheel(), mShooter))
+        .onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
 
     mController.povDown().onTrue(Commands.runOnce(() -> {
       mArm.setDesiredPosition(ArmPosition.REST);
@@ -303,7 +300,8 @@ public class RobotContainer {
       mWrist.setDesiredPosition(WristPosition.AMP);
     }, mArm, mWrist));
 
-    // mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
+    // mController.povLeft().onTrue(Commands.runOnce(() ->
+    // mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {
