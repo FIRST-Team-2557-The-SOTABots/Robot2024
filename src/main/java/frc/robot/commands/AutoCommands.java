@@ -97,7 +97,7 @@ public class AutoCommands {
                 mIntake.stop();
                 mDelivery.stop();
             })
-        )
+        );
     }
 
     // public Command alignAndShoot () {
