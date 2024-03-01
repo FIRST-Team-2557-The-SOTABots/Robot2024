@@ -13,7 +13,7 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Wrist.WristPosition;
 
 public class AutoCommands {
-    
+
     private Shooter mShooter;
     private Intake mIntake;
     private Wrist mWrist;
@@ -21,7 +21,8 @@ public class AutoCommands {
     private Arm mArm;
     private SOTA_SwerveDrive mSwerve;
 
-    public AutoCommands (Shooter shooter, Intake intake, Wrist wrist, Delivery delivery, Arm arm, SOTA_SwerveDrive swerve) {
+    public AutoCommands(Shooter shooter, Intake intake, Wrist wrist, Delivery delivery, Arm arm,
+            SOTA_SwerveDrive swerve) {
         if (shooter == null) {
             throw new NullPointerException("Shooter Null in AutoCommands.");
         }
@@ -42,7 +43,7 @@ public class AutoCommands {
 
     }
 
-    public Command intakeAutoStop () {
+    public Command intakeAutoStop() {
         return Commands.run(() -> {
             mWrist.setDesiredPosition(WristPosition.FLOOR);
             mIntake.intake();
@@ -52,104 +53,96 @@ public class AutoCommands {
         }, mIntake, mWrist));
     }
 
-    public Command spinUpShoot () {
+    public Command spinUpShoot() {
         return Commands.sequence(
-            Commands.parallel(
-                // new RotateToAprilTag(mSwerve),
-                Commands.run(() -> {
-                    mShooter.spinUpFlyWheel();
-                    mShooter.goToAngle();
-                }, mShooter).until(this::isReadyToShoot),
-                Commands.waitUntil(this::isReadyToShoot).andThen(
-                    Commands.runOnce(() -> {
-                        mIntake.intake();
-                        mDelivery.toShooter();
-                    })
-                )
-            ),
-            Commands.waitSeconds(0.5),
-            Commands.runOnce(() -> {
-                mShooter.stopFlyWheel();
-                mDelivery.stop();
-                mIntake.stop();
-            }, mShooter, mDelivery, mIntake)
-        );
+                Commands.parallel(
+                        // new RotateToAprilTag(mSwerve),
+                        Commands.run(() -> {
+                            mShooter.spinUpFlyWheel();
+                            mShooter.goToAngle();
+                        }, mShooter).until(this::isReadyToShoot),
+                        Commands.waitUntil(this::isReadyToShoot).andThen(
+                                Commands.runOnce(() -> {
+                                    mIntake.intake();
+                                    mDelivery.toShooter();
+                                }))),
+                Commands.waitSeconds(0.5),
+                Commands.runOnce(() -> {
+                    mShooter.stopFlyWheel();
+                    mDelivery.stop();
+                    mIntake.stop();
+                }, mShooter, mDelivery, mIntake));
     }
 
-    public Command setFlyWheels () {
+    public Command setFlyWheels() {
         return Commands.runOnce(() -> {
             mShooter.setSpeed(1);
 
         });
     }
 
-    public Command stopFlyWheels () {
+    public Command stopFlyWheels() {
         return Commands.runOnce(() -> {
             mShooter.stopFlyWheel();
         });
     }
 
-    public Command alignAndShoot () {
+    public Command alignAndShoot() {
         return Commands.sequence(
-            Commands.parallel(
-                // new RotateToAprilTag(mSwerve),
-                Commands.run(() -> {
-                    mShooter.goToAngle();
-                }, mShooter).until(this::isReadyToShoot),
-                Commands.waitUntil(this::isReadyToShoot).andThen(
-                    Commands.runOnce(() -> {
-                        mIntake.intake();
-                        mDelivery.toShooter();
-                    })  
-                )
-            ),
-            Commands.waitSeconds(1),
-            Commands.runOnce(() -> {
-                mIntake.stop();
-                mDelivery.stop();
-            })
-        );
+                Commands.parallel(
+                        // new RotateToAprilTag(mSwerve),
+                        Commands.run(() -> {
+                            mShooter.goToAngle();
+                        }, mShooter).until(this::isReadyToShoot),
+                        Commands.waitUntil(this::isReadyToShoot).andThen(
+                                Commands.runOnce(() -> {
+                                    mIntake.intake();
+                                    mDelivery.toShooter();
+                                }))),
+                Commands.waitSeconds(1),
+                Commands.runOnce(() -> {
+                    mIntake.stop();
+                    mDelivery.stop();
+                }));
     }
 
     // public Command alignAndShoot () {
-    //     return Commands.sequence(
-    //         // new RotateToAprilTag(mSwerve),
-    //         Commands.run(() -> mShooter.goToAngle(), mShooter),
-    //         // Commands.waitUntil(this::isReadyToShoot),
-    //         Commands.waitSeconds(1),
-    //         Commands.runOnce(() -> {
-    //             mIntake.intake();
-    //             mDelivery.toShooter();
-    //         }, mIntake, mDelivery),
-    //         Commands.waitSeconds(0.5),
-    //         Commands.runOnce(() -> {
-    //             mIntake.intake();
-    //             mDelivery.toShooter();
-    //         }, mIntake, mDelivery)
-    //     );
+    // return Commands.sequence(
+    // // new RotateToAprilTag(mSwerve),
+    // Commands.run(() -> mShooter.goToAngle(), mShooter),
+    // // Commands.waitUntil(this::isReadyToShoot),
+    // Commands.waitSeconds(1),
+    // Commands.runOnce(() -> {
+    // mIntake.intake();
+    // mDelivery.toShooter();
+    // }, mIntake, mDelivery),
+    // Commands.waitSeconds(0.5),
+    // Commands.runOnce(() -> {
+    // mIntake.intake();
+    // mDelivery.toShooter();
+    // }, mIntake, mDelivery)
+    // );
     // }
 
-    public Command setArmToAmp () {
+    public Command setArmToAmp() {
         return Commands.runOnce(() -> {
             mArm.setDesiredPosition(ArmPosition.AMP);
             mWrist.setDesiredPosition(WristPosition.AMP);
         }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
     }
 
-    public Command setArmToRest () {
+    public Command setArmToRest() {
         return Commands.runOnce(() -> {
             mArm.setDesiredPosition(ArmPosition.REST);
             mWrist.setDesiredPosition(WristPosition.REST);
         }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
     }
 
-    
     public Command intakeAmp() {
         return Commands.sequence(
-            Commands.runOnce(() -> mIntake.intake()),
-            Commands.waitSeconds(0.3),
-            Commands.runOnce(() -> mIntake.stop())
-        );
+                Commands.runOnce(() -> mIntake.intake()),
+                Commands.waitSeconds(0.3),
+                Commands.runOnce(() -> mIntake.stop()));
     }
 
     public boolean isReadyToShoot() {

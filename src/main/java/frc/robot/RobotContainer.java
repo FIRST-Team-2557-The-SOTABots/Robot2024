@@ -131,13 +131,6 @@ public class RobotContainer {
       SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
       SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
 
-      // DoubleSolenoid leftSolenoid = new DoubleSolenoid(20,
-      // PneumaticsModuleType.REVPH, 2, 3);
-      // DoubleSolenoid rightSolenoid = new DoubleSolenoid(20,
-      // PneumaticsModuleType.REVPH, 0, 1);
-
-      // leftSolenoid.set(Value.kReverse);
-      // rightSolenoid.set(Value.kReverse);
       this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor.getMotor(), leftMotor.getAbsEncoder(),
           rightMotor.getAbsEncoder());
     } catch (Exception e) {
@@ -241,6 +234,7 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
+    
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
       mWrist.setDesiredPosition(WristPosition.REST);
       mIntake.stop();
@@ -255,11 +249,6 @@ public class RobotContainer {
           mDelivery.stop();
           mShooter.stopFlyWheel();
         }, mIntake, mDelivery, mShooter));
-
-    // mController.y().onTrue(Commands.runOnce(() -> {
-    // mArm.setDesiredPosition(ArmPosition.AMP);
-    // mWrist.setDesiredPosition(WristPosition.AMP);
-    // }, mArm, mWrist));
 
     mController.y().onTrue(Commands.runOnce(() -> mShooter.spinUpFlyWheel(), mShooter))
         .onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
@@ -300,8 +289,6 @@ public class RobotContainer {
       mWrist.setDesiredPosition(WristPosition.AMP);
     }, mArm, mWrist));
 
-    // mController.povLeft().onTrue(Commands.runOnce(() ->
-    // mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {
