@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Spin Flywheels"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Center Exit Note-2"
@@ -20,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Align Shoot"
           }
         },
         {
@@ -40,7 +46,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -58,12 +64,49 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Align Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note2-Note1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note1-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
           }
         }
       ]
     }
   },
-  "folder": "2 Note",
+  "folder": "3 Note",
   "choreoAuto": false
 }

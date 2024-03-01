@@ -34,15 +34,17 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm(ArmConfig config, SOTA_MotorController leftMotor, SOTA_MotorController rightMotor,
-            SOTA_AbsoulteEncoder leftEncoder, SOTA_AbsoulteEncoder rightEncoder, DoubleSolenoid leftSolenoid,
-            DoubleSolenoid rightSolenoid) {
+            SOTA_AbsoulteEncoder leftEncoder, SOTA_AbsoulteEncoder rightEncoder) {
 
+
+        // , DoubleSolenoid leftSolenoid,
+            // DoubleSolenoid rightSolenoid
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
-        this.leftSolenoid = leftSolenoid;
-        this.rightSolenoid = rightSolenoid;
+        // this.leftSolenoid = leftSolenoid;
+        // this.rightSolenoid = rightSolenoid;
         this.mArmFeedforward = new ArmFeedforward(config.getkS(), config.getkG(), config.getkV());
         this.mPidController = new PIDController(config.getP(), config.getI(), config.getD());
 
@@ -83,6 +85,10 @@ public class Arm extends SubsystemBase {
             leftMotor.setVoltage(volts);
             rightMotor.setVoltage(volts);
         }
+    }
+
+    public boolean isAtSetpoint () {
+        return mPidController.atSetpoint();
     }
 
     public void setDesiredPosition(ArmPosition position) {

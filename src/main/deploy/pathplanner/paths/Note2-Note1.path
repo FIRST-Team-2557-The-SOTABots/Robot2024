@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.4212264214002115,
-        "y": 6.6528303232045065
+        "x": 2.4987833875488867,
+        "y": 6.726042503963363
       },
       "prevControl": {
-        "x": 1.7320383763574547,
-        "y": 6.317304564433691
+        "x": 1.80959534250613,
+        "y": 6.3905167451925475
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Intake1"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Speaker",
+  "folder": "Note-Note",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
