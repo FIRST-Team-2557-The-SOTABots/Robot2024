@@ -4,8 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
-    "Util",
-    "Speaker"
+    "Note-Note",
+    "Speaker",
+    "Util"
   ],
   "autoFolders": [
     "1 Note",
