@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmAmp"
+                  "name": "Arm to Amp"
                 }
               },
               {
@@ -33,13 +33,13 @@
         {
           "type": "named",
           "data": {
-            "name": "RunIntake"
+            "name": "Run Intake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ArmRest"
+            "name": "Arm to Rest"
           }
         },
         {
