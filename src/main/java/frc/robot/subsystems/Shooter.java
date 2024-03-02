@@ -38,7 +38,7 @@ public class Shooter extends SubsystemBase {
         this.linearEncoder = linearEncoder;
 
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
-        this.linearPID.setTolerance(0.02);
+        this.linearPID.setTolerance(0.5);
         this.maxLinearValue = config.getMaxLinearValue();
         this.angleConvM = config.getAngleConvM();
         this.angleConvB = config.getAngleConvB();

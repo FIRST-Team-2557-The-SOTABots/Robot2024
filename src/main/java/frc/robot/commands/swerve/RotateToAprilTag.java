@@ -15,7 +15,7 @@ public class RotateToAprilTag extends Command {
     public  RotateToAprilTag(SOTA_SwerveDrive drive) {
         this.mDrive = drive;
         mRotationController = new PIDController(2.5, 0, 0.5);
-        mRotationController.setTolerance(1);
+        mRotationController.setTolerance(2);
     }
 
     public double calculateRotationSpeed() {
