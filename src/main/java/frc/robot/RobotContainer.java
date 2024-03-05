@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
@@ -234,7 +235,7 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    
+
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
       mWrist.setDesiredPosition(WristPosition.REST);
       mIntake.stop();
@@ -265,6 +266,20 @@ public class RobotContainer {
     mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
         .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
             Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+
+    // mController.rightTrigger().whileTrue(Commands.parallel(
+    //     Commands.run(() -> {
+    //       mShooter.spinUpFlyWheel();
+    //     }, mShooter),
+    //     Commands.waitUntil(mShooter::isAtShootingSpeed).andThen(() -> {
+    //       mDelivery.toShooter();
+    //       mIntake.intake();
+    //     }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
+    //       mShooter.stopFlyWheel();
+    //       mShooter.linearActuatorSetVoltage(0);
+    //       mDelivery.stop();
+    //       mIntake.stop();
+    //     }, mShooter, mDelivery, mIntake));
 
     mController.leftBumper().onTrue(Commands.run(() -> {
       mDelivery.toIntake();
