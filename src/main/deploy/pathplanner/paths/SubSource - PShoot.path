@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7345293637955697,
+        "y": 4.485515286820048
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7345293637955697,
+        "y": 4.485515286820048
+      },
+      "isLocked": false,
+      "linkedName": "Source Sub"
+    },
+    {
+      "anchor": {
+        "x": 1.8952671238675813,
+        "y": 4.485515286820048
+      },
+      "prevControl": {
+        "x": 0.8952671238675813,
+        "y": 4.485515286820048
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Shoot Source"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -29.577838681261444,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": -60.592810939266364,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

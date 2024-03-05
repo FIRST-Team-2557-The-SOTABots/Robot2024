@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.revrobotics.ColorSensorV3;
 
 import SOTAlib.Config.ConfigUtils;
@@ -33,6 +35,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoCommands;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
@@ -59,15 +63,18 @@ import frc.robot.subsystems.configs.ShooterConfig;
 import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
-    public enum LimeLightPipelines {
-        SPEAKER(0),
-        AMP(1),
-        STAGE(2);
-        public int id;
-        private LimeLightPipelines(int id) {
-            this.id = id;
-        }
+  public enum LimeLightPipelines {
+    SPEAKER(0),
+    AMP(1),
+    STAGE(2);
+
+    public int id;
+
+    private LimeLightPipelines(int id) {
+      this.id = id;
     }
+  }
+
   private ConfigUtils mConfigUtils;
 
   private SendableChooser<Command> autoChooser;
@@ -125,14 +132,8 @@ public class RobotContainer {
       SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
       SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
 
-      DoubleSolenoid leftSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 2, 3);
-      DoubleSolenoid rightSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 0, 1);
-
-      leftSolenoid.set(Value.kReverse);
-      rightSolenoid.set(Value.kReverse);
       this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor.getMotor(), leftMotor.getAbsEncoder(),
-          rightMotor.getAbsEncoder(), leftSolenoid,
-          rightSolenoid);
+          rightMotor.getAbsEncoder());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -178,8 +179,6 @@ public class RobotContainer {
       };
 
       this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
-      this.autoChooser = AutoBuilder.buildAutoChooser();
-      Shuffleboard.getTab("Competition").add(autoChooser);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -188,13 +187,38 @@ public class RobotContainer {
     try {
       IntakeConfig intakeConfig = mConfigUtils.readFromClassPath(IntakeConfig.class, "intake/intake");
       SOTA_MotorController intakeMotor = MotorControllerFactory.generateMotorController(intakeConfig.getMotorConfig());
+      intakeMotor.setInverted(true);
       DigitalInput proxSensor = new DigitalInput(2);
       this.mIntake = new Intake(intakeMotor, intakeConfig, proxSensor);
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    try {
+      registerNamedCommands();
+
+      this.autoChooser = AutoBuilder.buildAutoChooser();
+      Shuffleboard.getTab("Competition").add(autoChooser);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     configureDefaultCommands();
     configureBindings();
+  }
+
+  private void registerNamedCommands() {
+    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
+    NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
+    NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
+    NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
+    NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
+    NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
+    NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
+    NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
+    NamedCommands.registerCommand("Align Tag", new RotateToAprilTag(mSwerveDrive));
   }
 
   private void configureDefaultCommands() {
@@ -203,14 +227,14 @@ public class RobotContainer {
 
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
 
-    rightClimber.setDefaultCommand(new Climb(leftClimber, rightClimber));
-    mShooter.setDefaultCommand(Commands.runOnce(() -> mShooter.goToSpecifiedAngle(0 ), mShooter));
+    mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(0), mShooter));
   }
 
   private void configureBindings() {
     dController.leftBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(false), mSwerveDrive));
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
+
 
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
       mWrist.setDesiredPosition(WristPosition.REST);
@@ -227,10 +251,8 @@ public class RobotContainer {
           mShooter.stopFlyWheel();
         }, mIntake, mDelivery, mShooter));
 
-    mController.y().onTrue(Commands.runOnce(() -> {
-      mArm.setDesiredPosition(ArmPosition.AMP);
-      mWrist.setDesiredPosition(WristPosition.AMP);
-    }, mArm, mWrist));
+    mController.y().onTrue(Commands.runOnce(() -> mShooter.spinUpFlyWheel(), mShooter))
+        .onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
 
     mController.povDown().onTrue(Commands.runOnce(() -> {
       mArm.setDesiredPosition(ArmPosition.REST);
@@ -244,6 +266,20 @@ public class RobotContainer {
     mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
         .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
             Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+
+    // mController.rightTrigger().whileTrue(Commands.parallel(
+    //     Commands.run(() -> {
+    //       mShooter.spinUpFlyWheel();
+    //     }, mShooter),
+    //     Commands.waitUntil(mShooter::isAtShootingSpeed).andThen(() -> {
+    //       mDelivery.toShooter();
+    //       mIntake.intake();
+    //     }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
+    //       mShooter.stopFlyWheel();
+    //       mShooter.linearActuatorSetVoltage(0);
+    //       mDelivery.stop();
+    //       mIntake.stop();
+    //     }, mShooter, mDelivery, mIntake));
 
     mController.leftBumper().onTrue(Commands.run(() -> {
       mDelivery.toIntake();
@@ -268,7 +304,6 @@ public class RobotContainer {
       mWrist.setDesiredPosition(WristPosition.AMP);
     }, mArm, mWrist));
 
-    mController.povLeft().onTrue(Commands.runOnce(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
   }
 
   public Command getAutonomousCommand() {

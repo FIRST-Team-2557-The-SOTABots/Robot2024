@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
         this.linearEncoder = linearEncoder;
 
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
+        this.linearPID.setTolerance(0.5);
         this.maxLinearValue = config.getMaxLinearValue();
         this.angleConvM = config.getAngleConvM();
         this.angleConvB = config.getAngleConvB();
@@ -101,7 +102,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtShootingSpeed() {
         return leftShooter.getEncoderVelocity() >= targetRPM - 100
-                || rightShooter.getEncoderVelocity() >= targetRPM - 100;
+                || rightShooter.getEncoderVelocity() >= targetRPM - 200;
     }
 
     public boolean isNotAtShootingSpeed() {
@@ -143,6 +144,11 @@ public class Shooter extends SubsystemBase {
 
     private boolean isTooClose() {
         return calcAngleToHood() > kMaxShooterAngle;
+    }
+
+    public void setSpeed(int speed) {
+        leftShooter.set(speed);
+        rightShooter.set(speed);
     }
 
 }

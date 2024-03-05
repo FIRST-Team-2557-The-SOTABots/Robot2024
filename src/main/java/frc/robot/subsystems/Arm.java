@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.ArmConfig;
 
@@ -34,15 +35,16 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm(ArmConfig config, SOTA_MotorController leftMotor, SOTA_MotorController rightMotor,
-            SOTA_AbsoulteEncoder leftEncoder, SOTA_AbsoulteEncoder rightEncoder, DoubleSolenoid leftSolenoid,
-            DoubleSolenoid rightSolenoid) {
+            SOTA_AbsoulteEncoder leftEncoder, SOTA_AbsoulteEncoder rightEncoder) {
 
+        // , DoubleSolenoid leftSolenoid,
+        // DoubleSolenoid rightSolenoid
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
-        this.leftSolenoid = leftSolenoid;
-        this.rightSolenoid = rightSolenoid;
+        // this.leftSolenoid = leftSolenoid;
+        // this.rightSolenoid = rightSolenoid;
         this.mArmFeedforward = new ArmFeedforward(config.getkS(), config.getkG(), config.getkV());
         this.mPidController = new PIDController(config.getP(), config.getI(), config.getD());
 
@@ -50,6 +52,8 @@ public class Arm extends SubsystemBase {
         Shuffleboard.getTab("Arm").addDouble("Left Encoder Positon", this::getCorrectedLeftPosition);
         Shuffleboard.getTab("Arm").addDouble("Right Encoder Pos", this::getCorrectedRightPosition);
         Shuffleboard.getTab("Arm").addNumber("Setpoint", this::getCurrentSetpoint);
+        Shuffleboard.getTab("Arm").addBoolean("At setpoint", this::isAtSetpoint);
+        Shuffleboard.getTab("Arm").addNumber("Left Output", leftMotor::getMotorCurrent);
     }
 
     public double getCorrectedLeftPosition() {
@@ -69,20 +73,34 @@ public class Arm extends SubsystemBase {
     }
 
     public void goToPosition() {
+        if (isAtSetpoint()) {
+            mPidController.reset();
+        }
         setMotorVoltage(mPidController.calculate(getCorrectedLeftPosition(), currentPosition.position));
     }
 
     private void setMotorVoltage(double volts) {
-        if ((getCorrectedLeftPosition() <= 0.01 || getCorrectedRightPosition() <= 0.01) && volts < 0) {
-            leftMotor.stopMotor();
-            rightMotor.stopMotor();
-        } else if ((getCorrectedLeftPosition() >= 0.3 && volts > 0)) {
-            leftMotor.setVoltage(0);
-            rightMotor.setVoltage(0);
-        } else {
-            leftMotor.setVoltage(volts);
-            rightMotor.setVoltage(volts);
-        }
+        // if ((getCorrectedLeftPosition() <= 0.01 || getCorrectedRightPosition() <= 0.01) && volts < 0) {
+        //     leftMotor.stopMotor();
+        //     rightMotor.stopMotor();
+        //     SmartDashboard.putBoolean("Stopped 1", true);
+        // } else if ((getCorrectedLeftPosition() >= 0.32 && volts > 0)) {
+        //     leftMotor.setVoltage(0);
+        //     rightMotor.setVoltage(0);
+        //     SmartDashboard.putBoolean("Stopped 2", true);
+        // } else {
+        //     leftMotor.setVoltage(volts);
+        //     rightMotor.setVoltage(volts);
+        //     SmartDashboard.putBoolean("Stopped 1", false);
+        //     SmartDashboard.putBoolean("Stopped 2", false);
+        // }
+        // SmartDashboard.putNumber("volts", volts);
+        leftMotor.setVoltage(volts);
+        rightMotor.setVoltage(volts);
+    }
+
+    public boolean isAtSetpoint() {
+        return mPidController.atSetpoint();
     }
 
     public void setDesiredPosition(ArmPosition position) {

@@ -29,7 +29,8 @@ public class ShooterSequence extends SequentialCommandGroup {
                     mShooter.goToAngle();
                 }, mShooter),
                 Commands.waitUntil(this::isReadyToShoot).andThen(Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery))
-            )
+            ),
+            Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> mShooter.stopFlyWheel(), mShooter))
         );
 
         addRequirements(mShooter, mDelivery, mIntake, mWrist);

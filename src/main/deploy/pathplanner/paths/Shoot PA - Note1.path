@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.054793832147686,
+        "y": 6.434459461636395
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.335910008415126,
+        "y": 6.543278626643146
+      },
+      "isLocked": false,
+      "linkedName": "Shoot1"
+    },
+    {
+      "anchor": {
+        "x": 2.4987833875488867,
+        "y": 6.726042503963363
+      },
+      "prevControl": {
+        "x": 2.2992815850365096,
+        "y": 6.617223338956611
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Intake1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 30.73548770192028,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note-Note",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
