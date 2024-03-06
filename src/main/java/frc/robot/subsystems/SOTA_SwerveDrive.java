@@ -11,6 +11,7 @@ import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.NullConfigException;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -77,7 +78,9 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         Shuffleboard.getTab("Competition").addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
         Shuffleboard.getTab("Competition").addBoolean("FieldCentric Active: ", this::getFieldCentric);
-        sTab.addNumber("Live Speed", () -> {return this.getRelativeSpeeds().omegaRadiansPerSecond;});
+        sTab.addNumber("Live Speed", () -> {
+            return this.getRelativeSpeeds().omegaRadiansPerSecond;
+        });
         sTab.add(mField2d);
 
     }
@@ -124,9 +127,9 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         if (fieldCentric) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, mGyro.getRotation2d());
         }
-        
+
         SwerveModuleState[] states = mDriveKinematics.toSwerveModuleStates(speeds);
-                SwerveDriveKinematics.desaturateWheelSpeeds(states, Conversions.feetPerSecToMetersPerSec(MAX_SPEED));
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, Conversions.feetPerSecToMetersPerSec(MAX_SPEED));
 
         for (int i = 0; i < states.length; i++) {
             modules[i].setModule(states[i]);
@@ -155,6 +158,13 @@ public class SOTA_SwerveDrive extends SubsystemBase {
      */
     public void setFieldCentric(boolean fieldCentric) {
         this.fieldCentric = fieldCentric;
+    }
+
+    /**
+     * @return the current heading of the robot
+     */
+    public Rotation2d getHeading() {
+        return mGyro.getRotation2d();
     }
 
     @Override

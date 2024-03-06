@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.Trap;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
@@ -303,6 +304,8 @@ public class RobotContainer {
       mArm.setDesiredPosition(ArmPosition.AMP);
       mWrist.setDesiredPosition(WristPosition.AMP);
     }, mArm, mWrist));
+
+    mController.leftStick().onTrue(new Trap(mSwerveDrive));
 
   }
 
