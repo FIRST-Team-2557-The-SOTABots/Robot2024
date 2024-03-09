@@ -1,14 +1,40 @@
 package frc.robot.subsystems.configs;
 
-import SOTAlib.Config.CompositeMotorConfig;
-import SOTAlib.Config.MotorControllerConfig;
-
 public class WristConfig {
-    private CompositeMotorConfig leftMotor;
-    private MotorControllerConfig rightMotor;
     private double p;
     private double i;
     private double d;
+    private double iZone;
+    private double minOutputRange;
+    private double maxOutputRange;
+    private int leftMotorPort;
+    private int rightMotorPort;
+    private boolean rightMotorInverted;
+    private boolean leftMotorInverted;
+
+    
+
+    public boolean getLeftMotorInverted() {
+        return leftMotorInverted;
+    }
+
+
+    public double getMinOutputRange() {
+        return minOutputRange;
+    }
+
+
+    public int getLeftMotorPort() {
+        return leftMotorPort;
+    }
+
+    public int getRightMotorPort() {
+        return rightMotorPort;
+    }
+
+    public double getiZone() {
+        return iZone;
+    }
 
     public double getP() {
         return p;
@@ -22,11 +48,13 @@ public class WristConfig {
         return d;
     }
 
-    public CompositeMotorConfig getLeftMotor() {
-        return leftMotor;
+
+    public double getMaxOutputRange() {
+        return maxOutputRange;
     }
 
-    public MotorControllerConfig getRightMotor() {
-        return rightMotor;
+
+    public boolean getRightMotorInverted() {
+        return rightMotorInverted;
     }
 }

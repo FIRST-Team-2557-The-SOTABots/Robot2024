@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector.ReferenceProperty.Type;
 import com.fasterxml.jackson.databind.util.Named;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 
 import SOTAlib.Config.ConfigUtils;
@@ -137,16 +143,19 @@ public class RobotContainer {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    try{
+    WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
+    CANSparkMax wristLeftMotor = new CANSparkMax(wristConfig.getLeftMotorPort(), MotorType.kBrushless);
+    CANSparkMax wristRightMotor = new CANSparkMax(wristConfig.getRightMotorPort(), MotorType.kBrushless);
+    AbsoluteEncoder wristEncoder = wristLeftMotor.getAbsoluteEncoder(com.revrobotics.SparkAbsoluteEncoder.Type.kDutyCycle);
+    SparkPIDController wristPID = wristLeftMotor.getPIDController();
 
-    try {
-      CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
-      WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
-      SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(wristConfig.getLeftMotor());
-      SOTA_MotorController rightMotor = MotorControllerFactory.generateMotorController(wristConfig.getRightMotor());
-      this.mWrist = new Wrist(wristConfig, leftMotor.getAbsEncoder(), leftMotor.getMotor(), rightMotor);
+    mWrist = new Wrist(wristConfig, wristPID, wristEncoder, wristLeftMotor, wristRightMotor);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
+    
 
     try {
       ClimberConfig leftConfig = mConfigUtils.readFromClassPath(ClimberConfig.class, "climber/left");
@@ -228,6 +237,8 @@ public class RobotContainer {
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
 
     mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(0), mShooter));
+
+    // mWrist.setDefaultCommand(Commands.run(() -> mWrist.setWristSetpoint(0.03), mWrist));
   }
 
   private void configureBindings() {
@@ -267,19 +278,19 @@ public class RobotContainer {
         .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
             Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
-    // mController.rightTrigger().whileTrue(Commands.parallel(
-    //     Commands.run(() -> {
-    //       mShooter.spinUpFlyWheel();
-    //     }, mShooter),
-    //     Commands.waitUntil(mShooter::isAtShootingSpeed).andThen(() -> {
-    //       mDelivery.toShooter();
-    //       mIntake.intake();
-    //     }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
-    //       mShooter.stopFlyWheel();
-    //       mShooter.linearActuatorSetVoltage(0);
-    //       mDelivery.stop();
-    //       mIntake.stop();
-    //     }, mShooter, mDelivery, mIntake));
+    mController.rightTrigger().whileTrue(Commands.parallel(
+        Commands.run(() -> {
+          mShooter.spinUpFlyWheel();
+        }, mShooter),
+        Commands.waitUntil(mShooter::isAtShootingSpeed).andThen(() -> {
+          mDelivery.toShooter();
+          mIntake.intake();
+        }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
+          mShooter.stopFlyWheel();
+          mShooter.linearActuatorSetVoltage(0);
+          mDelivery.stop();
+          mIntake.stop();
+        }, mShooter, mDelivery, mIntake));
 
     mController.leftBumper().onTrue(Commands.run(() -> {
       mDelivery.toIntake();
