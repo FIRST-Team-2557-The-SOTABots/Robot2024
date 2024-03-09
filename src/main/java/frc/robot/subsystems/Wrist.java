@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -13,9 +16,8 @@ public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
         FLOOR(0.36),
-        REST(0.0),
-        AMP(0.27),
-        TEST(0.3);
+        REST(0.03),
+        AMP(0.27);
 
         public double position;
 
@@ -29,47 +31,68 @@ public class Wrist extends SubsystemBase {
     private CANSparkMax rightMotor;
     private SparkPIDController mPID;
     private WristPosition currentPosition;
-    private boolean atSetpoint;
 
     public Wrist(WristConfig config, SparkPIDController wristPID, AbsoluteEncoder wristEncoder, CANSparkMax wristLeftMotor,
-            CANSparkMax rightMotor) {
+            CANSparkMax wirstRightMotor) {
         this.mEncoder = wristEncoder;
         this.leftMotor = wristLeftMotor;
-        this.rightMotor = rightMotor;
+        this.rightMotor = wirstRightMotor;
         this.mPID = wristPID;
+
+        leftMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        rightMotor.setInverted(config.getRightMotorInverted());
+        leftMotor.setInverted(config.getLeftMotorInverted());
+        rightMotor.follow(wristLeftMotor, true);
 
         mPID.setP(config.getP());
         mPID.setI(config.getI());
         mPID.setD(config.getD());
         mPID.setFeedbackDevice(wristEncoder);
+        mPID.setPositionPIDWrappingEnabled(true);
         mPID.setOutputRange(config.getMinOutputRange(), config.getMaxOutputRange());
+        currentPosition = WristPosition.REST;
+        
+        
 
-        this.currentPosition = WristPosition.REST;
+        Shuffleboard.getTab("Wrist").addDouble("Encoder Pos", mEncoder::getPosition);
+
+
+        // this.currentPosition = WristPosition.REST;
     }
 
     public void setDesiredPosition(WristPosition position) {
         this.currentPosition = position;
     }
 
+    public double getAdjustedEncoder(){
+        if (mEncoder.getPosition() > 0.95){
+            return 0.0;
+        } else{
+            return mEncoder.getPosition();
+        }
+    }
+
+    public boolean atSetpoint(){
+        if (getAdjustedEncoder() - currentPosition.position < .05){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+
     public void stop() {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
-    }
-
-    public boolean atSetpoint() {
-        atSetpoint = false;
-
-        if (currentPosition.position - mEncoder.getPosition() < .05){
-            atSetpoint = true;
-        }    
-        return atSetpoint;
     }
 
 
     @Override
     public void periodic() {
          mPID.setReference(currentPosition.position, ControlType.kPosition);
+         SmartDashboard.putNumber("encoder position", getAdjustedEncoder());
         //Shuffleboard.getTab("Wrist").addBoolean("At setpoint", Wrist.atSetpoint);
-        Shuffleboard.getTab("Wrist").addDouble("Encoder Postion", mEncoder::getPosition);
+        //Shuffleboard.getTab("Wrist").addDouble("Current Encoder Postion", mEncoder::getPosition);
     }
 }

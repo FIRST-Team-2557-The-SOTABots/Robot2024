@@ -237,6 +237,8 @@ public class RobotContainer {
     mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
 
     mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(0), mShooter));
+
+    // mWrist.setDefaultCommand(Commands.run(() -> mWrist.setWristSetpoint(0.03), mWrist));
   }
 
   private void configureBindings() {
