@@ -74,7 +74,7 @@ public class RobotContainer {
     private ConfigUtils mConfigUtils;
 
     private SendableChooser<Command> autoChooser;
-  
+    
     private SOTA_Xboxcontroller dController;
     private SOTA_Xboxcontroller mController;
     private SOTA_Gyro mGyro;
@@ -294,6 +294,7 @@ public class RobotContainer {
                 }, mArm)));
 
     mController.start().onTrue(new Climb(leftClimber, rightClimber));
+
     mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
         Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
 

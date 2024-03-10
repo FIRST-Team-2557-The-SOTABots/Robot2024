@@ -65,6 +65,8 @@ public class Wrist extends SubsystemBase {
         this.currentPosition = position;
     }
 
+    
+
     public double getAdjustedEncoder(){
         if (mEncoder.getPosition() > 0.9){
             return 0.0;
