@@ -87,7 +87,6 @@ public class Wrist extends SubsystemBase {
         rightMotor.stopMotor();
     }
 
-
     @Override
     public void periodic() {
          mPID.setReference(currentPosition.position, ControlType.kPosition);

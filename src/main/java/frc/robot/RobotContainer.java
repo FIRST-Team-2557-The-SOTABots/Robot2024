@@ -74,7 +74,7 @@ public class RobotContainer {
     private ConfigUtils mConfigUtils;
 
     private SendableChooser<Command> autoChooser;
-
+  
     private SOTA_Xboxcontroller dController;
     private SOTA_Xboxcontroller mController;
     private SOTA_Gyro mGyro;
@@ -216,18 +216,19 @@ public class RobotContainer {
         configureBindings();
     }
 
-    private void registerNamedCommands() {
-        AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
-        NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
-        NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
-        NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
-        NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
-        NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
-        NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
-        NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
-        NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
-        NamedCommands.registerCommand("Align Tag", new RotateToAprilTag(mSwerveDrive));
-    }
+  private void registerNamedCommands() {
+    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
+    NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
+    NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
+    NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
+    NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
+    NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
+    NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
+    NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
+    NamedCommands.registerCommand("Align Tag", new RotateToAprilTag(mSwerveDrive));
+    NamedCommands.registerCommand("Amp Sequence", autoCommands.scoreInAmp());
+  }
 
     private void configureDefaultCommands() {
         mSwerveDrive.setDefaultCommand(
@@ -249,8 +250,17 @@ public class RobotContainer {
             mIntake.stop();
         }, mWrist, mIntake));
 
-        mController.b().onTrue(Commands.run(() -> mIntake.outtake(), mIntake))
-                .onFalse(Commands.runOnce(() -> mIntake.stop(), mIntake));
+    mController.b().onTrue(Commands.sequence(
+      new RotateToAprilTag(mSwerveDrive),
+      Commands.run(() -> {
+        mIntake.intake();
+        mDelivery.toShooter();
+      }).withTimeout(1),
+      Commands.runOnce(() -> {
+        mIntake.stop();
+        mDelivery.stop();
+      })
+    ));
 
         mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
                 .onFalse(Commands.runOnce(() -> {
@@ -283,27 +293,33 @@ public class RobotContainer {
                     mArm.setDesiredPosition(ArmPosition.AMP);
                 }, mArm)));
 
-        mController.start().onTrue(new Climb(leftClimber, rightClimber));
-        mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
-                Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
+    mController.start().onTrue(new Climb(leftClimber, rightClimber));
+    mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
+        Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
 
-        mController.leftTrigger().onTrue(new Uppies(leftClimber, rightClimber))
-                .onFalse(new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
-                        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+    mController.leftTrigger().onTrue(
+      new Uppies(leftClimber, rightClimber)).onFalse(
+        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)
+        )
+      );
 
-        mController.rightTrigger().whileTrue(Commands.parallel(
-                Commands.run(() -> {
-                    mShooter.spinUpFlyWheel();
-                }, mShooter),
-                Commands.waitUntil(mShooter::isAtShootingSpeed).andThen(() -> {
-                    mDelivery.toShooter();
-                    mIntake.intake();
-                }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
-                    mShooter.stopFlyWheel();
-                    mShooter.linearActuatorSetVoltage(0);
-                    mDelivery.stop();
-                    mIntake.stop();
-                }, mShooter, mDelivery, mIntake));
+
+    // mController.rightTrigger().onTrue(Commands.parallel(
+    //   Commands.run(() -> mShooter.goToAngle(), mShooter),
+    //   Commands.runOnce(() -> mShooter.spinUpFlyWheel())
+    // )).onFalse(Commands.runOnce(() -> {
+    //   mShooter.goToSpecifiedAngle(0);
+    //   mShooter.stopFlyWheel();
+    // }, mShooter));
+
+    mController.y().onTrue(Commands.run(() -> {
+      mShooter.goToAngle();
+      mShooter.spinUpFlyWheel();
+    }, mShooter)).onFalse(Commands.runOnce(() -> {
+      mShooter.stopFlyWheel();
+      mShooter.goToSpecifiedAngle(0);
+    }, mShooter));
 
         mController.leftBumper().onTrue(Commands.runOnce(() -> {
             mDelivery.toShooter();
