@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.054793832147686,
-        "y": 6.434459461636395
+        "x": 1.6763851774572966,
+        "y": 6.681985456994171
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.335910008415126,
-        "y": 6.543278626643146
+        "x": 2.0532938811679173,
+        "y": 6.483024897831492
       },
       "isLocked": false,
-      "linkedName": "Shoot1"
+      "linkedName": "Shoot Amp"
     },
     {
       "anchor": {

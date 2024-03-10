@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4987833875488867,
-        "y": 6.726042503963363
+        "x": 2.410669293610502,
+        "y": 7.151927291332221
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.302341146376764,
-        "y": 6.684861201945028
+        "x": 2.4400406582566303,
+        "y": 6.740728186286426
       },
       "isLocked": false,
-      "linkedName": "Intake1"
+      "linkedName": "Amp-Intake1"
     },
     {
       "anchor": {
-        "x": 1.9976453737236408,
-        "y": 6.473917974723635
+        "x": 2.043527235533899,
+        "y": 5.991758387810157
       },
       "prevControl": {
-        "x": 2.144502196954282,
-        "y": 6.620774797954276
+        "x": 2.322555199672117,
+        "y": 6.373586128209824
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 1.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 19.653824058053292,
+    "rotation": 21.447736327105357,
     "rotateFast": false
   },
   "reversed": false,

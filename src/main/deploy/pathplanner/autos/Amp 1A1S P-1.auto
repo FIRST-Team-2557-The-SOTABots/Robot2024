@@ -1,0 +1,74 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.48,
+      "y": 7.4
+    },
+    "rotation": -90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Comm-Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Sequence"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpP - Note1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin Flywheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note1-ShootA"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "2 Note",
+  "choreoAuto": false
+}

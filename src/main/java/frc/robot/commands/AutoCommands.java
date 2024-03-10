@@ -128,7 +128,26 @@ public class AutoCommands {
         return Commands.runOnce(() -> {
             mArm.setDesiredPosition(ArmPosition.AMP);
             mWrist.setDesiredPosition(WristPosition.AMP);
-        }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
+        }).andThen(Commands.waitUntil(this::armIsAtSetpoint));
+    }
+
+    public Command scoreInAmp () {
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                mArm.setDesiredPosition(ArmPosition.AMP);
+                mWrist.setDesiredPosition(WristPosition.AMP);
+            }),
+            Commands.waitUntil(this::armIsAtSetpoint),
+            Commands.run(() -> mIntake.intake()).withTimeout(1),
+            // Commands.waitSeconds(0.5),
+            Commands.runOnce(() -> mIntake.stop()),
+
+            Commands.runOnce(() -> {
+                mArm.setDesiredPosition(ArmPosition.REST);
+                mWrist.setDesiredPosition(WristPosition.REST);
+            })
+
+        );
     }
 
     public Command setArmToRest() {
@@ -138,14 +157,26 @@ public class AutoCommands {
         }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
     }
 
-    public Command intakeAmp() {
-        return Commands.sequence(
-                Commands.runOnce(() -> mIntake.intake()),
-                Commands.waitSeconds(0.3),
-                Commands.runOnce(() -> mIntake.stop()));
+    // public Command intakeAmp() {
+    //     return Commands.sequence(
+    //             Commands.runOnce(() -> mIntake.intake()),
+    //             Commands.waitSeconds(0.3),
+    //             Commands.runOnce(() -> mIntake.stop()));
+    // }
+
+    public Command intakeAmp () {
+        return Commands.run(() -> {
+            mIntake.intake();
+        }).withTimeout(0.3).andThen(Commands.runOnce(() -> {
+            mIntake.stop();
+        }));
     }
 
     public boolean isReadyToShoot() {
         return mShooter.isAtShootingSpeed() && mShooter.isAtAngle() && mWrist.atSetpoint();
+    }
+
+    public boolean armIsAtSetpoint() {
+        return mArm.isAtSetpoint() && mWrist.atSetpoint();
     }
 }
