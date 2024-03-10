@@ -1,26 +1,22 @@
 package frc.robot.subsystems.configs;
 
-import SOTAlib.Config.CompositeMotorConfig;
 
 public class ArmConfig {
-
-    private CompositeMotorConfig leftMotor;
-    private CompositeMotorConfig rightMotor;
 
     private double p;
     private double i;
     private double d;
+    private double iZone;
+    private double minOutputRange;
+    private double maxOutputRange;
+    private int rightMotorPort;
+    private boolean rightMotorInverted;
+    private int leftMotorPort;
+    private boolean leftMotorInverted;
 
-    private double kS;
-    private double kG;
-    private double kV;
 
-    public CompositeMotorConfig getLeftMotor() {
-        return leftMotor;
-    }
-
-    public CompositeMotorConfig getRightMotor() {
-        return rightMotor;
+    public boolean getLeftMotorInverted() {
+        return leftMotorInverted;
     }
 
     public double getP() {
@@ -35,15 +31,27 @@ public class ArmConfig {
         return d;
     }
 
-    public double getkS() {
-        return kS;
+    public double getiZone() {
+        return iZone;
     }
 
-    public double getkG() {
-        return kG;
+    public double getMinOutputRange() {
+        return minOutputRange;
     }
 
-    public double getkV() {
-        return kV;
+    public double getMaxOutputRange() {
+        return maxOutputRange;
+    }
+
+    public int getRightMotorPort() {
+        return rightMotorPort;
+    }
+
+    public boolean getRightMotorInverted() {
+        return rightMotorInverted;
+    }
+
+    public int getLeftMotorPort() {
+        return leftMotorPort;
     }
 }
