@@ -63,9 +63,10 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Shooter Angle", this::getShooterAngle);
         Shuffleboard.getTab("Shooter").addDouble("Left rpm", leftShooter::getEncoderVelocity);
         Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        // Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
+        // Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
         Shuffleboard.getTab("Competition").addBoolean("Too Close!", this::isTooClose);
+        Shuffleboard.getTab("Competition").addBoolean("Ready To Shoot", this::isReadyToShoot);
         Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
         Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
     }
@@ -140,6 +141,10 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtAngle() {
         return linearPID.atSetpoint();
+    }
+
+    public boolean isReadyToShoot() {
+        return isAtAngle() && isAtShootingSpeed();
     }
 
     private boolean isTooClose() {

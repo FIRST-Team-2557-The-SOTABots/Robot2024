@@ -24,6 +24,8 @@ public class Wrist extends SubsystemBase {
         }
     }
 
+
+    
     private SOTA_AbsoulteEncoder mEncoder;
     private SOTA_MotorController leftMotor;
     private SOTA_MotorController rightMotor;
@@ -38,7 +40,7 @@ public class Wrist extends SubsystemBase {
 
         this.currentPosition = WristPosition.REST;
         this.mPID = new PIDController(config.getP(), config.getI(), config.getD());
-        mPID.enableContinuousInput(0, 1);
+        // mPID.enableContinuousInput(0, 1);
         mPID.setTolerance(0.02);
         Shuffleboard.getTab("Wrist").addBoolean("At setpoint", mPID::atSetpoint);
         Shuffleboard.getTab("Wrist").addDouble("Encoder Postion", mEncoder::getPosition);
@@ -48,6 +50,8 @@ public class Wrist extends SubsystemBase {
     public void setDesiredPosition(WristPosition position) {
         this.currentPosition = position;
     }
+
+    
 
     /**
      * When the wrist goes to the rest sometimes the abs encoder underflows from 0
@@ -83,7 +87,7 @@ public class Wrist extends SubsystemBase {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
     }
-
+  
     private void setWristVoltage(double volts) {
         if (mEncoder.getPosition() <= 0.95 && mEncoder.getPosition() >= 0.45) {
             stop();

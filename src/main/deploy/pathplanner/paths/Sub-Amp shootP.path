@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5325365738450776,
-        "y": 6.752581224460695
+        "x": 1.393680525866736,
+        "y": 7.115162519095204
       },
       "isLocked": false,
       "linkedName": "Amp Sub"
     },
     {
       "anchor": {
-        "x": 2.054793832147686,
-        "y": 6.434459461636395
+        "x": 1.6763851774572966,
+        "y": 6.681985456994171
       },
       "prevControl": {
-        "x": 1.8190189746330587,
-        "y": 6.7427804291555224
+        "x": 1.491456173573518,
+        "y": 6.795944541397153
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot1"
+      "linkedName": "Shoot Amp"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 24.22774531795409,
+    "rotation": 34.82448915695671,
     "rotateFast": false
   },
   "reversed": false,

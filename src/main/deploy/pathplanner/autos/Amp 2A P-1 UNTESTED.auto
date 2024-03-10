@@ -1,0 +1,62 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.48,
+      "y": 7.4
+    },
+    "rotation": -90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Comm-Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Sequence"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpP - Note1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note1-Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Sequence"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "2 Note",
+  "choreoAuto": false
+}

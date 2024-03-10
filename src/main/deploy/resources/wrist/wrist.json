@@ -9,7 +9,7 @@
             "motorModel": "SparkMax",
             "motorType": "BRUSHLESS",
             "neutralOperation": "BRAKE",
-            "currentLimit": 40
+            "currentLimit": 30
         },
         "encoderConfig": {
             "isInverted": false,
@@ -23,6 +23,6 @@
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
         "neutralOperation": "BRAKE",
-        "currentLimit": 40
+        "currentLimit": 30
     }
 }
