@@ -6,12 +6,6 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 
-import SOTAlib.Encoder.Absolute.SOTA_AbsoulteEncoder;
-import SOTAlib.MotorController.SOTA_MotorController;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,9 +19,9 @@ public class Arm extends SubsystemBase {
     private ArmPosition currentPosition;
 
     public enum ArmPosition {
-        REST(0.1),
+        REST(0.0),
         VERTICAL(0.25),
-        AMP(0.2);
+        AMP(0.27);
 
         public double position;
 
@@ -40,7 +34,7 @@ public class Arm extends SubsystemBase {
             CANSparkMax armRightMotor) {
 
         this.leftMotor = armLeftMotor;
-        this.rightMotor = armLeftMotor;
+        this.rightMotor = armRightMotor;
         this.mEncoder = armLeftEncoder;
         this.mPID = armPID;
 
@@ -74,27 +68,6 @@ public class Arm extends SubsystemBase {
         }
     }
 
-
-    // private void setMotorVoltage(double volts) {
-    //     // if ((getCorrectedLeftPosition() <= 0.01 || getCorrectedRightPosition() <= 0.01) && volts < 0) {
-    //     //     leftMotor.stopMotor();
-    //     //     rightMotor.stopMotor();
-    //     //     SmartDashboard.putBoolean("Stopped 1", true);
-    //     // } else if ((getCorrectedLeftPosition() >= 0.32 && volts > 0)) {
-    //     //     leftMotor.setVoltage(0);
-    //     //     rightMotor.setVoltage(0);
-    //     //     SmartDashboard.putBoolean("Stopped 2", true);
-    //     // } else {
-    //     //     leftMotor.setVoltage(volts);
-    //     //     rightMotor.setVoltage(volts);
-    //     //     SmartDashboard.putBoolean("Stopped 1", false);
-    //     //     SmartDashboard.putBoolean("Stopped 2", false);
-    //     // }
-    //     // SmartDashboard.putNumber("volts", volts);
-    //     leftMotor.setVoltage(volts);
-    //     rightMotor.setVoltage(volts);
-    // }
-
     public boolean isAtSetpoint(){
         if (getCorrectedLeftPosition() - currentPosition.position < .05){
             return true;
@@ -115,7 +88,5 @@ public class Arm extends SubsystemBase {
     public void periodic() {
          mPID.setReference(currentPosition.position, ControlType.kPosition);
          SmartDashboard.putNumber("encoder position", getCorrectedLeftPosition());
-        //Shuffleboard.getTab("Wrist").addBoolean("At setpoint", Wrist.atSetpoint);
-        //Shuffleboard.getTab("Wrist").addDouble("Current Encoder Postion", mEncoder::getPosition);
     }
 }
