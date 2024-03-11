@@ -8,6 +8,8 @@ public class ShooterConfig {
     private double i;
     private double d;
     private double maxLinearValue;
+    private double minLinearValue;
+
     private double angleConvM;
     private double angleConvB;
 
@@ -30,6 +32,11 @@ public class ShooterConfig {
 
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
+    private double restLinearValue;
+
+    public double getMinLinearValue() {
+        return minLinearValue;
+    }
 
     public double getLeftKS() {
         return leftKS;
@@ -113,5 +120,9 @@ public class ShooterConfig {
 
     public double getPivotHeight() {
         return pivotHeight;
+    }
+
+    public double getRestLinearValue() {
+        return restLinearValue;
     }
 }

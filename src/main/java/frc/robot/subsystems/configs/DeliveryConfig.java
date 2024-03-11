@@ -6,8 +6,13 @@ public class DeliveryConfig {
     private double deliverySpeed;
 
     private MotorControllerConfig deliveryConfig;
+    private MotorControllerConfig shooterDeliveryConfig;
 
-    public double getDeliverySpeed() {
+    public MotorControllerConfig getShooterDeliveryConfig() {
+		return shooterDeliveryConfig;
+	}
+
+	public double getDeliverySpeed() {
         return deliverySpeed;
     }
 

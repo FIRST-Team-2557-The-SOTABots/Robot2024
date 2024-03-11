@@ -14,6 +14,8 @@ public class Shooter extends SubsystemBase {
     private SOTA_AbsoulteEncoder linearEncoder;
     private PIDController linearPID;
     private double maxLinearValue;
+    private double minLinearValue;
+    private double restLinearValue;
     private final double angleConvM;
     private final double angleConvB;
 
@@ -40,6 +42,8 @@ public class Shooter extends SubsystemBase {
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
         this.linearPID.setTolerance(0.5);
         this.maxLinearValue = config.getMaxLinearValue();
+        this.minLinearValue = config.getMinLinearValue();
+        this.restLinearValue = config.getRestLinearValue();
         this.angleConvM = config.getAngleConvM();
         this.angleConvB = config.getAngleConvB();
 
@@ -82,8 +86,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void linearActuatorSetVoltage(double volts) {
-        if ((linearEncoder.getPosition() >= maxLinearValue && linearEncoder.getPosition() <= 0.95)
+        if ((linearEncoder.getPosition() >= maxLinearValue &&
+                linearEncoder.getPosition() <= 0.95)
                 && Math.signum(volts) == 1) {
+            linearActuator.stopMotor();
+        }
+        if (linearEncoder.getPosition() < minLinearValue && Math.signum(volts) == -1) {
             linearActuator.stopMotor();
         } else {
             linearActuator.setVoltage(volts);
@@ -133,8 +141,14 @@ public class Shooter extends SubsystemBase {
         linearActuatorSetVoltage(volts);
     }
 
-    public void goToSpecifiedAngle (double angle) {
+    public void goToSpecifiedAngle(double angle) {
         double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()), angle);
+        linearActuatorSetVoltage(volts);
+    }
+
+    public void goToRestAngle() {
+        double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()),
+                encoderToAngle(restLinearValue));
         linearActuatorSetVoltage(volts);
     }
 

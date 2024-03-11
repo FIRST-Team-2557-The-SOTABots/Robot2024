@@ -9,6 +9,8 @@
     "angleConvM": 49.3355,
     "angleConvB": 20.0349,
     "maxLinearValue": 0.6,
+    "minLinearValue": 0.22,
+    "restLinearValue": 0.444,
     "speakerTagHeight": 56.75,
     "speakerTagToHood" : 28.5,
     "limeLightHeight": 8.791,
@@ -40,7 +42,7 @@
     },
     "rightShooterConfig": {
         "port": 14,
-        "isInverted": true,
+        "isInverted": false,
         "motorType": "BRUSHLESS",
         "motorModel": "SparkFlex",
         "neutralOperation": "COAST",
