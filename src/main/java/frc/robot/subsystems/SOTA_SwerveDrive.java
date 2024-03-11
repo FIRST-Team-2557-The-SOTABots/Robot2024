@@ -12,6 +12,8 @@ import SOTAlib.MotorController.NullConfigException;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -82,7 +84,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
 
     }
 
-    private SwerveModulePosition[] getModulePositions() {
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
 
         for (int i = 0; i < modules.length; i++) {
@@ -163,7 +165,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         mField2d.setRobotPose(currentPose);
     }
 
-    private Pose2d getPose() {
+    public Pose2d getPose() {
         return currentPose;
     }
 
@@ -181,6 +183,18 @@ public class SOTA_SwerveDrive extends SubsystemBase {
             states[i] = modules[i].getState();
         }
         return states;
+    }
+
+    public Kinematics getModuleKinematics(){
+        return mDriveKinematics;
+    }
+
+    public Odometry getModuleOdometry(){
+        return mDriveOdometry;
+    }
+
+    public SOTA_Gyro getGyro(){
+        return mGyro;
     }
 
 }
