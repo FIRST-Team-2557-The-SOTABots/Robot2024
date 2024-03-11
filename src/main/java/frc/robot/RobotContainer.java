@@ -262,18 +262,28 @@ public class RobotContainer {
                 .onFalse(Commands.runOnce(() -> mShooter.stopFlyWheel()));
 
         mController.povDown().onTrue(Commands.sequence(
-            Commands.run(() -> {mShooter.goToRestAngle();}, mShooter).until(mShooter::isAtAngle),
-            Commands.runOnce(() -> {mArm.setDesiredPosition(ArmPosition.REST);}, mArm),
-            Commands.waitUntil(mArm::isAtSetpoint),
-            Commands.runOnce(() -> {mWrist.setDesiredPosition(WristPosition.REST);}, mWrist)
-        ));
+                Commands.run(() -> {
+                    mShooter.goToRestAngle();
+                }, mShooter).until(mShooter::isAtAngle),
+                Commands.runOnce(() -> {
+                    mArm.setDesiredPosition(ArmPosition.REST);
+                }, mArm),
+                Commands.waitUntil(mArm::isAtSetpoint),
+                Commands.runOnce(() -> {
+                    mWrist.setDesiredPosition(WristPosition.REST);
+                }, mWrist)));
 
         mController.povUp().onTrue(Commands.sequence(
-            Commands.run(() -> {mShooter.goToRestAngle();}, mShooter).until(mShooter::isAtAngle),
-            Commands.runOnce(() -> {mWrist.setDesiredPosition(WristPosition.AMP);}, mWrist),
-            Commands.waitUntil(mWrist::atSetpoint),
-            Commands.runOnce(() -> {mArm.setDesiredPosition(ArmPosition.AMP);}, mArm)
-        ));
+                Commands.run(() -> {
+                    mShooter.goToRestAngle();
+                }, mShooter).until(mShooter::isAtAngle),
+                Commands.runOnce(() -> {
+                    mWrist.setDesiredPosition(WristPosition.AMP);
+                }, mWrist),
+                Commands.waitUntil(mWrist::atSetpoint),
+                Commands.runOnce(() -> {
+                    mArm.setDesiredPosition(ArmPosition.AMP);
+                }, mArm)));
 
         mController.start().onTrue(new Climb(leftClimber, rightClimber));
         mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
@@ -297,16 +307,16 @@ public class RobotContainer {
                     mIntake.stop();
                 }, mShooter, mDelivery, mIntake));
 
-        mController.leftBumper().onTrue(Commands.run(() -> {
-            mDelivery.toIntake();
+        mController.leftBumper().onTrue(Commands.runOnce(() -> {
+            mDelivery.toShooter();
             mIntake.intake();
         }, mDelivery)).onFalse(Commands.runOnce(() -> {
             mDelivery.stop();
             mIntake.stop();
         }, mDelivery, mIntake));
 
-        mController.rightBumper().onTrue(Commands.run(() -> {
-            mDelivery.toShooter();
+        mController.rightBumper().onTrue(Commands.runOnce(() -> {
+            mDelivery.toIntake();
             mIntake.outtake();
         }, mDelivery)).onFalse(Commands.runOnce(() -> {
             mDelivery.stop();

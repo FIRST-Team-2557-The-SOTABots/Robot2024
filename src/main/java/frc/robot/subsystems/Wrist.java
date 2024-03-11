@@ -15,7 +15,7 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.42),
+        FLOOR(0.431),
         REST(0.01),
         AMP(0.35);
 
