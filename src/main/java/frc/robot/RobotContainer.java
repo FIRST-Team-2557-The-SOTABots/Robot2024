@@ -133,24 +133,26 @@ public class RobotContainer {
     }
 
     try {
-      CompositeMotorFactory lCompositeMotorFactory = new CompositeMotorFactory();
-      ArmConfig armConfig = mConfigUtils.readFromClassPath(ArmConfig.class, "arm/arm");
-      SOTA_CompositeMotor leftMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getLeftMotor());
-      SOTA_CompositeMotor rightMotor = lCompositeMotorFactory.generateCompositeMotor(armConfig.getRightMotor());
 
-      this.mArm = new Arm(armConfig, leftMotor.getMotor(), rightMotor.getMotor(), leftMotor.getAbsEncoder(),
-          rightMotor.getAbsEncoder());
+      ArmConfig armConfig = mConfigUtils.readFromClassPath(ArmConfig.class, "arm/arm");
+      CANSparkMax armLeftMotor = new CANSparkMax(armConfig.getLeftMotorPort(), MotorType.kBrushless);
+      CANSparkMax armRightMotor = new CANSparkMax(armConfig.getRightMotorPort(), MotorType.kBrushless);
+      AbsoluteEncoder armLeftEncoder = armLeftMotor.getAbsoluteEncoder(com.revrobotics.SparkAbsoluteEncoder.Type.kDutyCycle);
+      SparkPIDController armPID = armLeftMotor.getPIDController();
+
+      mArm = new Arm(armConfig, armPID, armLeftEncoder, armLeftMotor, armRightMotor);
+    
     } catch (Exception e) {
       e.printStackTrace();
     }
-    try{
-    WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
-    CANSparkMax wristLeftMotor = new CANSparkMax(wristConfig.getLeftMotorPort(), MotorType.kBrushless);
-    CANSparkMax wristRightMotor = new CANSparkMax(wristConfig.getRightMotorPort(), MotorType.kBrushless);
-    AbsoluteEncoder wristEncoder = wristLeftMotor.getAbsoluteEncoder(com.revrobotics.SparkAbsoluteEncoder.Type.kDutyCycle);
-    SparkPIDController wristPID = wristLeftMotor.getPIDController();
+    try {
+      WristConfig wristConfig = mConfigUtils.readFromClassPath(WristConfig.class, "wrist/wrist");
+      CANSparkMax wristLeftMotor = new CANSparkMax(wristConfig.getLeftMotorPort(), MotorType.kBrushless);
+      CANSparkMax wristRightMotor = new CANSparkMax(wristConfig.getRightMotorPort(), MotorType.kBrushless);
+      AbsoluteEncoder wristEncoder = wristLeftMotor.getAbsoluteEncoder(com.revrobotics.SparkAbsoluteEncoder.Type.kDutyCycle);
+      SparkPIDController wristPID = wristLeftMotor.getPIDController();
 
-    mWrist = new Wrist(wristConfig, wristPID, wristEncoder, wristLeftMotor, wristRightMotor);
+      mWrist = new Wrist(wristConfig, wristPID, wristEncoder, wristLeftMotor, wristRightMotor);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -234,7 +236,7 @@ public class RobotContainer {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-    mArm.setDefaultCommand(Commands.run(() -> mArm.goToPosition(), mArm));
+    // mArm.setDefaultCommand(Commands.run(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
 
     mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(0), mShooter));
 

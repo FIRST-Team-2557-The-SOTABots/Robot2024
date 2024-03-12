@@ -15,9 +15,9 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.36),
-        REST(0.03),
-        AMP(0.27);
+        FLOOR(0.43),
+        REST(0.048),
+        AMP(0.36);
 
         public double position;
 
@@ -33,17 +33,17 @@ public class Wrist extends SubsystemBase {
     private WristPosition currentPosition;
 
     public Wrist(WristConfig config, SparkPIDController wristPID, AbsoluteEncoder wristEncoder, CANSparkMax wristLeftMotor,
-            CANSparkMax wirstRightMotor) {
+            CANSparkMax wristRightMotor) {
         this.mEncoder = wristEncoder;
         this.leftMotor = wristLeftMotor;
-        this.rightMotor = wirstRightMotor;
+        this.rightMotor = wristRightMotor;
         this.mPID = wristPID;
 
         leftMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         rightMotor.setInverted(config.getRightMotorInverted());
         leftMotor.setInverted(config.getLeftMotorInverted());
-        rightMotor.follow(wristLeftMotor, true);
+        rightMotor.follow(leftMotor, true);
 
         mPID.setP(config.getP());
         mPID.setI(config.getI());
@@ -66,7 +66,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public double getAdjustedEncoder(){
-        if (mEncoder.getPosition() > 0.95){
+        if (mEncoder.getPosition() > 0.9){
             return 0.0;
         } else{
             return mEncoder.getPosition();
