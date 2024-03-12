@@ -87,10 +87,25 @@ public class AutoCommands {
         });
     }
 
+    public Command shootNote() {
+        return Commands.sequence(
+            new RotateToAprilTag(mSwerve),
+            Commands.runOnce(() -> {
+                mIntake.intake();
+                mDelivery.toShooter();
+            }, mIntake, mDelivery),
+            Commands.waitSeconds(0.75),
+            Commands.runOnce(() -> {
+                mIntake.stop();
+                mDelivery.stop();
+            }, mIntake, mDelivery)
+        );
+    }
+
     public Command alignAndShoot() {
         return Commands.sequence(
+                new RotateToAprilTag(mSwerve),
                 Commands.parallel(
-                        // new RotateToAprilTag(mSwerve),
                         Commands.run(() -> {
                             mShooter.goToAngle();
                         }, mShooter).until(this::isReadyToShoot),
@@ -105,24 +120,6 @@ public class AutoCommands {
                     mDelivery.stop();
                 }));
     }
-
-    // public Command alignAndShoot () {
-    // return Commands.sequence(
-    // // new RotateToAprilTag(mSwerve),
-    // Commands.run(() -> mShooter.goToAngle(), mShooter),
-    // // Commands.waitUntil(this::isReadyToShoot),
-    // Commands.waitSeconds(1),
-    // Commands.runOnce(() -> {
-    // mIntake.intake();
-    // mDelivery.toShooter();
-    // }, mIntake, mDelivery),
-    // Commands.waitSeconds(0.5),
-    // Commands.runOnce(() -> {
-    // mIntake.intake();
-    // mDelivery.toShooter();
-    // }, mIntake, mDelivery)
-    // );
-    // }
 
     public Command setArmToAmp() {
         return Commands.runOnce(() -> {
