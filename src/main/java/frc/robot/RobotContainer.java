@@ -48,6 +48,7 @@ import frc.robot.commands.climber.Uppies;
 import frc.robot.commands.intake.AutoStop;
 import frc.robot.commands.shooter.ShooterSequence;
 import frc.robot.commands.swerve.DriveCommand;
+import frc.robot.commands.swerve.RotateAndDrive;
 import frc.robot.commands.swerve.RotateToAprilTag;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Delivery;
@@ -219,7 +220,8 @@ public class RobotContainer {
 
   private void registerNamedCommands() {
     AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
-    NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    // NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    NamedCommands.registerCommand("Shoot", autoCommands.shootNote());
     NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
     NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
     NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
@@ -247,6 +249,11 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
+    dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+
 
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
       mWrist.setDesiredPosition(WristPosition.REST);
@@ -255,15 +262,14 @@ public class RobotContainer {
 
     mController.b().onTrue(Commands.sequence(
       new RotateToAprilTag(mSwerveDrive),
-      Commands.run(() -> {
+      Commands.runOnce(() -> {
         mIntake.intake();
         mDelivery.toShooter();
-      }).withTimeout(1),
-      Commands.runOnce(() -> {
+      })
+    )).onFalse(Commands.runOnce(() -> {
         mIntake.stop();
         mDelivery.stop();
-      })
-    ));
+      }));
 
     mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
         .onFalse(Commands.runOnce(() -> {
@@ -305,7 +311,7 @@ public class RobotContainer {
     }, mShooter));
 
     mController.leftBumper().onTrue(Commands.run(() -> {
-      mDelivery.toIntake();
+      mDelivery.toShooter();
       mIntake.intake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();
@@ -313,7 +319,7 @@ public class RobotContainer {
     }, mDelivery, mIntake));
 
     mController.rightBumper().onTrue(Commands.run(() -> {
-      mDelivery.toShooter();
+      mDelivery.toIntake();
       mIntake.outtake();
     }, mDelivery)).onFalse(Commands.runOnce(() -> {
       mDelivery.stop();

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4987833875488867,
-        "y": 6.726042503963363
+        "x": 0.4624814512786921,
+        "y": 4.149989528049232
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.348680311395711,
-        "y": 6.680035114456194
+        "x": 1.4624814512786921,
+        "y": 4.149989528049232
       },
       "isLocked": false,
-      "linkedName": "Intake1"
+      "linkedName": "Source Sub"
     },
     {
       "anchor": {
-        "x": 1.9976453737236408,
-        "y": 6.473917974723635
+        "x": 2.584455168910338,
+        "y": 3.379187109251412
       },
       "prevControl": {
-        "x": 2.1310419813822086,
-        "y": 6.5530794219483175
+        "x": 1.904335387618143,
+        "y": 3.778190714276166
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot1"
+      "linkedName": "shoot source-stage"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 1.0,
+    "maxAcceleration": 4.71,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 19.653824058053292,
+    "rotation": -36.11934084947976,
     "rotateFast": false
   },
   "reversed": false,
@@ -48,5 +48,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

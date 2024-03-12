@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.47,
-      "y": 4.1
+      "x": 0.4443449237775669,
+      "y": 4.168126055550356
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,83 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SubSource - PShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align Shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop Flywheels"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SSide PShoot-Center8"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.3
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Note8-Shoot"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Spin Flywheels"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "Source Shoot"
           }
         },
         {
@@ -110,10 +34,98 @@
           "data": {
             "name": "Stop Flywheels"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source-stage-note7"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "note7-shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source-stage-note8"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Note8-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
+          }
         }
       ]
     }
   },
-  "folder": "2 Note",
+  "folder": "3 Note",
   "choreoAuto": false
 }

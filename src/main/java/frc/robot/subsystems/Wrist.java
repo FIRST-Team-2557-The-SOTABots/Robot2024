@@ -15,9 +15,9 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.36),
-        REST(0.03),
-        AMP(0.27);
+        FLOOR(0.43),
+        REST(0.048),
+        AMP(0.36);
 
         public double position;
 
@@ -66,7 +66,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public double getAdjustedEncoder(){
-        if (mEncoder.getPosition() > 0.95){
+        if (mEncoder.getPosition() > 0.9){
             return 0.0;
         } else{
             return mEncoder.getPosition();
