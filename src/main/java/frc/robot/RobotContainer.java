@@ -221,6 +221,8 @@ public class RobotContainer {
     AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
     // NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
     NamedCommands.registerCommand("Shoot", autoCommands.shootNote());
+    // NamedCommands.registerCommand("Shoot", autoCommands.spinUpShoot());
+    NamedCommands.registerCommand("Shoot", autoCommands.shootNote());
     NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
     NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
     NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
