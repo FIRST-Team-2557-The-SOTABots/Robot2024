@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase {
     public enum ArmPosition {
         REST(0.0),
         VERTICAL(0.25),
-        AMP(0.27);
+        AMP(0.23);
 
         public double position;
 
@@ -50,12 +50,11 @@ public class Arm extends SubsystemBase {
         mPID.setI(config.getI());
         mPID.setD(config.getD());
         mPID.setFeedbackDevice(mEncoder);
-        mPID.setPositionPIDWrappingEnabled(true);
         mPID.setOutputRange(config.getMinOutputRange(), config.getMaxOutputRange());
-        //hi - lauren
+        // hi - lauren
         this.currentPosition = ArmPosition.REST;
 
-        Shuffleboard.getTab("Arm").addDouble("Left Encoder Positon", this::getCorrectedLeftPosition);
+        Shuffleboard.getTab("Arm").addDouble("Left Encoder Positon", mEncoder::getPosition);
         Shuffleboard.getTab("Arm").addNumber("Setpoint", this::getCurrentSetpoint);
         Shuffleboard.getTab("Arm").addBoolean("At setpoint", this::isAtSetpoint);
     }
@@ -68,15 +67,16 @@ public class Arm extends SubsystemBase {
         }
     }
 
-    public boolean isAtSetpoint(){
-        if (getCorrectedLeftPosition() - currentPosition.position < .05){
+    public boolean isAtSetpoint() {
+        if (getCorrectedLeftPosition() - currentPosition.position < .05) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
 
     public void setDesiredPosition(ArmPosition position) {
+        SmartDashboard.putBoolean("SETPOINT CHANGED", true);
         this.currentPosition = position;
     }
 
@@ -86,7 +86,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-         mPID.setReference(currentPosition.position, ControlType.kPosition);
-         SmartDashboard.putNumber("encoder position", getCorrectedLeftPosition());
+        mPID.setReference(currentPosition.position, ControlType.kPosition);
+        SmartDashboard.putNumber("encoder position", getCorrectedLeftPosition());
     }
 }
