@@ -13,6 +13,14 @@ public class ShooterConfig {
     private double angleConvM;
     private double angleConvB;
 
+    private double angleCalcA;
+    private double angleCalcB;
+    private double angleCalcC;
+
+    private double rpmCalcA;
+    private double rpmCalcB;
+    private double rpmCalcC;
+
     private double speakerTagHeight;
     private double speakerTagToHood;
     private double limeLightHeight;
@@ -33,6 +41,30 @@ public class ShooterConfig {
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
     private double restLinearValue;
+
+    public double getRpmCalcA() {
+        return rpmCalcA;
+    }
+
+    public double getRpmCalcB() {
+        return rpmCalcB;
+    }
+
+    public double getRpmCalcC() {
+        return rpmCalcC;
+    }
+
+    public double getAngleCalcA() {
+        return angleCalcA;
+    }
+
+    public double getAngleCalcB() {
+        return angleCalcB;
+    }
+
+    public double getAngleCalcC() {
+        return angleCalcC;
+    }
 
     public double getMinLinearValue() {
         return minLinearValue;

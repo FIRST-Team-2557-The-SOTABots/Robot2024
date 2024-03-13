@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import SOTAlib.MotorController.SOTA_MotorController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.DeliveryConfig;
 
@@ -13,6 +14,7 @@ public class Delivery extends SubsystemBase {
         this.mDeliveryMotor = deliveryMotor;
         this.mShooterDeliveryMotor = shooterDeliveryMotor;
         this.intakeSpeed = config.getDeliverySpeed();
+        Shuffleboard.getTab("Delivery").addDouble("Shooter Feeder Current",mShooterDeliveryMotor::getMotorCurrent);
     }
 
     public void toShooter() {
