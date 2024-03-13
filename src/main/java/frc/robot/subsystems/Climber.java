@@ -18,6 +18,7 @@ public class Climber extends SubsystemBase {
         this.kClimbSpeed = config.getClimbSpeed();
         this.name = config.getName();
         Shuffleboard.getTab("Climber").addBoolean(name + " isFullyRetracted:", this::isFullyRetracted);
+        Shuffleboard.getTab("Climber").addNumber(name + " encoder position", mMotor::getEncoderPosition);
     }
 
     public void climb() {
@@ -25,7 +26,11 @@ public class Climber extends SubsystemBase {
     }
 
     public void downClimb() {
-        mMotor.set(-kClimbSpeed);
+        if (mMotor.getEncoderPosition() >= -140) {
+            mMotor.set(-kClimbSpeed);
+        } else {
+            mMotor.stopMotor();
+        }
     }
 
     public boolean isFullyRetracted() {

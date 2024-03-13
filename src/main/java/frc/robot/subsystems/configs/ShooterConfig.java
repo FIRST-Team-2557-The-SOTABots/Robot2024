@@ -8,8 +8,18 @@ public class ShooterConfig {
     private double i;
     private double d;
     private double maxLinearValue;
+    private double minLinearValue;
+
     private double angleConvM;
     private double angleConvB;
+
+    private double angleCalcA;
+    private double angleCalcB;
+    private double angleCalcC;
+
+    private double rpmCalcA;
+    private double rpmCalcB;
+    private double rpmCalcC;
 
     private double speakerTagHeight;
     private double speakerTagToHood;
@@ -30,6 +40,35 @@ public class ShooterConfig {
 
     private MotorControllerConfig leftShooterConfig;
     private MotorControllerConfig rightShooterConfig;
+    private double restLinearValue;
+
+    public double getRpmCalcA() {
+        return rpmCalcA;
+    }
+
+    public double getRpmCalcB() {
+        return rpmCalcB;
+    }
+
+    public double getRpmCalcC() {
+        return rpmCalcC;
+    }
+
+    public double getAngleCalcA() {
+        return angleCalcA;
+    }
+
+    public double getAngleCalcB() {
+        return angleCalcB;
+    }
+
+    public double getAngleCalcC() {
+        return angleCalcC;
+    }
+
+    public double getMinLinearValue() {
+        return minLinearValue;
+    }
 
     public double getLeftKS() {
         return leftKS;
@@ -113,5 +152,9 @@ public class ShooterConfig {
 
     public double getPivotHeight() {
         return pivotHeight;
+    }
+
+    public double getRestLinearValue() {
+        return restLinearValue;
     }
 }

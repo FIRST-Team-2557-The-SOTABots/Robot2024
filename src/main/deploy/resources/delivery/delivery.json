@@ -1,11 +1,19 @@
 {
-    "deliverySpeed": 0.3,
+    "deliverySpeed": 1,
+    "shooterDeliveryConfig": {
+        "port": 22,
+        "isInverted": false,
+        "motorModel": "SparkMax",
+        "motorType": "BRUSHLESS",
+        "neutralOperation": "COAST",
+        "currentLimit": 15
+    },
     "deliveryConfig": {
         "port": 12,
         "isInverted": false,
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
-        "neutralOperation": "BRAKE",
-        "currentLimit": 30
+        "neutralOperation": "COAST",
+        "currentLimit": 15
     }
 }
