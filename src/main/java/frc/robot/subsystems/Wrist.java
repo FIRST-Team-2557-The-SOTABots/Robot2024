@@ -17,7 +17,7 @@ public class Wrist extends SubsystemBase {
     public enum WristPosition {
         FLOOR(0.43),
         REST(0.048),
-        AMP(0.36);
+        AMP(0.35);
 
         public double position;
 

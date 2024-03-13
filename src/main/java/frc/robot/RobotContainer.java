@@ -236,9 +236,8 @@ public class RobotContainer {
     mSwerveDrive.setDefaultCommand(
         new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-    // mArm.setDefaultCommand(Commands.run(() -> mArm.setDesiredPosition(ArmPosition.REST), mArm));
 
-    mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(0), mShooter));
+    mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(45), mShooter));
 
     // mWrist.setDefaultCommand(Commands.run(() -> mWrist.setWristSetpoint(0.03), mWrist));
   }
