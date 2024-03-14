@@ -18,15 +18,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Center Exit Note-2"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Align Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Exit Note-2"
           }
         },
         {

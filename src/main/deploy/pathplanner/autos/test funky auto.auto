@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.47,
-      "y": 4.12
+      "x": 1.4690587275911393,
+      "y": 7.342018368247263
     },
     "rotation": 0
   },
@@ -18,15 +18,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Shooter"
-                }
-              },
               {
                 "type": "sequential",
                 "data": {
@@ -34,7 +28,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SubSource - PShoot"
+                        "pathName": "Amp shootP"
                       }
                     },
                     {
@@ -48,30 +42,24 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "path",
-                            "data": {
-                              "pathName": "SSide PShoot-3"
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Shoot PA - Note1"
                             }
                           }
                         ]
                       }
                     },
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Note3-Shoot"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Shoot"
                       }
                     },
                     {
@@ -81,7 +69,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Shoot3-Intake2"
+                              "pathName": "1-2"
                             }
                           },
                           {
@@ -96,7 +84,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Tag"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Align Shoot"
                       }
                     },
                     {
@@ -106,7 +100,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Note2-Note1"
+                              "pathName": "2-3"
                             }
                           },
                           {
@@ -119,18 +113,24 @@
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "Note1-Shoot"
+                        "name": "Align Tag"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Shoot"
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
                 }
               }
             ]
@@ -140,6 +140,12 @@
           "type": "named",
           "data": {
             "name": "Stop Flywheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3-6"
           }
         }
       ]

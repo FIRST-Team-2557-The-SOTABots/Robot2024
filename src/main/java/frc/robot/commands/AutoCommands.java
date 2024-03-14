@@ -43,14 +43,32 @@ public class AutoCommands {
 
     }
 
-    public Command intakeAutoStop() {
-        return Commands.run(() -> {
-            mWrist.setDesiredPosition(WristPosition.FLOOR);
-            mIntake.intake();
-        }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.runOnce(() -> {
-            mIntake.stop();
-            mWrist.setDesiredPosition(WristPosition.REST);
-        }, mIntake, mWrist));
+    // public Command intakeAutoStop() {
+    //     return Commands.run(() -> {
+    //         mWrist.setDesiredPosition(WristPosition.FLOOR);
+    //         mIntake.intake();
+    //     }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.runOnce(() -> {
+    //         mIntake.stop();
+    //         mWrist.setDesiredPosition(WristPosition.REST);
+    //     }, mIntake, mWrist));
+    // }
+
+    public Command intakeAutoStop () {
+        return Commands.sequence(
+            Commands.race(
+                Commands.run(() -> {
+                    mWrist.setDesiredPosition(WristPosition.FLOOR);
+                    mIntake.intake();
+            }, mWrist, mIntake).withTimeout(2),
+            Commands.waitUntil(mIntake::hasNote)
+            ),
+            Commands.runOnce(() -> {
+                mWrist.setDesiredPosition(WristPosition.REST);
+                mIntake.stop();
+            }, mWrist, mIntake)
+            
+        
+        );
     }
 
     public Command spinUpShoot() {
@@ -74,9 +92,13 @@ public class AutoCommands {
                 }, mShooter, mDelivery, mIntake));
     }
 
+    public Command alignShooter () {
+        return Commands.run(() -> mShooter.goToAngle());
+    }
+
     public Command setFlyWheels() {
         return Commands.runOnce(() -> {
-            mShooter.setSpeed(1);
+            mShooter.setSpeed(0.9);
 
         });
     }
@@ -87,9 +109,13 @@ public class AutoCommands {
         });
     }
 
+    public Command spinFlywheels() {
+        return Commands.run(() -> mShooter.spinUpFlyWheel());
+    }
+
     public Command shootNote() {
         return Commands.sequence(
-            new RotateToAprilTag(mSwerve),
+            // new RotateToAprilTag(mSwerve),
             Commands.runOnce(() -> {
                 mIntake.intake();
                 mDelivery.toShooter();
@@ -104,7 +130,7 @@ public class AutoCommands {
 
     public Command alignAndShoot() {
         return Commands.sequence(
-                new RotateToAprilTag(mSwerve),
+                // new RotateToAprilTag(mSwerve),
                 Commands.parallel(
                         Commands.run(() -> {
                             mShooter.goToAngle();

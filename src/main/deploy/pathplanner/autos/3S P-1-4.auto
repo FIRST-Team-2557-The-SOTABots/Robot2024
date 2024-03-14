@@ -63,12 +63,6 @@
                       }
                     },
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Note1-Shoot"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "Shoot"

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.768311431359705,
-        "y": 4.875450628094239
+        "x": 1.5144000463439524,
+        "y": 5.2019081231144915
       },
       "isLocked": false,
       "linkedName": "Intake2"
     },
     {
       "anchor": {
-        "x": 2.4665677401530246,
-        "y": 4.276945220557108
+        "x": 2.3305437838945857,
+        "y": 3.96862425303798
       },
       "prevControl": {
-        "x": 2.049427607627145,
-        "y": 4.648744034330174
+        "x": 1.3858755664879754,
+        "y": 4.068375154294167
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,13 +33,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 4.71,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -24.44395478041664,
+    "rotation": -2.6128210412209847,
     "rotateFast": false
   },
   "reversed": false,
@@ -48,5 +48,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

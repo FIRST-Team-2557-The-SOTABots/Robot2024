@@ -22,12 +22,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Align Shooter"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -40,7 +34,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Shoot"
                       }
                     },
                     {
@@ -65,7 +59,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Shoot"
                       }
                     },
                     {
@@ -90,7 +84,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Align Shoot"
                       }
                     },
                     {
@@ -113,12 +107,24 @@
                       }
                     },
                     {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Note3-Shoot"
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "Align Shoot"
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
                 }
               }
             ]
@@ -133,6 +139,6 @@
       ]
     }
   },
-  "folder": "4 Note",
+  "folder": null,
   "choreoAuto": false
 }

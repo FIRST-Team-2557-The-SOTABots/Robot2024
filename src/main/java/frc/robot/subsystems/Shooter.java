@@ -85,7 +85,7 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
         // Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
         // Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addBoolean("Too Close!", this::isTooClose);
+        Shuffleboard.getTab("Competition").addBoolean("Too Far!", this::isTooFar);
         Shuffleboard.getTab("Competition").addBoolean("Ready To Shoot", this::isReadyToShoot);
         Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
         Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
@@ -118,6 +118,8 @@ public class Shooter extends SubsystemBase {
         if (getCorrectedEncoderPosition() > maxLinearValue && volts > 0) {
             linearActuator.stopMotor();
         } else if (getCorrectedEncoderPosition() < minLinearValue && volts < 0) {
+            linearActuator.stopMotor();
+        } else if (linearPID.atSetpoint()) {
             linearActuator.stopMotor();
         } else {
             linearActuator.setVoltage(volts);
@@ -191,7 +193,11 @@ public class Shooter extends SubsystemBase {
         return calcAngleToHood() > kMaxShooterAngle;
     }
 
-    public void setSpeed(int speed) {
+    private boolean isTooFar() {
+        return calcTargetAngle() < 24; // TODO: find actual angle using encoder units
+    }
+
+    public void setSpeed(double speed) {
         leftShooter.set(speed);
         rightShooter.set(speed);
     }

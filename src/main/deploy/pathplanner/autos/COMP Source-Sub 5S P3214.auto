@@ -106,10 +106,22 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": null
+                              "pathName": "Note2-Note1"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Shoot1 - Note4"
                       }
                     }
                   ]
