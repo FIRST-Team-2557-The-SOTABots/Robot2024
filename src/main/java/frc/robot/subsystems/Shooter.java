@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
         this.linearEncoder = linearEncoder;
 
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
-        this.linearPID.setTolerance(0.5);
+        this.linearPID.setTolerance(0.75);
         this.maxLinearValue = config.getMaxLinearValue();
         this.minLinearValue = config.getMinLinearValue();
         this.restLinearValue = config.getRestLinearValue();
@@ -124,6 +124,8 @@ public class Shooter extends SubsystemBase {
         } else {
             linearActuator.setVoltage(volts);
         }
+
+        // linearActuator.setVoltage(volts);
     }
 
     public void spinUpFlyWheel() {

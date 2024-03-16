@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.584455168910338,
-        "y": 3.379187109251412
+        "x": 1.922471915119269,
+        "y": 3.669371549269415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.173892312696906,
-        "y": 2.95297871297497
-      },
-      "isLocked": false,
-      "linkedName": "shoot source-stage"
-    },
-    {
-      "anchor": {
-        "x": 4.615746249036357,
-        "y": 2.0280158104175863
-      },
-      "prevControl": {
-        "x": 3.9446947314947263,
-        "y": 2.300063722934463
-      },
-      "nextControl": {
-        "x": 5.713318284628401,
-        "y": 1.5830541743667588
+        "x": 2.76582044392159,
+        "y": 2.898569130471595
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.880321199238891,
-        "y": 2.236585876680526
+        "x": 4.924067216555486,
+        "y": 1.6108756778917073
       },
       "prevControl": {
-        "x": 6.783061285420818,
-        "y": 1.8103774804040853
+        "x": 3.3189845327059078,
+        "y": 1.9282649091613973
+      },
+      "nextControl": {
+        "x": 6.285650777614658,
+        "y": 1.3416359906766173
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.179573903007455,
+        "y": 2.2003128216782755
+      },
+      "prevControl": {
+        "x": 7.082313989189382,
+        "y": 1.7741044254018346
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,11 +45,23 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.45,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 4.71,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 480.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 1.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -73,7 +85,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 23.682087724538462,
+    "rotation": 11.070202577939357,
     "rotateFast": false
   },
   "reversed": false,

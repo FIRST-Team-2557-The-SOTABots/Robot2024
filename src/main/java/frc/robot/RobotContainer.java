@@ -220,6 +220,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
     NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
     NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
+    NamedCommands.registerCommand("Spin Flywheels to RPM", autoCommands.runFlywheelsToRpm());
     NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
     NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
     NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
@@ -228,13 +229,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("Amp Sequence", autoCommands.scoreInAmp());
     NamedCommands.registerCommand("Align Shooter", autoCommands.alignShooter());
     NamedCommands.registerCommand("Reset Gyro", Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
+    NamedCommands.registerCommand("Teleop shoot command", new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
+    NamedCommands.registerCommand("Check Intake", autoCommands.checkIntake());
   }
 
     private void configureDefaultCommands() {
         mSwerveDrive.setDefaultCommand(
                 new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-        mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(50), mShooter));
+        mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(58), mShooter));
+
+        // mShooter.setDefaultCommand(Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() * -12), mShooter));
     }
 
   private void configureBindings() {
@@ -242,10 +247,20 @@ public class RobotContainer {
     dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
     dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    // dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    // dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    // dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+    // dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+
+    dController.leftTrigger().onTrue(
+      new Uppies(leftClimber, rightClimber)).onFalse(
+        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)
+        )
+    );
+    
+    dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+
 
 
     mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
@@ -301,7 +316,8 @@ public class RobotContainer {
       mArm.setDesiredPosition(ArmPosition.REST);
     }, mWrist, mArm));
 
-    mController.start().onTrue(new Climb(leftClimber, rightClimber));
+    mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+
 
     mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
         Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
@@ -338,6 +354,8 @@ public class RobotContainer {
     }, mDelivery, mIntake));
 
     mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
+
+    
 
     }
 

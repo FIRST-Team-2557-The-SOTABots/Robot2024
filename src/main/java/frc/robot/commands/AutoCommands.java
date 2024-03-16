@@ -57,9 +57,9 @@ public class AutoCommands {
         return Commands.sequence(
             Commands.race(
                 Commands.run(() -> {
-                    mWrist.setDesiredPosition(WristPosition.FLOOR);
                     mIntake.intake();
-            }, mWrist, mIntake).withTimeout(2),
+                    mWrist.setDesiredPosition(WristPosition.FLOOR);
+            }, mWrist, mIntake).withTimeout(2.5),
             Commands.waitUntil(mIntake::hasNote)
             ),
             Commands.runOnce(() -> {
@@ -103,6 +103,10 @@ public class AutoCommands {
         });
     }
 
+    public Command runFlywheelsToRpm() {
+        return Commands.run(() -> mShooter.spinUpFlyWheel(), mShooter).until(mShooter::isAtShootingSpeed);
+    }
+
     public Command stopFlyWheels() {
         return Commands.runOnce(() -> {
             mShooter.stopFlyWheel();
@@ -128,9 +132,18 @@ public class AutoCommands {
         );
     }
 
+    public Command checkIntake() {
+        return Commands.runOnce(() -> {
+            if (!mIntake.hasNote()) {
+                mWrist.setDesiredPosition(WristPosition.REST);
+                mIntake.stop();
+            }
+        }, mIntake, mWrist);
+    }
+
     public Command alignAndShoot() {
         return Commands.sequence(
-                // new RotateToAprilTag(mSwerve),
+                new RotateToAprilTag(mSwerve),
                 Commands.parallel(
                         Commands.run(() -> {
                             mShooter.goToAngle();

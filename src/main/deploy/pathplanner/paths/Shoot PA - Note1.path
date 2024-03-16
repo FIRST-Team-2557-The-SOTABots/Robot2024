@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1945198276361464,
-        "y": 6.67096685070563
+        "x": 2.167315036384459,
+        "y": 6.625625531952818
       },
       "isLocked": false,
       "linkedName": "Shoot Amp"
@@ -20,8 +20,8 @@
         "y": 6.734444696959569
       },
       "prevControl": {
-        "x": 2.2852024651417726,
-        "y": 6.643762059453943
+        "x": 2.27613420139121,
+        "y": 6.689103378206757
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 1.0,
+    "maxAcceleration": 0.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },

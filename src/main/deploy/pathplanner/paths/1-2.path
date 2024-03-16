@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8861988601170183,
-        "y": 6.271963245680877
+        "x": 1.5597413650967653,
+        "y": 6.371714146937067
       },
       "isLocked": false,
       "linkedName": "Intake1"
     },
     {
       "anchor": {
-        "x": 2.2852024651417726,
-        "y": 5.483024299381933
+        "x": 2.321475520144023,
+        "y": 5.238181178116742
       },
       "prevControl": {
-        "x": 1.6957653213552042,
-        "y": 5.446751244379681
+        "x": 1.7320383763574545,
+        "y": 5.20190812311449
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -9.688786560366896,
+    "rotation": -1.123302714075565,
     "rotateFast": false
   },
   "reversed": false,
