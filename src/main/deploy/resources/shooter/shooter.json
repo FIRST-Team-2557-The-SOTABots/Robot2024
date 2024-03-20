@@ -1,7 +1,7 @@
 {
-    "p": 2.0,
+    "p": 3,
     "i": 0.0,
-    "d": 0.0,
+    "d": 0.1,
     "leftKS": 0.25,
     "leftKV": 0.00197258,
     "rightKS": 0.25,
@@ -15,7 +15,7 @@
     "rpmCalcB": -10.2602,
     "rpmCalcC": 2859.77,
     "maxLinearValue": 0.63,
-    "minLinearValue": 0.01,
+    "minLinearValue": 0.119,
     "restLinearValue": 0.444,
     "speakerTagHeight": 57.13,
     "speakerTagToHood" : 41,

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.054793832147686,
-        "y": 6.434459461636395
+        "x": 2.049427607627145,
+        "y": 6.571215949449443
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.335910008415126,
-        "y": 6.543278626643146
+        "x": 2.167315036384459,
+        "y": 6.625625531952818
       },
       "isLocked": false,
-      "linkedName": "Shoot1"
+      "linkedName": "Shoot Amp"
     },
     {
       "anchor": {
-        "x": 2.4987833875488867,
-        "y": 6.726042503963363
+        "x": 2.366816838896836,
+        "y": 6.734444696959569
       },
       "prevControl": {
-        "x": 2.2992815850365096,
-        "y": 6.617223338956611
+        "x": 2.27613420139121,
+        "y": 6.689103378206757
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,14 +33,14 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 1.0,
+    "maxAcceleration": 0.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 30.73548770192028,
-    "rotateFast": false
+    "rotation": 25.277722235552854,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Note-Note",

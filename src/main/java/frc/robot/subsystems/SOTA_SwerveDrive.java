@@ -11,6 +11,7 @@ import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.NullConfigException;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -73,7 +74,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
 
         mField2d = new Field2d();
         this.sTab = Shuffleboard.getTab("Swerve");
-        sTab.addNumber("Gyro Heading: ", mGyro::getAngle);
+        sTab.addNumber("Gyro Heading: ", this::getHeadingDegrees);
         Shuffleboard.getTab("Competition").addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
         Shuffleboard.getTab("Competition").addBoolean("FieldCentric Active: ", this::getFieldCentric);
@@ -140,6 +141,15 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         mGyro.resetAngle();
         mDriveOdometry.resetPosition(mGyro.getRotation2d(), getModulePositions(), currentPose);
     }
+
+    public Rotation2d getHeading() {
+        return mGyro.getRotation2d();
+    }
+
+    public double getHeadingDegrees() {
+        return mGyro.getRotation2d().getDegrees();
+    }
+
 
     /**
      * @return fieldCentric status

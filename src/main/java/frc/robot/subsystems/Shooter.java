@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
         this.linearEncoder = linearEncoder;
 
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
-        this.linearPID.setTolerance(0.5);
+        this.linearPID.setTolerance(0.75);
         this.maxLinearValue = config.getMaxLinearValue();
         this.minLinearValue = config.getMinLinearValue();
         this.restLinearValue = config.getRestLinearValue();
@@ -83,9 +83,10 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Shooter Angle", this::getShooterAngle);
         Shuffleboard.getTab("Shooter").addDouble("Left rpm", leftShooter::getEncoderVelocity);
         Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addBoolean("Too Close!", this::isTooClose);
+        // Shuffleboard.getTab("Competition").addDouble("Left rpm", leftShooter::getEncoderVelocity);
+        // Shuffleboard.getTab("Competition").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Competition").addBoolean("Too Far!", this::isTooFar);
+        Shuffleboard.getTab("Competition").addBoolean("Ready To Shoot", this::isReadyToShoot);
         Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
         Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
         Shuffleboard.getTab("Shooter").addDouble("Distance to Limelight", this::calcDistanceLimeLightToTag);
@@ -118,9 +119,13 @@ public class Shooter extends SubsystemBase {
             linearActuator.stopMotor();
         } else if (getCorrectedEncoderPosition() < minLinearValue && volts < 0) {
             linearActuator.stopMotor();
+        } else if (linearPID.atSetpoint()) {
+            linearActuator.stopMotor();
         } else {
             linearActuator.setVoltage(volts);
         }
+
+        // linearActuator.setVoltage(volts);
     }
 
     public void spinUpFlyWheel() {
@@ -182,11 +187,19 @@ public class Shooter extends SubsystemBase {
         return linearPID.atSetpoint();
     }
 
+    public boolean isReadyToShoot() {
+        return isAtAngle() && isAtShootingSpeed();
+    }
+
     private boolean isTooClose() {
         return calcAngleToHood() > kMaxShooterAngle;
     }
 
-    public void setSpeed(int speed) {
+    private boolean isTooFar() {
+        return calcTargetAngle() < 24; // TODO: find actual angle using encoder units
+    }
+
+    public void setSpeed(double speed) {
         leftShooter.set(speed);
         rightShooter.set(speed);
     }

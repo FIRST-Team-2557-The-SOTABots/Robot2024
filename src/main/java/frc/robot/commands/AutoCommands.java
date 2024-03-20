@@ -43,14 +43,32 @@ public class AutoCommands {
 
     }
 
-    public Command intakeAutoStop() {
-        return Commands.run(() -> {
-            mWrist.setDesiredPosition(WristPosition.FLOOR);
-            mIntake.intake();
-        }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.runOnce(() -> {
-            mIntake.stop();
-            mWrist.setDesiredPosition(WristPosition.REST);
-        }, mIntake, mWrist));
+    // public Command intakeAutoStop() {
+    //     return Commands.run(() -> {
+    //         mWrist.setDesiredPosition(WristPosition.FLOOR);
+    //         mIntake.intake();
+    //     }, mIntake, mWrist).until(mIntake::hasNote).andThen(Commands.runOnce(() -> {
+    //         mIntake.stop();
+    //         mWrist.setDesiredPosition(WristPosition.REST);
+    //     }, mIntake, mWrist));
+    // }
+
+    public Command intakeAutoStop () {
+        return Commands.sequence(
+            Commands.race(
+                Commands.run(() -> {
+                    mIntake.intake();
+                    mWrist.setDesiredPosition(WristPosition.FLOOR);
+            }, mWrist, mIntake).withTimeout(2.5),
+            Commands.waitUntil(mIntake::hasNote)
+            ),
+            Commands.runOnce(() -> {
+                mWrist.setDesiredPosition(WristPosition.REST);
+                mIntake.stop();
+            }, mWrist, mIntake)
+            
+        
+        );
     }
 
     public Command spinUpShoot() {
@@ -74,11 +92,19 @@ public class AutoCommands {
                 }, mShooter, mDelivery, mIntake));
     }
 
+    public Command alignShooter () {
+        return Commands.run(() -> mShooter.goToAngle());
+    }
+
     public Command setFlyWheels() {
         return Commands.runOnce(() -> {
-            mShooter.setSpeed(1);
+            mShooter.setSpeed(0.9);
 
         });
+    }
+
+    public Command runFlywheelsToRpm() {
+        return Commands.run(() -> mShooter.spinUpFlyWheel(), mShooter).until(mShooter::isAtShootingSpeed);
     }
 
     public Command stopFlyWheels() {
@@ -87,10 +113,38 @@ public class AutoCommands {
         });
     }
 
+    public Command spinFlywheels() {
+        return Commands.run(() -> mShooter.spinUpFlyWheel());
+    }
+
+    public Command shootNote() {
+        return Commands.sequence(
+            // new RotateToAprilTag(mSwerve),
+            Commands.runOnce(() -> {
+                mIntake.intake();
+                mDelivery.toShooter();
+            }, mIntake, mDelivery),
+            Commands.waitSeconds(0.75),
+            Commands.runOnce(() -> {
+                mIntake.stop();
+                mDelivery.stop();
+            }, mIntake, mDelivery)
+        );
+    }
+
+    public Command checkIntake() {
+        return Commands.runOnce(() -> {
+            if (!mIntake.hasNote()) {
+                mWrist.setDesiredPosition(WristPosition.REST);
+                mIntake.stop();
+            }
+        }, mIntake, mWrist);
+    }
+
     public Command alignAndShoot() {
         return Commands.sequence(
+                new RotateToAprilTag(mSwerve),
                 Commands.parallel(
-                        // new RotateToAprilTag(mSwerve),
                         Commands.run(() -> {
                             mShooter.goToAngle();
                         }, mShooter).until(this::isReadyToShoot),
@@ -106,29 +160,30 @@ public class AutoCommands {
                 }));
     }
 
-    // public Command alignAndShoot () {
-    // return Commands.sequence(
-    // // new RotateToAprilTag(mSwerve),
-    // Commands.run(() -> mShooter.goToAngle(), mShooter),
-    // // Commands.waitUntil(this::isReadyToShoot),
-    // Commands.waitSeconds(1),
-    // Commands.runOnce(() -> {
-    // mIntake.intake();
-    // mDelivery.toShooter();
-    // }, mIntake, mDelivery),
-    // Commands.waitSeconds(0.5),
-    // Commands.runOnce(() -> {
-    // mIntake.intake();
-    // mDelivery.toShooter();
-    // }, mIntake, mDelivery)
-    // );
-    // }
-
     public Command setArmToAmp() {
         return Commands.runOnce(() -> {
             mArm.setDesiredPosition(ArmPosition.AMP);
             mWrist.setDesiredPosition(WristPosition.AMP);
-        }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
+        }).andThen(Commands.waitUntil(this::armIsAtSetpoint));
+    }
+
+    public Command scoreInAmp () {
+        return Commands.sequence(
+            Commands.runOnce(() -> {
+                mArm.setDesiredPosition(ArmPosition.AMP);
+                mWrist.setDesiredPosition(WristPosition.AMP);
+            }),
+            Commands.waitUntil(this::armIsAtSetpoint),
+            Commands.run(() -> mIntake.intake()).withTimeout(1),
+            // Commands.waitSeconds(0.5),
+            Commands.runOnce(() -> mIntake.stop()),
+
+            Commands.runOnce(() -> {
+                mArm.setDesiredPosition(ArmPosition.REST);
+                mWrist.setDesiredPosition(WristPosition.REST);
+            })
+
+        );
     }
 
     public Command setArmToRest() {
@@ -138,14 +193,26 @@ public class AutoCommands {
         }).andThen(Commands.waitUntil(mArm::isAtSetpoint));
     }
 
-    public Command intakeAmp() {
-        return Commands.sequence(
-                Commands.runOnce(() -> mIntake.intake()),
-                Commands.waitSeconds(0.3),
-                Commands.runOnce(() -> mIntake.stop()));
+    // public Command intakeAmp() {
+    //     return Commands.sequence(
+    //             Commands.runOnce(() -> mIntake.intake()),
+    //             Commands.waitSeconds(0.3),
+    //             Commands.runOnce(() -> mIntake.stop()));
+    // }
+
+    public Command intakeAmp () {
+        return Commands.run(() -> {
+            mIntake.intake();
+        }).withTimeout(0.3).andThen(Commands.runOnce(() -> {
+            mIntake.stop();
+        }));
     }
 
     public boolean isReadyToShoot() {
         return mShooter.isAtShootingSpeed() && mShooter.isAtAngle() && mWrist.atSetpoint();
+    }
+
+    public boolean armIsAtSetpoint() {
+        return mArm.isAtSetpoint() && mWrist.atSetpoint();
     }
 }

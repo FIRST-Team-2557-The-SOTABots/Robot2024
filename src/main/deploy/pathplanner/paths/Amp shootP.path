@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4871952550922645,
+        "y": 7.360154895748388
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.393680525866736,
+        "y": 7.115162519095204
+      },
+      "isLocked": false,
+      "linkedName": "Amp Sub"
+    },
+    {
+      "anchor": {
+        "x": 2.049427607627145,
+        "y": 6.571215949449443
+      },
+      "prevControl": {
+        "x": 1.5053317825933896,
+        "y": 6.553079421948317
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Shoot Amp"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 23.962488974578175,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

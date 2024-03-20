@@ -1,6 +1,6 @@
 {
     "name": "right",
-    "climbSpeed": 0.8,
+    "climbSpeed": 1.0,
     "switchPort": 1,
     "motorConfig": {
         "port": 19,

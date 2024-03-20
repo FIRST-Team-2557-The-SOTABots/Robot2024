@@ -16,7 +16,7 @@ public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
         FLOOR(0.431),
-        REST(0.01),
+        REST(0.013),
         AMP(0.35);
 
         public double position;
@@ -65,6 +65,8 @@ public class Wrist extends SubsystemBase {
         this.currentPosition = position;
     }
 
+    
+
     public double getAdjustedEncoder(){
         if (mEncoder.getPosition() > 0.9){
             return 0.0;
@@ -86,7 +88,6 @@ public class Wrist extends SubsystemBase {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
     }
-
 
     @Override
     public void periodic() {

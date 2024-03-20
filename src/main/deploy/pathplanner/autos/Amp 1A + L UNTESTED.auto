@@ -12,40 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Arm to Amp"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Comm-Amp"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Run Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Arm to Rest"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Amp to Leave"
+            "pathName": "Comm-Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Sequence"
           }
         }
       ]
