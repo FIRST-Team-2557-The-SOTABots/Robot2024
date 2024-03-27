@@ -75,7 +75,7 @@ public class RobotContainer {
     private ConfigUtils mConfigUtils;
 
     private SendableChooser<Command> autoChooser;
-    
+
     private SOTA_Xboxcontroller dController;
     private SOTA_Xboxcontroller mController;
     private SOTA_Gyro mGyro;
@@ -104,7 +104,8 @@ public class RobotContainer {
                     .generateMotorController(deliveryConfig.getDeliveryConfig());
             SOTA_MotorController shooterDeliveryMotor = MotorControllerFactory
                     .generateMotorController(deliveryConfig.getShooterDeliveryConfig());
-            this.mDelivery = new Delivery(deliveryConfig, deliveryMotor, shooterDeliveryMotor);
+            DigitalInput shooterNoteSensor = new DigitalInput(3);
+            this.mDelivery = new Delivery(deliveryConfig, deliveryMotor, shooterDeliveryMotor, shooterNoteSensor);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,159 +204,173 @@ public class RobotContainer {
             e.printStackTrace();
         }
 
-        
         registerNamedCommands();
 
         this.autoChooser = AutoBuilder.buildAutoChooser();
         Shuffleboard.getTab("Competition").add(autoChooser);
 
-
         configureDefaultCommands();
         configureBindings();
     }
 
-  private void registerNamedCommands() {
-    AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
-    NamedCommands.registerCommand("Shoot", autoCommands.shootNote());
-    NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
-    NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
-    NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
-    NamedCommands.registerCommand("Spin Flywheels to RPM", autoCommands.runFlywheelsToRpm());
-    NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
-    NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
-    NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
-    NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
-    NamedCommands.registerCommand("Align Tag", new RotateToAprilTag(mSwerveDrive));
-    NamedCommands.registerCommand("Amp Sequence", autoCommands.scoreInAmp());
-    NamedCommands.registerCommand("Align Shooter", autoCommands.alignShooter());
-    NamedCommands.registerCommand("Reset Gyro", Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
-    NamedCommands.registerCommand("Teleop shoot command", new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
-    NamedCommands.registerCommand("Check Intake", autoCommands.checkIntake());
-  }
+    private void registerNamedCommands() {
+        AutoCommands autoCommands = new AutoCommands(mShooter, mIntake, mWrist, mDelivery, mArm, mSwerveDrive);
+        NamedCommands.registerCommand("Shoot", autoCommands.shootNote());
+        NamedCommands.registerCommand("Intake", autoCommands.intakeAutoStop());
+        NamedCommands.registerCommand("Run Intake", autoCommands.intakeAmp());
+        NamedCommands.registerCommand("Spin Flywheels", autoCommands.setFlyWheels());
+        NamedCommands.registerCommand("Spin Flywheels to RPM", autoCommands.runFlywheelsToRpm());
+        NamedCommands.registerCommand("Stop Flywheels", autoCommands.stopFlyWheels());
+        NamedCommands.registerCommand("Align Shoot", autoCommands.alignAndShoot());
+        NamedCommands.registerCommand("Arm to Amp", autoCommands.setArmToAmp());
+        NamedCommands.registerCommand("Arm to Rest", autoCommands.setArmToRest());
+        NamedCommands.registerCommand("Align Tag", new RotateToAprilTag(mSwerveDrive));
+        NamedCommands.registerCommand("Amp Sequence", autoCommands.scoreInAmp());
+        NamedCommands.registerCommand("Align Shooter", autoCommands.alignShooter());
+        NamedCommands.registerCommand("Reset Gyro", Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
+        NamedCommands.registerCommand("Teleop shoot command",
+                new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
+        NamedCommands.registerCommand("Check Intake", autoCommands.checkIntake());
+    }
 
     private void configureDefaultCommands() {
         mSwerveDrive.setDefaultCommand(
                 new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-        mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToSpecifiedAngle(58), mShooter));
+        // mShooter.setDefaultCommand(Commands.run(() ->
+        // mShooter.goToSpecifiedAngle(58), mShooter));
 
-        // mShooter.setDefaultCommand(Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() * -12), mShooter));
+        mShooter.setDefaultCommand(
+                Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() * -12), mShooter));
     }
 
-  private void configureBindings() {
-    dController.leftBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(false), mSwerveDrive));
-    dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
-    dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
+    private void configureBindings() {
+        dController.leftBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(false), mSwerveDrive));
+        dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
+        dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-    // dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    // dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    // dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
-    // dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive, dController::getLeftY, dController::getLeftX, 0));
+        // dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive,
+        // dController::getLeftY, dController::getLeftX, 0));
+        // dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive,
+        // dController::getLeftY, dController::getLeftX, 0));
+        // dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive,
+        // dController::getLeftY, dController::getLeftX, 0));
+        // dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive,
+        // dController::getLeftY, dController::getLeftX, 0));
 
-    dController.leftTrigger().onTrue(
-      new Uppies(leftClimber, rightClimber)).onFalse(
-        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
-        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)
-        )
-    );
-    
-    dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+        dController.leftTrigger().onTrue(
+                new Uppies(leftClimber, rightClimber)).onFalse(
+                        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+                                Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
+        dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
+        mController.a().onTrue(Commands.run(() -> {
+            mWrist.moveSlowlyToFloor();
+        }, mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
+        mController.b().onTrue(Commands.run(() -> {
+            mWrist.moveSlowlyToRest();
+        }, mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
 
-    mController.a().onTrue(new AutoStop(mWrist, mIntake)).onFalse(Commands.runOnce(() -> {
-        mWrist.setDesiredPosition(WristPosition.REST);
-        mIntake.stop();
-    }, mWrist, mIntake));
+        mController.a().onTrue(new AutoStop(mWrist,
+                mIntake)).onFalse(Commands.runOnce(() -> {
+                    mWrist.setDesiredPosition(WristPosition.REST);
+                    mIntake.stop();
+                }, mWrist, mIntake));
 
-    mController.b().onTrue(Commands.sequence(
-      new RotateToAprilTag(mSwerveDrive),
-      Commands.runOnce(() -> {
-        mIntake.intake();
-        mDelivery.toShooter();
-      }))).onFalse(Commands.runOnce(() -> {
-        mIntake.stop();
-        mDelivery.stop();
-      }));
+        mController.b().onTrue(Commands.sequence(
+                new RotateToAprilTag(mSwerveDrive),
+                Commands.runOnce(() -> {
+                    mIntake.intake();
+                    mDelivery.toShooter();
+                }))).onFalse(Commands.runOnce(() -> {
+                    mIntake.stop();
+                    mDelivery.stop();
+                }));
 
-    mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
-      .onFalse(Commands.runOnce(() -> {
-          mIntake.stop();
-          mDelivery.stop();
-          mShooter.stopFlyWheel();
-      }, mIntake, mDelivery, mShooter));
+        mController.x().onTrue(new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive))
+                .onFalse(Commands.runOnce(() -> {
+                    mIntake.stop();
+                    mDelivery.stop();
+                    mShooter.stopFlyWheel();
+                }, mIntake, mDelivery, mShooter));
 
-    // mController.povDown().onTrue(Commands.sequence(
-    //   Commands.run(() -> {
-    //       mShooter.goToRestAngle();
-    //   }, mShooter).until(mShooter::isAtAngle),
-    //   Commands.runOnce(() -> {
-    //       mArm.setDesiredPosition(ArmPosition.REST);
-    //       mWrist.setDesiredPosition(WristPosition.REST);
-    //   }, mArm, mWrist)));
+        mController.rightStick().onTrue(Commands.sequence(Commands.run(() -> {
+            mIntake.intake();
+            mDelivery.toShooter();
+        }, mIntake, mDelivery).until(mDelivery::shooterHasNote), Commands.runOnce(() -> {
+            mIntake.stop();
+            mDelivery.stop();
+        }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
+            mIntake.stop();
+            mDelivery.stop();
+        }, mDelivery, mIntake));
+        // mController.povDown().onTrue(Commands.sequence(
+        // Commands.run(() -> {
+        // mShooter.goToRestAngle();
+        // }, mShooter).until(mShooter::isAtAngle),
+        // Commands.runOnce(() -> {
+        // mArm.setDesiredPosition(ArmPosition.REST);
+        // mWrist.setDesiredPosition(WristPosition.REST);
+        // }, mArm, mWrist)));
 
-    // mController.povUp().onTrue(Commands.sequence(
-    //   Commands.run(() -> {
-    //       mShooter.goToRestAngle();
-    //   }, mShooter).until(mShooter::isAtAngle),
-    //   Commands.runOnce(() -> {
-    //       mWrist.setDesiredPosition(WristPosition.AMP);
-    //   }, mWrist),
-    //   Commands.waitUntil(mWrist::atSetpoint),
-    //   Commands.runOnce(() -> {
-    //       mArm.setDesiredPosition(ArmPosition.AMP);
-    //   }, mArm)));
+        // mController.povUp().onTrue(Commands.sequence(
+        // Commands.run(() -> {
+        // mShooter.goToRestAngle();
+        // }, mShooter).until(mShooter::isAtAngle),
+        // Commands.runOnce(() -> {
+        // mWrist.setDesiredPosition(WristPosition.AMP);
+        // }, mWrist),
+        // Commands.waitUntil(mWrist::atSetpoint),
+        // Commands.runOnce(() -> {
+        // mArm.setDesiredPosition(ArmPosition.AMP);
+        // }, mArm)));
 
-    mController.povUp().onTrue(Commands.runOnce(() -> {
-      mWrist.setDesiredPosition(WristPosition.AMP);
-      mArm.setDesiredPosition(ArmPosition.AMP);
-    }, mWrist, mArm));
+        mController.povUp().onTrue(Commands.runOnce(() -> {
+            mWrist.setDesiredPosition(WristPosition.AMP);
+            mArm.setDesiredPosition(ArmPosition.AMP);
+        }, mWrist, mArm));
 
-    mController.povDown().onTrue(Commands.runOnce(() -> {
-      mWrist.setDesiredPosition(WristPosition.REST);
-      mArm.setDesiredPosition(ArmPosition.REST);
-    }, mWrist, mArm));
+        mController.povDown().onTrue(Commands.runOnce(() -> {
+            mWrist.setDesiredPosition(WristPosition.REST);
+            mArm.setDesiredPosition(ArmPosition.REST);
+        }, mWrist, mArm));
 
-    mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+        mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
+        mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
+                Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
 
-    mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
-        Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
+        mController.leftTrigger().onTrue(
+                new Uppies(leftClimber, rightClimber)).onFalse(
+                        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+                                Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
-    mController.leftTrigger().onTrue(
-      new Uppies(leftClimber, rightClimber)).onFalse(
-        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
-        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)
-        )
-      );
+        mController.y().onTrue(Commands.run(() -> {
+            // mShooter.goToAngle();
+            mShooter.spinUpFlyWheel();
+        }, mShooter)).onFalse(Commands.runOnce(() -> {
+            mShooter.stopFlyWheel();
+            // mShooter.goToRestAngle();
+        }, mShooter));
 
-    mController.y().onTrue(Commands.run(() -> {
-      mShooter.goToAngle();
-      mShooter.spinUpFlyWheel();
-    }, mShooter)).onFalse(Commands.runOnce(() -> {
-      mShooter.stopFlyWheel();
-      // mShooter.goToRestAngle();
-    }, mShooter));
- 
-    mController.leftBumper().onTrue(Commands.runOnce(() -> {
-        mDelivery.toShooter();
-        mIntake.intake();
-    }, mDelivery)).onFalse(Commands.runOnce(() -> {
-        mDelivery.stop();
-        mIntake.stop();
-    }, mDelivery, mIntake));
+        mController.leftBumper().onTrue(Commands.runOnce(() -> {
+            mDelivery.toShooter();
+            mIntake.intake();
+        }, mDelivery)).onFalse(Commands.runOnce(() -> {
+            mDelivery.stop();
+            mIntake.stop();
+        }, mDelivery, mIntake));
 
-    mController.rightBumper().onTrue(Commands.runOnce(() -> {
-        mDelivery.toIntake();
-        mIntake.outtake();
-    }, mDelivery)).onFalse(Commands.runOnce(() -> {
-        mDelivery.stop();
-        mIntake.stop();
-    }, mDelivery, mIntake));
+        mController.rightBumper().onTrue(Commands.runOnce(() -> {
+            mDelivery.toIntake();
+            mIntake.outtake();
+        }, mDelivery)).onFalse(Commands.runOnce(() -> {
+            mDelivery.stop();
+            mIntake.stop();
+        }, mDelivery, mIntake));
 
-    mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
-
-    
+        mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
 
     }
 

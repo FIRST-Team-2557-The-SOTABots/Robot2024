@@ -115,6 +115,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void linearActuatorSetVoltage(double volts) {
+        /*
         if (getCorrectedEncoderPosition() > maxLinearValue && volts > 0) {
             linearActuator.stopMotor();
         } else if (getCorrectedEncoderPosition() < minLinearValue && volts < 0) {
@@ -124,12 +125,13 @@ public class Shooter extends SubsystemBase {
         } else {
             linearActuator.setVoltage(volts);
         }
-
-        // linearActuator.setVoltage(volts);
+*/
+        linearActuator.setVoltage(volts);
     }
 
     public void spinUpFlyWheel() {
-        targetRPM = calcTargetRpm();
+//        targetRPM = calcTargetRpm();
+        targetRPM = 6000;
         leftShooter.setVoltage(leftFF.calculate(targetRPM));
         rightShooter.setVoltage(rightFF.calculate(targetRPM));
     }

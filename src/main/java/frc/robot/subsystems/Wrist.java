@@ -15,9 +15,9 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.431),
-        REST(0.013),
-        AMP(0.35);
+        FLOOR(0.44),
+        REST(0.035),
+        AMP(0.33);
 
         public double position;
 
@@ -73,6 +73,18 @@ public class Wrist extends SubsystemBase {
         } else{
             return mEncoder.getPosition();
         }
+    }
+
+    public void moveSlowlyToFloor() {
+        SmartDashboard.putBoolean("To Floor", true);
+        leftMotor.set(0.1);
+        rightMotor.set(0.1);
+    }
+
+    public void moveSlowlyToRest() {
+        SmartDashboard.putBoolean("To Rest", true);
+        leftMotor.set(-0.1);
+        rightMotor.set(-0.1);
     }
 
     public boolean atSetpoint(){

@@ -30,7 +30,7 @@
         "motorType": "BRUSHED",
         "motorModel": "SparkMax",
         "neutralOperation": "BRAKE",
-        "currentLimit": 3
+        "currentLimit": 8
     },
     "linearEncoderConfig": {
         "port": 0,
@@ -40,7 +40,7 @@
     },
     "leftShooterConfig": {
         "port": 13,
-        "isInverted": false,
+        "isInverted": true,
         "motorType": "BRUSHLESS",
         "motorModel": "SparkFlex",
         "neutralOperation": "COAST",
@@ -48,7 +48,7 @@
     },
     "rightShooterConfig": {
         "port": 14,
-        "isInverted": false,
+        "isInverted": true,
         "motorType": "BRUSHLESS",
         "motorModel": "SparkFlex",
         "neutralOperation": "COAST",
