@@ -342,10 +342,10 @@ public class RobotContainer {
             mArm.setDesiredPosition(ArmPosition.AMP);
         }, mWrist, mArm));
 
-        mController.povDown().onTrue(Commands.runOnce(() -> {
-            mWrist.setDesiredPosition(WristPosition.REST);
-            mArm.setDesiredPosition(ArmPosition.REST);
-        }, mWrist, mArm));
+        mController.povDown().onTrue(Commands.sequence(
+            Commands.runOnce(() -> {mArm.setDesiredPosition(ArmPosition.REST);}, mArm),
+            Commands.waitUntil(mArm::isAtSetpoint).andThen(() -> {mWrist.setDesiredPosition(WristPosition.REST);})
+        ));
 
         mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
