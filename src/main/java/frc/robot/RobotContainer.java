@@ -237,11 +237,12 @@ public class RobotContainer {
         mSwerveDrive.setDefaultCommand(
                 new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-        // mShooter.setDefaultCommand(Commands.run(() ->
-        // mShooter.goToSpecifiedAngle(58), mShooter));
+        mShooter.setDefaultCommand(Commands.run(() -> mShooter.goToRestAngle(),
+                mShooter));
 
-        mShooter.setDefaultCommand(
-                Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() * -12), mShooter));
+        // mShooter.setDefaultCommand(
+        // Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() *
+        // -12), mShooter));
     }
 
     private void configureBindings() {
@@ -292,19 +293,29 @@ public class RobotContainer {
                 .onFalse(Commands.runOnce(() -> {
                     mIntake.stop();
                     mDelivery.stop();
+                    mShooter.linearActuatorSetVoltage(0);
                     mShooter.stopFlyWheel();
                 }, mIntake, mDelivery, mShooter));
 
-        mController.rightStick().onTrue(Commands.sequence(Commands.run(() -> {
-            mIntake.intake();
-            mDelivery.toShooter();
-        }, mIntake, mDelivery).until(mDelivery::shooterHasNote), Commands.runOnce(() -> {
-            mIntake.stop();
-            mDelivery.stop();
-        }, mDelivery, mIntake))).onFalse(Commands.runOnce(() -> {
-            mIntake.stop();
-            mDelivery.stop();
-        }, mDelivery, mIntake));
+        mController.rightStick().onTrue(
+                Commands.sequence(
+                        Commands.runOnce(() -> {
+                            mShooter.goToSpecifiedAngle(26); // lowest angle for delivering
+                        }, mShooter),
+                        Commands.waitUntil(mShooter::isIntakeAble).andThen(
+                                Commands.run(() -> {
+                                    mIntake.intake();
+                                    mDelivery.toShooter();
+                                }, mIntake, mDelivery).until(mDelivery::shooterHasNote)),
+                        Commands.runOnce(() -> {
+                            mIntake.stop();
+                            mDelivery.stop();
+                            mShooter.goToRestAngle();
+                        }, mDelivery, mIntake)))
+                .onFalse(Commands.runOnce(() -> {
+                    mIntake.stop();
+                    mDelivery.stop();
+                }, mDelivery, mIntake));
         // mController.povDown().onTrue(Commands.sequence(
         // Commands.run(() -> {
         // mShooter.goToRestAngle();

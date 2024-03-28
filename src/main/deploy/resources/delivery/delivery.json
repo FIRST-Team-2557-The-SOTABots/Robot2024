@@ -5,8 +5,8 @@
         "isInverted": false,
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
-        "neutralOperation": "COAST",
-        "currentLimit": 15
+        "neutralOperation": "BRAKE",
+        "currentLimit": 14.5
     },
     "deliveryConfig": {
         "port": 12,
@@ -14,6 +14,6 @@
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
         "neutralOperation": "COAST",
-        "currentLimit": 15
+        "currentLimit": 14.5
     }
 }
