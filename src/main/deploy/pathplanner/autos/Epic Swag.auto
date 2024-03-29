@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.32,
+      "y": 5.56
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Sub to left mid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top mid to podium"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "podium to center mid through stage"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "TEST",
+  "choreoAuto": false
+}
