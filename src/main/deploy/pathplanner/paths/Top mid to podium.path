@@ -1,0 +1,84 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.628905257810516,
+        "y": 7.410074050917332
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.948086203864717,
+        "y": 6.9956624528633675
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.885895156405699,
+        "y": 5.979367343350071
+      },
+      "prevControl": {
+        "x": 6.609396064945973,
+        "y": 6.808190539458002
+      },
+      "nextControl": {
+        "x": 3.162394247865424,
+        "y": 5.15054414724214
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.494656220081673,
+        "y": 4.864402805728689
+      },
+      "prevControl": {
+        "x": 3.777166805637651,
+        "y": 4.869942228974885
+      },
+      "nextControl": {
+        "x": 2.9914421367304285,
+        "y": 4.85453586291788
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.517828881811611,
+        "y": 4.065180438053184
+      },
+      "prevControl": {
+        "x": 1.3535296301361848,
+        "y": 4.775600320431411
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Swag End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "TEST",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

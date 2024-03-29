@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -61,9 +63,10 @@ import frc.robot.subsystems.configs.WristConfig;
 
 public class RobotContainer {
     public enum LimeLightPipelines {
-        SPEAKER(0),
+        SPEAKER(4),
         AMP(1),
-        STAGE(2);
+        STAGE(2),
+        MEGATAG(0);
 
         public int id;
 
@@ -91,7 +94,7 @@ public class RobotContainer {
 
     private Arm mArm;
 
-    public RobotContainer() {
+    public RobotContainer(DoubleSupplier getPeriod) {
         this.mConfigUtils = new ConfigUtils();
         CameraServer.startAutomaticCapture();
         this.dController = new SOTA_Xboxcontroller(0);
@@ -187,7 +190,7 @@ public class RobotContainer {
                     initModule(mConfigUtils, mCompositeMotorFactory, "swerve/backright", driveConfig)
             };
 
-            this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig);
+            this.mSwerveDrive = new SOTA_SwerveDrive(modules, kinematics, mGyro, driveConfig, getPeriod);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,6 +234,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Teleop shoot command",
                 new ShooterSequence(mShooter, mDelivery, mIntake, mWrist, mSwerveDrive));
         NamedCommands.registerCommand("Check Intake", autoCommands.checkIntake());
+        NamedCommands.registerCommand("Outtake", Commands.run(() -> mIntake.outtake(), mIntake).withTimeout(0.75).andThen(Commands.runOnce(() -> mIntake.stop(), mIntake)));
     }
 
     private void configureDefaultCommands() {
@@ -264,7 +268,7 @@ public class RobotContainer {
                         new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
                                 Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
-        dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+        // dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
         mController.a().onTrue(Commands.run(() -> {
             mWrist.moveSlowlyToFloor();
@@ -343,11 +347,14 @@ public class RobotContainer {
         }, mWrist, mArm));
 
         mController.povDown().onTrue(Commands.sequence(
-            Commands.runOnce(() -> {mArm.setDesiredPosition(ArmPosition.REST);}, mArm),
-            Commands.waitUntil(mArm::isAtSetpoint).andThen(() -> {mWrist.setDesiredPosition(WristPosition.REST);})
-        ));
+                Commands.runOnce(() -> {
+                    mArm.setDesiredPosition(ArmPosition.REST);
+                }, mArm),
+                Commands.waitUntil(mArm::isAtSetpoint).andThen(() -> {
+                    mWrist.setDesiredPosition(WristPosition.REST);
+                })));
 
-        mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
+        // mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
         mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
                 Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
@@ -358,7 +365,7 @@ public class RobotContainer {
                                 Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
         mController.y().onTrue(Commands.run(() -> {
-            // mShooter.goToAngle();
+            // mShooter.goToSpecifiedAngle(72.95);
             mShooter.spinUpFlyWheel();
         }, mShooter)).onFalse(Commands.runOnce(() -> {
             mShooter.stopFlyWheel();
@@ -386,6 +393,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        mGyro.resetAngle();
+        LimelightHelpers.setPipelineIndex("", LimeLightPipelines.MEGATAG.id);
         return autoChooser.getSelected();
     }
 

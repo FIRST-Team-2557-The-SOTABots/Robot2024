@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45,
-        "y": 5.55
+        "x": 0.47537171997421085,
+        "y": 7.73568316367402
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5144000463439524,
-        "y": 5.2019081231144915
+        "x": 1.475371719974211,
+        "y": 7.73568316367402
       },
       "isLocked": false,
-      "linkedName": "Intake2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.409292510892716,
-        "y": 4.351321779566637
+        "x": 7.875578828080734,
+        "y": 7.73568316367402
       },
       "prevControl": {
-        "x": 1.4646242934861056,
-        "y": 4.451072680822824
+        "x": 6.875578828080734,
+        "y": 7.73568316367402
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Intake3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.71,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 4.71,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 480.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.6128210412209847,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Note-Note",
+  "folder": "TEST",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

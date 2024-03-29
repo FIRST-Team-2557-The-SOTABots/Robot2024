@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
     }
 
     Timer.delay(10);
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(this::getPeriod);
   }
 
   @Override

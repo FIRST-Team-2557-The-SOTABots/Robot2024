@@ -12,12 +12,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Spin Flywheels"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
