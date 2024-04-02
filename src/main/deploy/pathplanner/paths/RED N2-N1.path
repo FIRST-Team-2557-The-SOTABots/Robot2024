@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.0,
+        "y": 5.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.916137858715754,
+        "y": 5.557214513862455
+      },
+      "isLocked": false,
+      "linkedName": "RED-Intake2 new"
+    },
+    {
+      "anchor": {
+        "x": 14.150807225127199,
+        "y": 6.853590893206338
+      },
+      "prevControl": {
+        "x": 14.892709369932435,
+        "y": 6.6427344941564295
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RED-Intake1 new"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 150.37625124882604,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note-Note",
+  "previewStartingState": {
+    "rotation": 179.77917106637034,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
