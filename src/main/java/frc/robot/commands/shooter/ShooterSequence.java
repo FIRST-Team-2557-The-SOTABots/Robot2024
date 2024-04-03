@@ -38,15 +38,14 @@ public class ShooterSequence extends SequentialCommandGroup {
                         Commands.waitUntil(this::isReadyToShoot).andThen(Commands.run(() -> {
                             mIntake.intake();
                             mDelivery.toShooter();
-                        }, mIntake, mDelivery))),
+                        }, mIntake, mDelivery))).withTimeout(1.5),
                 Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
                     mShooter.stopFlyWheel();
                     mIntake.stop();
                     mDelivery.stop();
-                    LimelightHelpers.setPipelineIndex("", LimeLightPipelines.MEGATAG.id);
                 }, mShooter)));
 
-        addRequirements(mShooter, mDelivery, mIntake, mWrist);
+        addRequirements(mShooter, mDelivery, mIntake, mWrist, mSwerve);
     }
 
     public boolean isReadyToShoot() {
