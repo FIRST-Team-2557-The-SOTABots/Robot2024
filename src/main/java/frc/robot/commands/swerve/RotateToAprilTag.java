@@ -39,7 +39,7 @@ public class RotateToAprilTag extends Command {
 
     @Override
     public boolean isFinished() {
-        return mRotationController.atSetpoint();
+        return mRotationController.atSetpoint() && xOffset != 0.0;
 
     }
 

@@ -95,8 +95,9 @@ public class AutoCommands {
                     shouldRotate ? new RotateToAprilTag(mSwerve) : Commands.waitSeconds(0) 
                 ),
                 Commands.waitUntil(this::isReadyToShoot).andThen(
+                    Commands.waitSeconds(0.25).andThen(
                     Commands.run(() -> {mIntake.intake(); mDelivery.toShooter();}, mIntake, mDelivery).withTimeout(isPreloaded ? 0.75 : 1.5)
-                )
+                ))
             ),
             Commands.runOnce(() -> {
                 // mShooter.stopFlyWheel();
@@ -238,7 +239,7 @@ public class AutoCommands {
         return Commands.run(() -> {
             mIntake.intake(); 
             mDelivery.toShooter();
-        }, mIntake, mDelivery).until(mDelivery::shooterHasNote).withTimeout(1).andThen(Commands.runOnce(() -> {
+        }, mIntake, mDelivery).until(mDelivery::shooterHasNote).withTimeout(2).andThen(Commands.runOnce(() -> {
             mIntake.stop(); 
             mDelivery.stop();
         }, mIntake, mDelivery));

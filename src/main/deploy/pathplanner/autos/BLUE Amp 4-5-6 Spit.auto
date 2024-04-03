@@ -1,0 +1,105 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4603758008271446,
+      "y": 7.345589157656125
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE Amp-N4 Spit"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight Speaker"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BLUE N4-Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot preloaded"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE ShootWing-N5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Reset Intake"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BLUE N5-Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot preloaded"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE ShootStage-N6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "3 Note",
+  "choreoAuto": false
+}

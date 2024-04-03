@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.439758586788185,
+        "y": 6.57244902780646
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.260140172782707,
+        "y": 6.658353486678645
+      },
+      "isLocked": false,
+      "linkedName": "RED-ShootP"
+    },
+    {
+      "anchor": {
+        "x": 14.033664781210582,
+        "y": 6.791114923117476
+      },
+      "prevControl": {
+        "x": 14.119569240082766,
+        "y": 6.728638953028613
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RED-Intake1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 151.60698057861694,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note-Note",
+  "previewStartingState": {
+    "rotation": 151.9908232919863,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

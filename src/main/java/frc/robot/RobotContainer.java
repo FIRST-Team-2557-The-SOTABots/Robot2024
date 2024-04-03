@@ -257,12 +257,9 @@ public class RobotContainer {
         mSwerveDrive.setDefaultCommand(
                 new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
 
-        mShooter.setDefaultCommand(Commands.run(() -> {mShooter.goToRestAngle();}, mShooter));
+        mShooter.setDefaultCommand(Commands.run(() -> {mShooter.goToSpecifiedAngle(50);}, mShooter));
         // mShooter.setDefaultCommand(Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY()*-12), mShooter));
-        // Commands.runOnce(() -> LimelightHelpers.setPipelineIndex("",
-        // LimeLightPipelines.MEGATAG.id));},
-        // mShooter));
-            // mShooter.setDefaultCommand(Commands.run(mShooter::spinUpFlyWheel, mShooter));
+
         // mShooter.setDefaultCommand(Commands.run(() -> {mShooter.goToSpecifiedAngle(30);}, mShooter));
         // mShooter.setDefaultCommand(
         // Commands.run(() -> mShooter.linearActuatorSetVoltage(mController.getLeftY() *
@@ -274,29 +271,14 @@ public class RobotContainer {
         dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
         dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
 
-        // dController.povUp().onTrue(new RotateAndDrive(mSwerveDrive,
-        // dController::getLeftY, dController::getLeftX, 0));
-        // dController.povDown().onTrue(new RotateAndDrive(mSwerveDrive,
-        // dController::getLeftY, dController::getLeftX, 0));
-        // dController.povLeft().onTrue(new RotateAndDrive(mSwerveDrive,
-        // dController::getLeftY, dController::getLeftX, 0));
-        // dController.povRight().onTrue(new RotateAndDrive(mSwerveDrive,
-        // dController::getLeftY, dController::getLeftX, 0));
+        dController.leftTrigger().onTrue(
+        new Uppies(leftClimber, rightClimber)).onFalse(
+        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(),
+        leftClimber),
+        Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
-        // dController.leftTrigger().onTrue(
-        // new Uppies(leftClimber, rightClimber)).onFalse(
-        // new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(),
-        // leftClimber),
-        // Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+        dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
 
-        // dController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber));
-
-        // mController.a().onTrue(Commands.run(() -> {
-        // mWrist.moveSlowlyToFloor();
-        // }, mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
-        // mController.b().onTrue(Commands.run(() -> {
-        // mWrist.moveSlowlyToRest();
-        // }, mWrist)).onFalse(Commands.runOnce(() -> mWrist.stop(), mWrist));
 
         mController.a().onTrue(new AutoStop(mWrist,
                 mIntake)).onFalse(Commands.runOnce(() -> {
@@ -323,36 +305,13 @@ public class RobotContainer {
                 }, mIntake, mDelivery, mShooter));
 
         mController.y().onTrue(Commands.run(() -> {
-            // mShooter.goToSpecifiedAngle(72.95);
             LimelightHelpers.setPipelineIndex("", LimeLightPipelines.SPEAKER.id);
             mShooter.goToAngle();
             mShooter.spinUpFlyWheel();
-            // mShooter.setSpeed(1);
         }, mShooter)).onFalse(Commands.runOnce(() -> {
             mShooter.stopFlyWheel();
             LimelightHelpers.setPipelineIndex("", LimeLightPipelines.MEGATAG.id);
-            // mShooter.goToRestAngle();
         }, mShooter));
-
-        // mController.rightStick().onTrue(
-        // Commands.sequence(
-        // Commands.runOnce(() -> {
-        // mShooter.goToSpecifiedAngle(26); // lowest angle for delivering
-        // }, mShooter),
-        // Commands.waitUntil(mShooter::isIntakeAble).andThen(
-        // Commands.run(() -> {
-        // mIntake.intake();
-        // mDelivery.toShooter();
-        // }, mIntake, mDelivery).until(mDelivery::shooterHasNote)),
-        // Commands.runOnce(() -> {
-        // mIntake.stop();
-        // mDelivery.stop();
-        // mShooter.goToRestAngle();
-        // }, mDelivery, mIntake)))
-        // .onFalse(Commands.runOnce(() -> {
-        // mIntake.stop();
-        // mDelivery.stop();
-        // }, mDelivery, mIntake));
 
         mController.rightStick().onTrue(Commands.run(() -> {
             mIntake.intake();
@@ -364,27 +323,6 @@ public class RobotContainer {
             mIntake.stop();
             mDelivery.stop();
         }, mIntake, mDelivery));
-
-        // mController.povDown().onTrue(Commands.sequence(
-        // Commands.run(() -> {
-        // mShooter.goToRestAngle();
-        // }, mShooter).until(mShooter::isAtAngle),
-        // Commands.runOnce(() -> {
-        // mArm.setDesiredPosition(ArmPosition.REST);
-        // mWrist.setDesiredPosition(WristPosition.REST);
-        // }, mArm, mWrist)));
-
-        // mController.povUp().onTrue(Commands.sequence(
-        // Commands.run(() -> {
-        // mShooter.goToRestAngle();
-        // }, mShooter).until(mShooter::isAtAngle),
-        // Commands.runOnce(() -> {
-        // mWrist.setDesiredPosition(WristPosition.AMP);
-        // }, mWrist),
-        // Commands.waitUntil(mWrist::atSetpoint),
-        // Commands.runOnce(() -> {
-        // mArm.setDesiredPosition(ArmPosition.AMP);
-        // }, mArm)));
 
         mController.povUp().onTrue(Commands.runOnce(() -> {
             mWrist.setDesiredPosition(WristPosition.AMP);
@@ -414,18 +352,28 @@ public class RobotContainer {
                 }, mDelivery, mIntake));
 
         mController.povRight().onTrue(Commands.run(
-                () -> mShooter.spinToRpm(1000), mShooter)).onFalse(Commands.runOnce(
+                () -> mShooter.spinToRpm(2800), mShooter)).onFalse(Commands.runOnce(
                         () -> mShooter.stopFlyWheel(), mShooter));
 
-        mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber).withTimeout(5));
 
-        mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
-                Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
+        mController.start().onTrue(Commands.sequence(
+            Commands.runOnce(() -> mWrist.setDesiredPosition(WristPosition.AMP), mWrist),
+            Commands.waitUntil(mWrist::atSetpoint),
+            Commands.run(() -> mIntake.outtake(), mIntake).withTimeout(0.5),
+            Commands.runOnce(() -> mIntake.stop(), mIntake)
+        )).onFalse(Commands.runOnce(() -> {
+            mWrist.setDesiredPosition(WristPosition.REST);
+            mIntake.stop();
+        }, mWrist, mIntake));
+        // mController.rightTrigger().onTrue(new Climb(leftClimber, rightClimber).withTimeout(5));
 
-        mController.leftTrigger().onTrue(
-                new Uppies(leftClimber, rightClimber)).onFalse(
-                        new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
-                                Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
+        // mController.back().whileTrue(new ParallelCommandGroup(Commands.run(() -> leftClimber.stopMotor(), leftClimber),
+        //         Commands.run(() -> rightClimber.stopMotor(), rightClimber)));
+
+        // mController.leftTrigger().onTrue(
+        //         new Uppies(leftClimber, rightClimber)).onFalse(
+        //                 new ParallelCommandGroup(Commands.runOnce(() -> leftClimber.stopMotor(), leftClimber),
+        //                         Commands.runOnce(() -> rightClimber.stopMotor(), rightClimber)));
 
         mController.leftBumper().onTrue(Commands.runOnce(() -> {
             mDelivery.toShooter();
@@ -443,10 +391,6 @@ public class RobotContainer {
             mIntake.stop();
         }, mDelivery, mIntake));
 
-        mController.rightTrigger().onTrue(new RotateToAprilTag(mSwerveDrive));
-
-        // tController.a().onTrue(Commands.run(() -> {mShooter.linearActuatorSetVoltage(-12);}, mShooter)).onFalse(Commands.runOnce(() -> mShooter.linearActuatorSetVoltage(0), mShooter));
-        // tController.b().onTrue(Commands.run(() -> {mShooter.linearActuatorSetVoltage(12);}, mShooter)).onFalse(Commands.runOnce(() -> mShooter.linearActuatorSetVoltage(0), mShooter));
     }
 
     public Command getAutonomousCommand() {

@@ -121,7 +121,7 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Linear Actuator Voltage", linearActuator::getMotorCurrent);
         Shuffleboard.getTab("Shooter").addBoolean("At Angle", this::isAtAngle);
         Shuffleboard.getTab("Shooter").addBoolean("Intakeable", this::isIntakeAble);
-            }
+    }
 
     public double getCorrectedEncoderPosition() {
         double output;
@@ -146,19 +146,19 @@ public class Shooter extends SubsystemBase {
 
     public void linearActuatorSetVoltage(double volts) {
         if (getCorrectedEncoderPosition() > maxLinearValue && volts > 0) {
-        linearActuator.stopMotor();
+            linearActuator.stopMotor();
         } else if (getCorrectedEncoderPosition() < minLinearValue && volts < 0) {
-        linearActuator.stopMotor();
+            linearActuator.stopMotor();
         } else if (linearPID.atSetpoint()) {
             linearActuator.stopMotor();
         } else {
-        linearActuator.setVoltage(volts);
-}
+            linearActuator.setVoltage(volts);
+        }
         // linearActuator.setVoltage(volts);
     }
 
     public void spinUpFlyWheel() {
-        targetRPM = Math.min(calcTargetRpm(), 4250);
+        targetRPM = Math.min(calcTargetRpm(), 5000);
         leftShooter.setVoltage(leftRPMToVolts(targetRPM));
         rightShooter.setVoltage(rightRPMToVolts(targetRPM));
     }
@@ -175,7 +175,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtShootingSpeed() {
         return leftShooter.getEncoderVelocity() >= targetRPM - 100
-                || rightShooter.getEncoderVelocity() >= targetRPM - 100 || leftShooter.getEncoderVelocity() >= 5100;
+                || rightShooter.getEncoderVelocity() >= targetRPM - 100 || leftShooter.getEncoderVelocity() >= 4800;
     }
 
     public boolean isNotAtShootingSpeed() {
@@ -215,6 +215,7 @@ public class Shooter extends SubsystemBase {
 
     public void goToRestAngle() {
         currentAngleSetpoint = encoderToAngle(restLinearValue);
+        // currentAngleSetpoint = 53;
         double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()),
                 encoderToAngle(restLinearValue));
         linearActuatorSetVoltage(volts);
@@ -255,7 +256,11 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // linearPID.setReference(Math.toRadians(currentAngleSetpoint), ControlType.kPosition);
+        // linearPID.setReference(Math.toRadians(currentAngleSetpoint),
+        // ControlType.kPosition);
         targetAngle = calcTargetAngle();
+        if (linearPID.atSetpoint()) {
+            linearPID.reset();
+        }
     }
 }
