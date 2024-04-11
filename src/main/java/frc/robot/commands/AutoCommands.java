@@ -83,12 +83,14 @@ public class AutoCommands {
     // }
 
     public Command spinUpShoot(boolean isPreloaded, boolean shouldRotate) {
+        
         return Commands.sequence(
             // Commands.run(() -> new RotateToAprilTag(mSwerve)).raceWith(Commands.waitSeconds(1)),
             // new RotateToAprilTag(mSwerve),
             Commands.race(
                 Commands.parallel(
                 Commands.run(() -> {
+                    LimelightHelpers.takeSnapshot("", "Auto Command " + LimelightHelpers.getTY(""));
                     mShooter.spinUpFlyWheel();
                     mShooter.goToAngle();
                 }, mShooter),

@@ -21,6 +21,7 @@ public class ShooterSequence extends SequentialCommandGroup {
     public ShooterSequence(Shooter mShooter, Delivery mDelivery, Intake mIntake, Wrist mWrist,
             SOTA_SwerveDrive mSwerve) {
         this.shooter = mShooter;
+        LimelightHelpers.takeSnapshot("", "Sequence " + LimelightHelpers.getTY(""));
         addCommands(
                 Commands.runOnce(() -> {
                     mWrist.setDesiredPosition(WristPosition.REST);
