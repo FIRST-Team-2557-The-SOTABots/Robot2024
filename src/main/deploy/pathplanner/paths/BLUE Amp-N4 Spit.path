@@ -1,0 +1,120 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4603758008271446,
+        "y": 7.345589157656125
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0538975166727407,
+        "y": 7.7907304445347245
+      },
+      "isLocked": false,
+      "linkedName": "BLUE-Amp"
+    },
+    {
+      "anchor": {
+        "x": 3.350273896015214,
+        "y": 7.7438734669726195
+      },
+      "prevControl": {
+        "x": 2.4991173452647275,
+        "y": 7.729920080894744
+      },
+      "nextControl": {
+        "x": 3.8266531679427858,
+        "y": 7.751682963233726
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.44987495451856,
+        "y": 7.493969586617171
+      },
+      "prevControl": {
+        "x": 5.888360180875227,
+        "y": 7.470541097833847
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BLUE-Intake4"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spit note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Ground"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note-Note",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

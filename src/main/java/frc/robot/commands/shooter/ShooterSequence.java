@@ -21,10 +21,11 @@ public class ShooterSequence extends SequentialCommandGroup {
     public ShooterSequence(Shooter mShooter, Delivery mDelivery, Intake mIntake, Wrist mWrist,
             SOTA_SwerveDrive mSwerve) {
         this.shooter = mShooter;
-        LimelightHelpers.setPipelineIndex("", LimeLightPipelines.SPEAKER.id);
+        LimelightHelpers.takeSnapshot("", "Sequence " + LimelightHelpers.getTY(""));
         addCommands(
                 Commands.runOnce(() -> {
                     mWrist.setDesiredPosition(WristPosition.REST);
+                    LimelightHelpers.setPipelineIndex("", LimeLightPipelines.SPEAKER.id);                    
                 }, mWrist),
                 Commands.waitUntil(mWrist::atSetpoint),
                 // Commands.run(() -> {mIntake.outtake(); mDelivery.toIntake();}, mIntake,
@@ -34,17 +35,18 @@ public class ShooterSequence extends SequentialCommandGroup {
                         Commands.run(() -> {
                             mShooter.spinUpFlyWheel();
                             mShooter.goToAngle();
-                        }, mShooter),
+                        }, mShooter).until(this::isReadyToShoot),
                         Commands.waitUntil(this::isReadyToShoot).andThen(Commands.run(() -> {
                             mIntake.intake();
                             mDelivery.toShooter();
-                        }, mIntake, mDelivery))),
+                        }, mIntake, mDelivery))).withTimeout(1.5),
                 Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
                     mShooter.stopFlyWheel();
-                    LimelightHelpers.setPipelineIndex("", LimeLightPipelines.MEGATAG.id);
+                    mIntake.stop();
+                    mDelivery.stop();
                 }, mShooter)));
 
-        addRequirements(mShooter, mDelivery, mIntake, mWrist);
+        addRequirements(mShooter, mDelivery, mIntake, mWrist, mSwerve);
     }
 
     public boolean isReadyToShoot() {

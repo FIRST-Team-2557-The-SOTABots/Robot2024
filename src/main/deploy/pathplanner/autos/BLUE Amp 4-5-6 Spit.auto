@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
-      "y": 5.55
+      "x": 1.4603758008271446,
+      "y": 7.345589157656125
     },
     "rotation": 0
   },
@@ -14,29 +14,29 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Exit Note-2"
+            "pathName": "BLUE Amp-N4 Spit"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Limelight Speaker"
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "Align Shooter"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center P-2"
+                  "pathName": "BLUE N4-Shoot"
                 }
               }
             ]
@@ -45,38 +45,56 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Note2-3"
-                }
-              }
-            ]
+            "name": "Shoot preloaded"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Note3-Shoot"
+            "pathName": "BLUE ShootWing-N5"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Reset Intake"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Shooter"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BLUE N5-Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot preloaded"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLUE ShootStage-N6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Flywheels"
           }
         }
       ]

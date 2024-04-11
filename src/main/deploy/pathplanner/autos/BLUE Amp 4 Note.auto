@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.47,
-      "y": 4.12
+      "x": 1.4603758008271446,
+      "y": 7.345589157656125
     },
     "rotation": 0
   },
@@ -18,7 +18,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -32,9 +32,64 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Odom"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
-                        "pathName": "SubSource - PShoot"
+                        "pathName": "BLUE Amp-ShootP"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Ground"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot preloaded"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Odom"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "BLUE ShootP-N1"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Speaker"
                       }
                     },
                     {
@@ -44,28 +99,34 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Odom"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
                           {
-                            "type": "path",
-                            "data": {
-                              "pathName": "SSide PShoot-3"
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "BLUE N1-N2"
                             }
                           }
                         ]
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "Note3-Shoot"
+                        "name": "Limelight Speaker"
                       }
                     },
                     {
@@ -75,19 +136,25 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Odom"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
                           {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Shoot3-Intake2"
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "Intake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "BLUE N2-N3"
                             }
                           }
                         ]
@@ -96,32 +163,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Note2-Note1"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Note1-Shoot"
+                        "name": "Limelight Speaker"
                       }
                     },
                     {
@@ -145,6 +187,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "4 Note",
   "choreoAuto": false
 }

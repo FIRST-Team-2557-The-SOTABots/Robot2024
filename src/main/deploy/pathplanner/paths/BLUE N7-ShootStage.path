@@ -1,0 +1,87 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.551398405912959,
+        "y": 2.292845076719427
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.091022605085815,
+        "y": 3.1753181542245987
+      },
+      "isLocked": false,
+      "linkedName": "BLUE-Intake7"
+    },
+    {
+      "anchor": {
+        "x": 4.349889417437002,
+        "y": 4.7918838802738986
+      },
+      "prevControl": {
+        "x": 5.896169677136331,
+        "y": 3.948458284074264
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BLUE-ShootStage"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.15,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Feed Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Flywheels to RPM"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -6.0724564072077,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

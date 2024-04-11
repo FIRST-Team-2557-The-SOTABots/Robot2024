@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4603758008271446,
+        "y": 7.345589157656125
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.47599479334936,
+        "y": 6.736448449289722
+      },
+      "isLocked": false,
+      "linkedName": "BLUE-Amp"
+    },
+    {
+      "anchor": {
+        "x": 2.1476114718046246,
+        "y": 6.611496509111999
+      },
+      "prevControl": {
+        "x": 1.8742791026658543,
+        "y": 6.525592050239814
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BLUE-ShootP"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 24.92847413546133,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

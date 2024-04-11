@@ -1,23 +1,36 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+
 import SOTAlib.Encoder.Absolute.SOTA_AbsoulteEncoder;
 import SOTAlib.MotorController.SOTA_MotorController;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.ShooterConfig;
 
 public class Shooter extends SubsystemBase {
-    private SOTA_MotorController linearActuator;
-    private SOTA_AbsoulteEncoder linearEncoder;
-    private PIDController linearPID;
+    // private CANSparkMax linearActuator;
+    // private AbsoluteEncoder linearEncoder;
+    // private SparkPIDController linearPID;
+
+    SOTA_MotorController linearActuator;
+    SOTA_AbsoulteEncoder linearEncoder;
+    PIDController linearPID;
+    private ArmFeedforward linearFF;
     private double maxLinearValue;
     private double minLinearValue;
     private double restLinearValue;
-    private final double angleConvM;
-    private final double angleConvB;
+    private double angleConvA;
+    private double angleConvB;
+    private double angleConvC;
     private double angleCalcA;
     private double angleCalcB;
     private double angleCalcC;
@@ -35,12 +48,15 @@ public class Shooter extends SubsystemBase {
 
     private SOTA_MotorController leftShooter;
     private SOTA_MotorController rightShooter;
-    private SimpleMotorFeedforward leftFF;
-    private SimpleMotorFeedforward rightFF;
     private double targetRPM;
     private double kMaxShooterAngle;
 
     private double currentAngleSetpoint;
+    private double leftKv;
+    private double leftKs;
+    private double rightKv;
+    private double rightKs;
+    private double targetAngle;
 
     public Shooter(ShooterConfig config, SOTA_MotorController linearActuator, SOTA_AbsoulteEncoder linearEncoder,
             SOTA_MotorController leftShooter, SOTA_MotorController rightShooter) {
@@ -48,14 +64,17 @@ public class Shooter extends SubsystemBase {
         this.linearActuator = linearActuator;
         this.linearEncoder = linearEncoder;
         this.currentAngleSetpoint = 0.0;
+        this.targetAngle = 0.0;
 
+        // this.linearPID = linearActuator.getPIDController();
         this.linearPID = new PIDController(config.getP(), config.getI(), config.getD());
         this.linearPID.setTolerance(0.15);
         this.maxLinearValue = config.getMaxLinearValue();
         this.minLinearValue = config.getMinLinearValue();
         this.restLinearValue = config.getRestLinearValue();
-        this.angleConvM = config.getAngleConvM();
+        this.angleConvA = config.getAngleConvA();
         this.angleConvB = config.getAngleConvB();
+        this.angleConvC = config.getAngleConvC();
 
         this.speakerTagHeight = config.getSpeakerTagHeight();
         this.speakerTagToHood = config.getSpeakerTagToHood();
@@ -66,8 +85,10 @@ public class Shooter extends SubsystemBase {
 
         this.leftShooter = leftShooter;
         this.rightShooter = rightShooter;
-        this.leftFF = new SimpleMotorFeedforward(config.getLeftKS(), config.getLeftKV());
-        this.rightFF = new SimpleMotorFeedforward(config.getRightKS(), config.getRightKV());
+        this.leftKs = config.getLeftKS();
+        this.leftKv = config.getLeftKV();
+        this.rightKs = config.getRightKS();
+        this.rightKv = config.getRightKV();
         this.targetRPM = config.getTargetRPM();
         this.kMaxShooterAngle = encoderToAngle(maxLinearValue);
 
@@ -80,18 +101,20 @@ public class Shooter extends SubsystemBase {
         this.rpmCalcC = config.getRpmCalcC();
 
         Shuffleboard.getTab("Shooter").addDouble("Encoder Position", this.linearEncoder::getPosition);
-        Shuffleboard.getTab("Shooter").addDouble("Encoder Raw Position", this.linearEncoder::getRawPosition);
         Shuffleboard.getTab("Shooter").addDouble("Angle Target", this::calcTargetAngle);
         Shuffleboard.getTab("Shooter").addDouble("RPM Target", this::calcTargetRpm);
         Shuffleboard.getTab("Shooter").addDouble("Shooter Angle", this::getShooterAngle);
         Shuffleboard.getTab("Shooter").addDouble("Left rpm", leftShooter::getEncoderVelocity);
         Shuffleboard.getTab("Shooter").addDouble("Right rpm", rightShooter::getEncoderVelocity);
+        Shuffleboard.getTab("Shooter").addDouble("Right Current", rightShooter::getMotorCurrent);
+        Shuffleboard.getTab("Shooter").addDouble("Left Current", leftShooter::getMotorCurrent);
         // Shuffleboard.getTab("Competition").addDouble("Left rpm",
         // leftShooter::getEncoderVelocity);
         // Shuffleboard.getTab("Competition").addDouble("Right rpm",
         // rightShooter::getEncoderVelocity);
-        Shuffleboard.getTab("Competition").addBoolean("Too Far!", this::isTooFar);
+        Shuffleboard.getTab("Competition").addBoolean("Close Enough!", this::isTooFar);
         Shuffleboard.getTab("Competition").addBoolean("Ready To Shoot", this::isReadyToShoot);
+        Shuffleboard.getTab("Competition").addDouble("Angle Target", this::calcTargetAngle);
         Shuffleboard.getTab("Shooter").addDouble("Corrected Position", this::getCorrectedEncoderPosition);
         Shuffleboard.getTab("Shooter").addBoolean("isAtShootingSpeed", this::isAtShootingSpeed);
         Shuffleboard.getTab("Shooter").addDouble("Distance to Limelight", this::calcDistanceLimeLightToTag);
@@ -135,9 +158,14 @@ public class Shooter extends SubsystemBase {
     }
 
     public void spinUpFlyWheel() {
-        targetRPM = calcTargetRpm();
-                leftShooter.setVoltage(leftFF.calculate(targetRPM));
-        rightShooter.setVoltage(rightFF.calculate(targetRPM));
+        targetRPM = Math.min(calcTargetRpm(), 5000);
+        leftShooter.setVoltage(leftRPMToVolts(targetRPM));
+        rightShooter.setVoltage(rightRPMToVolts(targetRPM));
+    }
+
+    public void spinToRpm(int rpm) {
+        leftShooter.setVoltage(leftRPMToVolts(rpm));
+        rightShooter.setVoltage(rightRPMToVolts(rpm));
     }
 
     public void stopFlyWheel() {
@@ -147,7 +175,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtShootingSpeed() {
         return leftShooter.getEncoderVelocity() >= targetRPM - 100
-                || rightShooter.getEncoderVelocity() >= targetRPM;
+                || rightShooter.getEncoderVelocity() >= targetRPM - 100 || leftShooter.getEncoderVelocity() >= 4800;
     }
 
     public boolean isNotAtShootingSpeed() {
@@ -155,7 +183,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double encoderToAngle(double encoderPos) {
-        return angleConvM * encoderPos + angleConvB;
+        return (angleConvA * encoderPos * encoderPos) + (angleConvB * encoderPos) + angleConvC;
     }
 
     public double getShooterAngle() {
@@ -187,6 +215,7 @@ public class Shooter extends SubsystemBase {
 
     public void goToRestAngle() {
         currentAngleSetpoint = encoderToAngle(restLinearValue);
+        // currentAngleSetpoint = 53;
         double volts = linearPID.calculate(encoderToAngle(getCorrectedEncoderPosition()),
                 encoderToAngle(restLinearValue));
         linearActuatorSetVoltage(volts);
@@ -209,7 +238,7 @@ public class Shooter extends SubsystemBase {
     }
 
     private boolean isTooFar() {
-        return calcTargetAngle() < 24; // TODO: find actual angle using encoder units
+        return calcTargetAngle() > 26.5; // TODO: find actual angle using encoder units
     }
 
     public void setSpeed(double speed) {
@@ -217,4 +246,21 @@ public class Shooter extends SubsystemBase {
         rightShooter.set(speed);
     }
 
+    public double leftRPMToVolts(double RPM) {
+        return leftKv * RPM + leftKs * Math.signum(RPM);
+    }
+
+    public double rightRPMToVolts(double RPM) {
+        return rightKv * RPM + rightKs * Math.signum(RPM);
+    }
+
+    @Override
+    public void periodic() {
+        // linearPID.setReference(Math.toRadians(currentAngleSetpoint),
+        // ControlType.kPosition);
+        targetAngle = calcTargetAngle();
+        if (linearPID.atSetpoint()) {
+            linearPID.reset();
+        }
+    }
 }

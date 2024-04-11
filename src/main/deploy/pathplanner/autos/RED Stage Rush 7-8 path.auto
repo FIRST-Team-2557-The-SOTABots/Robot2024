@@ -2,48 +2,48 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 4.49
+      "x": 15.10356576898234,
+      "y": 3.534554982235555
     },
-    "rotation": -60.0
+    "rotation": -179.59651526494127
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Spin Flywheels"
+            "pathName": "RED SubSource-ShootP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SubSource - PShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Flywheels"
+            "pathName": "RED ShootP-N7"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SSide PShoot-Leave"
+            "pathName": "RED N7-ShootSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED ShootSource-N8"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED N8-ShootSource"
           }
         }
       ]
     }
   },
-  "folder": "1 Note",
+  "folder": "3 Note",
   "choreoAuto": false
 }

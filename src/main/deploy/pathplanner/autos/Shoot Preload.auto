@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4681852970882525,
-      "y": 1.4884669618253301
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -12,14 +12,14 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BLUE Goofy Time"
+            "name": "Shoot preloaded"
           }
         }
       ]
     }
   },
-  "folder": "0 Note",
+  "folder": null,
   "choreoAuto": false
 }

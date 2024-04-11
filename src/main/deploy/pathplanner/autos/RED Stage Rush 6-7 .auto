@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.49,
-      "y": 7.36
+      "x": 15.10356576898234,
+      "y": 3.534554982235555
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Spin Flywheels"
-          }
-        },
         {
           "type": "race",
           "data": {
@@ -32,64 +26,87 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Amp shootP"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Shoot PA - Note1"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop Flywheels"
+                        "name": "Limelight Odom"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Shoot1 - Note4"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Note4-Shoot"
+                        "pathName": "RED SubSource-ShootP"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Shoot"
+                        "name": "Limelight Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot preloaded"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED SourceStage-N6"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Reset Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED N6-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot preloaded"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED ShootStage-N7"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Reset Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RED N7-Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Limelight Speaker"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot preloaded"
                       }
                     }
                   ]

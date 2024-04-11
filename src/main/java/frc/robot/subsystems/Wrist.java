@@ -15,9 +15,9 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.44),
-        REST(0.035),
-        AMP(0.33);
+        FLOOR(0.41),
+        REST(0.015),
+        AMP(0.32);
 
         public double position;
 
@@ -43,6 +43,8 @@ public class Wrist extends SubsystemBase {
         rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         rightMotor.setInverted(config.getRightMotorInverted());
         leftMotor.setInverted(config.getLeftMotorInverted());
+        rightMotor.setSmartCurrentLimit(30);
+        leftMotor.setSmartCurrentLimit(30);
         rightMotor.follow(leftMotor, true);
 
         mPID.setP(config.getP());
@@ -51,11 +53,13 @@ public class Wrist extends SubsystemBase {
         mPID.setFeedbackDevice(wristEncoder);
         mPID.setPositionPIDWrappingEnabled(true);
         mPID.setOutputRange(config.getMinOutputRange(), config.getMaxOutputRange());
-        currentPosition = WristPosition.REST;
+                currentPosition = WristPosition.REST;
         
         
 
         Shuffleboard.getTab("Wrist").addDouble("Encoder Pos", mEncoder::getPosition);
+        Shuffleboard.getTab("Wrist").addDouble("Left Current", leftMotor::getOutputCurrent);
+        Shuffleboard.getTab("Wrist").addDouble("Right Current", rightMotor::getOutputCurrent);
 
 
         // this.currentPosition = WristPosition.REST;
