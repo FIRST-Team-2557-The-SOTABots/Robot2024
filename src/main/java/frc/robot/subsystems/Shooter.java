@@ -10,6 +10,7 @@ import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,7 @@ public class Shooter extends SubsystemBase {
     private double angleCalcA;
     private double angleCalcB;
     private double angleCalcC;
+    private GenericEntry manualRPMTarget;
 
     private double rpmCalcA;
     private double rpmCalcB;
@@ -121,6 +123,7 @@ public class Shooter extends SubsystemBase {
         Shuffleboard.getTab("Shooter").addDouble("Linear Actuator Voltage", linearActuator::getMotorCurrent);
         Shuffleboard.getTab("Shooter").addBoolean("At Angle", this::isAtAngle);
         Shuffleboard.getTab("Shooter").addBoolean("Intakeable", this::isIntakeAble);
+        manualRPMTarget = Shuffleboard.getTab("Outreach").add("TargetRPM", 0).getEntry();
     }
 
     public double getCorrectedEncoderPosition() {
@@ -145,16 +148,9 @@ public class Shooter extends SubsystemBase {
     }
 
     public void linearActuatorSetVoltage(double volts) {
-        if (getCorrectedEncoderPosition() > maxLinearValue && volts > 0) {
-            linearActuator.stopMotor();
-        } else if (getCorrectedEncoderPosition() < minLinearValue && volts < 0) {
-            linearActuator.stopMotor();
-        } else if (linearPID.atSetpoint()) {
-            linearActuator.stopMotor();
-        } else {
-            linearActuator.setVoltage(volts);
-        }
-        // linearActuator.setVoltage(volts);
+        
+        linearActuator.setVoltage(volts);
+
     }
 
     public void spinUpFlyWheel() {
@@ -166,6 +162,10 @@ public class Shooter extends SubsystemBase {
     public void spinToRpm(int rpm) {
         leftShooter.setVoltage(leftRPMToVolts(rpm));
         rightShooter.setVoltage(rightRPMToVolts(rpm));
+    }
+
+    public void spinToSetRPM() {
+        spinToRpm((int) manualRPMTarget.getInteger(0));
     }
 
     public void stopFlyWheel() {
