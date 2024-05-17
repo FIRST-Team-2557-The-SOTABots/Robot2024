@@ -1,5 +1,5 @@
 {
-    "intakeVoltage": 1,
+    "intakeVoltage": 0.6,
     "sensorTrigger": 200,
     "motorConfig": {
         "port" : 9,
