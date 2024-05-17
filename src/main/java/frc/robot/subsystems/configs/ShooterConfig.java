@@ -10,8 +10,9 @@ public class ShooterConfig {
     private double maxLinearValue;
     private double minLinearValue;
 
-    private double angleConvM;
+    private double angleConvA;
     private double angleConvB;
+    private double angleConvC;
 
     private double angleCalcA;
     private double angleCalcB;
@@ -110,8 +111,8 @@ public class ShooterConfig {
         return limeLightAngle;
     }
 
-    public double getAngleConvM() {
-        return angleConvM;
+    public double getAngleConvA() {
+        return angleConvA;
     }
 
     public double getAngleConvB() {
@@ -156,5 +157,9 @@ public class ShooterConfig {
 
     public double getRestLinearValue() {
         return restLinearValue;
+    }
+
+    public double getAngleConvC() {
+        return angleConvC;
     }
 }

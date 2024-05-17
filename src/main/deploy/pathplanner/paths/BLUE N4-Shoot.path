@@ -1,0 +1,87 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.44987495451856,
+        "y": 7.493969586617171
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.817690235947044,
+        "y": 7.3299701651339095
+      },
+      "isLocked": false,
+      "linkedName": "BLUE-Intake4"
+    },
+    {
+      "anchor": {
+        "x": 4.685697756664635,
+        "y": 6.291307162406582
+      },
+      "prevControl": {
+        "x": 5.755598744436393,
+        "y": 6.9160668632952005
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Blue-ShootWing"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.1,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Feed Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Flywheels to RPM"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 4.899092453787673,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

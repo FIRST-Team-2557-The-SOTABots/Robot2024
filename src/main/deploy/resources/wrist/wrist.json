@@ -6,10 +6,10 @@
     "minOutputRange":-1.5,
     "maxOutputRange":2,
 
-    "leftMotorPort":10,
+    "leftMotorPort":11,
     "leftMotorInverted":false,
 
-    "rightMotorPort":11,
+    "rightMotorPort":10,
     "rightMotorInverted":true
 
 }

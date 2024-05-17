@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.179573903007455,
+        "y": 2.2003128216782755
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.742701941544234,
+        "y": 1.1665307541141405
+      },
+      "isLocked": false,
+      "linkedName": "Intake7"
+    },
+    {
+      "anchor": {
+        "x": 2.584455168910338,
+        "y": 3.3610505817502867
+      },
+      "prevControl": {
+        "x": 3.7633294564834747,
+        "y": 1.8647870629074599
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "shoot source-stage"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Flywheels to RPM"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Check Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 4.71,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -27.072080237992754,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": 30.749967302381506,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -14,8 +14,10 @@ public class RotateToAprilTag extends Command {
 
     public  RotateToAprilTag(SOTA_SwerveDrive drive) {
         this.mDrive = drive;
-        mRotationController = new PIDController(2.5, 0, 0.5);
-        mRotationController.setTolerance(2);
+        mRotationController = new PIDController(0.1, 0, 0);
+        mRotationController.setTolerance(1.6);
+
+        addRequirements(drive);
     }
 
     public double calculateRotationSpeed() {
@@ -29,26 +31,25 @@ public class RotateToAprilTag extends Command {
         }
     }
 
-    public boolean isAtAprilTag() {
-        return Math.abs(xOffset) < 2;
-
-    }
-
     @Override
     public void execute() {
-        ChassisSpeeds speeds = new ChassisSpeeds(0, 0, calculateRotationSpeed() * 0.03);
+        ChassisSpeeds speeds = new ChassisSpeeds(0, 0, calculateRotationSpeed());
         mDrive.drive(speeds);
     }
 
     @Override
     public boolean isFinished() {
-        // return Math.abs(xOffset) < 2;
-        return mRotationController.atSetpoint();
+        return mRotationController.atSetpoint() && xOffset != 0.0;
 
     }
 
     @Override
     public void initialize() {
         mRotationController.reset();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        mDrive.drive(new ChassisSpeeds(0, 0, 0));
     }
 }

@@ -15,9 +15,9 @@ import frc.robot.subsystems.configs.WristConfig;
 public class Wrist extends SubsystemBase {
 
     public enum WristPosition {
-        FLOOR(0.431),
-        REST(0.01),
-        AMP(0.35);
+        FLOOR(0.41),
+        REST(0.015),
+        AMP(0.32);
 
         public double position;
 
@@ -43,6 +43,8 @@ public class Wrist extends SubsystemBase {
         rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake);
         rightMotor.setInverted(config.getRightMotorInverted());
         leftMotor.setInverted(config.getLeftMotorInverted());
+        rightMotor.setSmartCurrentLimit(30);
+        leftMotor.setSmartCurrentLimit(30);
         rightMotor.follow(leftMotor, true);
 
         mPID.setP(config.getP());
@@ -51,11 +53,13 @@ public class Wrist extends SubsystemBase {
         mPID.setFeedbackDevice(wristEncoder);
         mPID.setPositionPIDWrappingEnabled(true);
         mPID.setOutputRange(config.getMinOutputRange(), config.getMaxOutputRange());
-        currentPosition = WristPosition.REST;
+                currentPosition = WristPosition.REST;
         
         
 
         Shuffleboard.getTab("Wrist").addDouble("Encoder Pos", mEncoder::getPosition);
+        Shuffleboard.getTab("Wrist").addDouble("Left Current", leftMotor::getOutputCurrent);
+        Shuffleboard.getTab("Wrist").addDouble("Right Current", rightMotor::getOutputCurrent);
 
 
         // this.currentPosition = WristPosition.REST;
@@ -65,12 +69,26 @@ public class Wrist extends SubsystemBase {
         this.currentPosition = position;
     }
 
+    
+
     public double getAdjustedEncoder(){
         if (mEncoder.getPosition() > 0.9){
             return 0.0;
         } else{
             return mEncoder.getPosition();
         }
+    }
+
+    public void moveSlowlyToFloor() {
+        SmartDashboard.putBoolean("To Floor", true);
+        leftMotor.set(0.1);
+        rightMotor.set(0.1);
+    }
+
+    public void moveSlowlyToRest() {
+        SmartDashboard.putBoolean("To Rest", true);
+        leftMotor.set(-0.1);
+        rightMotor.set(-0.1);
     }
 
     public boolean atSetpoint(){
@@ -86,7 +104,6 @@ public class Wrist extends SubsystemBase {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
     }
-
 
     @Override
     public void periodic() {

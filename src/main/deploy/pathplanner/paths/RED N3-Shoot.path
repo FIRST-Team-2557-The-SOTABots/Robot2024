@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.236711683999381,
+        "y": 4.487313526090697
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.119569240082765,
+        "y": 4.690360428879497
+      },
+      "isLocked": false,
+      "linkedName": "RED-Intake3"
+    },
+    {
+      "anchor": {
+        "x": 14.158616721388308,
+        "y": 5.322929626029224
+      },
+      "prevControl": {
+        "x": 14.025855284949474,
+        "y": 5.0417877606293455
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.71,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 480.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -179.02897806892085,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": -131.6335393365703,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
