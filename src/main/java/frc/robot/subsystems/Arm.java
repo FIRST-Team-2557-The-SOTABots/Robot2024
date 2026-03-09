@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,7 @@ public class Arm extends SubsystemBase {
     private AbsoluteEncoder mEncoder;
     private SparkPIDController mPID;
     private ArmPosition currentPosition;
+    private GenericEntry speedMultiplier;
 
     public enum ArmPosition {
         REST(0.02),
@@ -46,7 +48,7 @@ public class Arm extends SubsystemBase {
 
         mEncoder.setInverted(true);
 
-        mPID.setP(config.getP());
+        mPID.setP(config.getP()*(int) speedMultiplier.getInteger(0));
         mPID.setI(config.getI());
         mPID.setD(config.getD());
         mPID.setFeedbackDevice(mEncoder);
@@ -57,6 +59,7 @@ public class Arm extends SubsystemBase {
         Shuffleboard.getTab("Arm").addDouble("Left Encoder Positon", mEncoder::getPosition);
         Shuffleboard.getTab("Arm").addNumber("Setpoint", this::getCurrentSetpoint);
         Shuffleboard.getTab("Arm").addBoolean("At setpoint", this::isAtSetpoint);
+        speedMultiplier = Shuffleboard.getTab("Arm").addPersistent("Speed Multiplier (between 1 and 0)", 1).getEntry();
     }
 
     public double getCorrectedLeftPosition() {

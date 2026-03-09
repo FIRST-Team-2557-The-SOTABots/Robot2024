@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -37,6 +38,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
     private boolean fieldCentric;
     private Pose2d currentPose;
     private Field2d mField2d;
+    private GenericEntry speedMultiplier;
 
     private double MAX_SPEED;
 
@@ -90,6 +92,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
             return this.getRelativeSpeeds().omegaRadiansPerSecond;
         });
         sTab.add(mField2d);
+        speedMultiplier = sTab.addPersistent("Speed Multiplier (between 1 and 0)", 1).getEntry();
 
     }
 
@@ -111,9 +114,10 @@ public class SOTA_SwerveDrive extends SubsystemBase {
      * @param rttn  rotational input
      */
     public void drive(double frwrd, double strf, double rttn) {
-        frwrd = MathUtil.clamp(frwrd, -1, 1) * Conversions.feetPerSecToMetersPerSec(MAX_SPEED);
-        strf = MathUtil.clamp(strf, -1, 1) * Conversions.feetPerSecToMetersPerSec(MAX_SPEED);
-        rttn = MathUtil.clamp(rttn, -1, 1) * MAX_ROTATIONAL_VELOCITY;
+        int multiplier = (int) speedMultiplier.getInteger(0);
+        frwrd = MathUtil.clamp(frwrd, -1*multiplier, 1*multiplier) * Conversions.feetPerSecToMetersPerSec(MAX_SPEED);
+        strf = MathUtil.clamp(strf, -1*multiplier, 1*multiplier) * Conversions.feetPerSecToMetersPerSec(MAX_SPEED);
+        rttn = MathUtil.clamp(rttn, -1*multiplier, 1*multiplier) * MAX_ROTATIONAL_VELOCITY;
         drive(new ChassisSpeeds(frwrd, strf, rttn));
     }
 

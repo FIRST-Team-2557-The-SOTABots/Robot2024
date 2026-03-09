@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,6 +32,7 @@ public class Wrist extends SubsystemBase {
     private CANSparkMax rightMotor;
     private SparkPIDController mPID;
     private WristPosition currentPosition;
+    private GenericEntry speedMultiplier;
 
     public Wrist(WristConfig config, SparkPIDController wristPID, AbsoluteEncoder wristEncoder, CANSparkMax wristLeftMotor,
             CANSparkMax wristRightMotor) {
@@ -47,7 +49,7 @@ public class Wrist extends SubsystemBase {
         leftMotor.setSmartCurrentLimit(30);
         rightMotor.follow(leftMotor, true);
 
-        mPID.setP(config.getP());
+        mPID.setP(config.getP()*(int) speedMultiplier.getInteger(0));
         mPID.setI(config.getI());
         mPID.setD(config.getD());
         mPID.setFeedbackDevice(wristEncoder);
@@ -60,6 +62,7 @@ public class Wrist extends SubsystemBase {
         Shuffleboard.getTab("Wrist").addDouble("Encoder Pos", mEncoder::getPosition);
         Shuffleboard.getTab("Wrist").addDouble("Left Current", leftMotor::getOutputCurrent);
         Shuffleboard.getTab("Wrist").addDouble("Right Current", rightMotor::getOutputCurrent);
+        speedMultiplier = Shuffleboard.getTab("Wrist").addPersistent("Speed Multiplier (between 1 and 0)", 1).getEntry();
 
 
         // this.currentPosition = WristPosition.REST;
